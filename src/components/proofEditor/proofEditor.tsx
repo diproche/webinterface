@@ -11,12 +11,7 @@ interface State {
 }
 
 export class ProofEditor extends React.Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = {
-            text: "",
-        };
-    }
+    public state = { text: "" };
 
     public render() {
         return <div className={styles.proofEditor}>
@@ -29,7 +24,7 @@ export class ProofEditor extends React.Component<Props, State> {
                 <button onClick={this.checkInput}>
                     Prüfen
                 </button>
-                <button onClick={() => { alert("Toller HInweis"); } }>
+                <button onClick={() => { alert("Toller Hinweis"); } }>
                     Hinweis
                 </button>
             </div>
