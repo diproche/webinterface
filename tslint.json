@@ -11,7 +11,7 @@
         "indent": [
             true,
             "tabs",
-            2
+            1,
         ],
         "no-conditional-assignment": false,
         "arrow-parens": false
