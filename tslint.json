@@ -8,11 +8,6 @@
         "object-literal-sort-keys": false,
         "interface-name": false,
         "no-console": false,
-        "indent": [
-            true,
-            "tabs",
-            2
-        ],
         "no-conditional-assignment": false,
         "arrow-parens": false
     },
