@@ -1,10 +1,10 @@
-import * as tauProlog from "tau-prolog/modules/core";
+import { format_answer, type } from "tau-prolog/modules/core";
 
 export class PrologSession {
     public readonly session: any;
 
     constructor(program: string, limit?: number) {
-        this.session = new tauProlog.type.Session(limit);
+        this.session = new type.Session(limit);
         this.session.consult(program);
     }
 
@@ -25,7 +25,7 @@ export class PrologSession {
     private getNextAnswer() {
         return new Promise<string>((resolve, reject) => {
             this.session.answers((x: any) => {
-                resolve(tauProlog.format_answer(x));
+                resolve(format_answer(x));
             });
         });
     }
