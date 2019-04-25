@@ -1,15 +1,20 @@
 {
-    "defaultSeverity": "error",
-    "extends": [
-        "tslint:recommended"
-    ],
-    "jsRules": {},
-    "rules": {
-        "object-literal-sort-keys": false,
-        "interface-name": false,
-        "no-console": false,
-        "no-conditional-assignment": false,
-        "arrow-parens": false
-    },
-    "rulesDirectory": []
+	"defaultSeverity": "error",
+	"extends": [
+		"tslint:recommended"
+	],
+	"jsRules": {},
+	"rules": {
+		"object-literal-sort-keys": false,
+		"interface-name": false,
+		"no-console": false,
+		"indent": [
+			true,
+			"tabs",
+			2
+		],
+		"no-conditional-assignment": false,
+		"arrow-parens": false
+	},
+	"rulesDirectory": []
 }
