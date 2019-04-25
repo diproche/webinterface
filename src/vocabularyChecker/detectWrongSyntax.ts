@@ -1,79 +1,120 @@
-import json from "./AllowedVocab.json"
+import json from "./AllowedVocab.json";
+const punctuation = new RegExp(/[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-.\/:;<=>?@\[\]^_`{|}~]/g);
+const space = new RegExp(/\s+/g);
+const allowedWords = json;
 
 /**
- * Checks, if all words used, are allowed.
- * 
- * 
- * 
+ * (input:) @param text
+ * This method takes the user input as a parameter.
+ * At first it prepocesses @param text by calling
+ * @function preprocessText thus calls the two
+ * functions @function eliminatePunctuation and @function splitIntoWords.
+ * For their functionality see the corresponding comments.
+ * @function checkInput then filters out all wrong @param word 
+ * from @param text and puts them all into @param allWrongWords,
+ * which is printed in the console log by calling @function logInvalidWords.
+ * This is for debugging purposes and should later be changed to
+ * be displayed to the user. For further postprocessing all wrong
+ * words are collected in a @returns @param invalidWords of
+ * @type string array.
  */
 
-function preprocessingText(text: string){
-    var cleantext = eliminatePunctuation(text);
-    var textarray = transformTextToStringArray(cleantext);
-    return textarray;
-}
-
-export function checkInput(text: string){
-    let preprocessedText : string[] = preprocessingText(text);
-    let issue : string[] = []; //collect all wrong words in a stringarray
-    for (const word of preprocessedText) {
-        if (!json.foo.includes(word)) {//word not included in AllowedVocab.json
-            console.log(word + " ist kein erlaubtes Wort. Bitte verwenden Sie ein anderes!"); //for debugging purposes. The user should get a message on screen telling him what's wrong.
-            issue.push(word);
-        }
-    }
-    let allWrongWords :string = "";
-    allWrongWords += issue.join //Join all wrong words to one String
-    allWrongWords += " sind nicht erlaubte Wörter. Bitte verwenden Sie andere!"
-    console.log(allWrongWords); //Tell the User what's wrong
-    return issue;
+export function checkInput(text: string) {
+		const preprocessedText: string[] = preprocessText(text);
+		const invalidWords = preprocessedText.filter(word => !allowedWords.includes(word));
+		logInvalidWords(removeDuplicates(invalidWords));
+		return invalidWords;
 }
 
 /**
- * Delete any unwanted punctuation
+ * (input:) @param text
+ * This method deletes all UNICODE-characters \u2000-\u206F\u2E00-\u2E7F
+ * as well as '!"#$%&()*+,\-.\/:;<=>?@\[\]^_`{|}~]/. and
+ * replaces them with whitespaces. A word is afterwards (in @function splitIntoWords)
+ * considered as a substring with has at least a whitespace on the right
+ * or on the left.
+ * The exact symbols that can be deleted may have to be overthought,
+ * since brackets, commas and fullstops seem to be necessary to make the user input Prolog-readable.
  */
 
-export function eliminatePunctuation(text: string){
-    var punctuationRegularExpression = /[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-.\/:;<=>?@\[\]^_`{|}~]/g;//delete some unicoe characters as well as specific punctuation signs.
-    var spaceRegularExpression = /\s+/g;
-    text = text.replace(punctuationRegularExpression, ' ').replace(spaceRegularExpression, ' ');
-    return text;
+export function eliminatePunctuation(text: string) {
+		return text.replace(punctuation, " ").replace(space, " ");
+}
+
+/**
+ * (input:) @param text
+ * This method first deletes and leading or trailing whitespaces off of the
+ * input string. It then calls @function findSpacePositionsInStringArray, to
+ * create an array containing the positions where a new word begins.
+ * Currently this adds a whitespace to every word after the first one.
+ * After doing some corrections to the text, the method @returns @param result,
+ * which is an array containing as entries the single words filtered out
+ * of the text.
+ */
+
+export function splitIntoWords(text: string) {
+		text = text.trim();
+		const spacePositions = findSpacePositionsInStringArray(text);
+		let tempPos = 0;
+		const result: string[] = [];
+				// this loop is problematic. Adds a whitespace to the beginning of each word after the second one.
+		spacePositions.forEach(element => {
+				result.push(text.substring(tempPos, element));
+				tempPos = element;
+		});
+						// the substring after the last whitespace seems to miss, if this substring is not empty. Fix in next line.
+		if (text.substring(spacePositions[spacePositions.length - 1], text.length) !== " ") {
+		result.push(text.substring(spacePositions[spacePositions.length - 1], text.length));
+		}
+		for (let index = 0; index < result.length; index++) {
+				if (result[index].startsWith(" ")) {
+						result[index] = result[index].substring(1, result[index].length); // delete the wrong whitespaces in the beginning
+				}
+		}
+		return result;
+}
+
+/**
+ * (input:) @param text
+ * Just a function bundling @function eliminatePunctuation and
+ * @function splitIntoWords together for better readibility
+ * and in case, those two methods need to be called more
+ * often in conjunction.
+ */
+
+function preprocessText(text: string) {
+	const cleantext = eliminatePunctuation(text);
+	const textarray = splitIntoWords(cleantext);
+	return textarray;
 }
 
 /**
  * Collects all positions where there is a whitespace in a string.
  */
 
-function findSpacePositionsInStringArray(text: string){
-    var index = 0;
-    var spacePositions = [];
-    while((index = text.indexOf(' ', index + 1)) > 0){
-        spacePositions.push(index);
-    }
-    return spacePositions;
+function findSpacePositionsInStringArray(text: string) {
+	let index = 0;
+	const spacePositions = [];
+	while ((index = text.indexOf(" ", index + 1)) > 0) {
+			spacePositions.push(index);
+	}
+	return spacePositions;
 }
 
 /**
- * Seperates a given string along it's whitespaces.
+ * (input:) @param invalidWords.
+ * Prints out a error message on the console (later to the user),
+ * iff there are invalid Words.
  */
 
-export function transformTextToStringArray(text: string){
-    text.trim; //delete leading and trailing whitespaces
-    var spacePositions = findSpacePositionsInStringArray(text);
-    var tempPos = 0;
-    let result :  string[] = [];
-    spacePositions.forEach(element => {//this loop is problematic. Adds a whitespace to the beginning of each word after the second one.
-        result.push(text.substring(tempPos, element));
-        tempPos = element;
-    });
-    //the substring after the last whitespace seems to miss in general, if this substring is not already empty. The next line fixes this.
-    if(text.substring(spacePositions[spacePositions.length - 1], text.length) != " "){
-    result.push(text.substring(spacePositions[spacePositions.length - 1], text.length));
-    }
-    for (let index = 0; index < result.length; index++) {
-        if(result[index].startsWith(' ')){
-            result[index] = result[index].substring(1, result[index].length); //delete the wrong whitespaces in the beginning
-        }
-    }
-    return result;
+function logInvalidWords(invalidWords: string[]) {
+	const errorMessage = invalidWords.length > 0 ? `${invalidWords.join(", ")} sind nicht erlaubte Wörter!` : undefined;
+	if (errorMessage !== undefined) {
+	 console.log(errorMessage);
+	}
+
+}
+
+function removeDuplicates(invalidWords: string[]) {
+	return invalidWords.filter((value, item) => invalidWords.indexOf(value) === item);
 }
