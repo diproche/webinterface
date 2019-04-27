@@ -1,4 +1,5 @@
 import json from "./AllowedVocab.json";
+import Issue from "./Issue";
 const punctuation = new RegExp(/[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-.\/:;<=>?@\[\]^_`{|}~]/g);
 const space = new RegExp(/\s+/g);
 const allExceptSpace = new RegExp(/^(?!\s*$).+/g);
@@ -11,7 +12,7 @@ const allowedWords = json;
  * @function preprocessText thus calls the two
  * functions @function eliminatePunctuation and @function splitIntoWords.
  * For their functionality see the corresponding comments.
- * @function checkInput then filters out all wrong @param word 
+ * @function checkInput then filters out all wrong @param word
  * from @param text and puts them all into @param allWrongWords,
  * which is printed in the console log by calling @function logInvalidWords.
  * This is for debugging purposes and should later be changed to
@@ -23,7 +24,11 @@ const allowedWords = json;
 export function checkInput(text: string) {
 		const preprocessedText: string[] = preprocessText(text);
 		const invalidWords = preprocessedText.filter(word => !allowedWords.includes(word));
-		logInvalidWords(removeDuplicates(invalidWords));
+		// TODO: Make logInvalidWords dependent on this posOfInvalidWords.
+		const posOfInvalidWords = findPositionsOfInvalidWords(text, invalidWords);
+		logInvalidWords(invalidWords);
+		// How to change the Issuemessage?
+		Issue.message = invalidWords.toString();
 		return invalidWords;
 }
 
@@ -72,7 +77,7 @@ export function splitIntoWords(text: string) {
 						result[index] = result[index].substring(1, result[index].length); // delete the wrong whitespaces in the beginning
 				}
 		}
-		if (!text.replace(/\s/g, "").length) { //
+		if (!text.replace(/\s/g, "").length) {
 			return [];
 		}
 		return result;
@@ -114,9 +119,23 @@ function logInvalidWords(invalidWords: string[]) {
 	if (errorMessage !== undefined) {
 	 console.log(errorMessage);
 	}
-
 }
 
 function removeDuplicates(invalidWords: string[]) {
 	return invalidWords.filter((value, item) => invalidWords.indexOf(value) === item);
+}
+
+/**
+ * @param text
+ * @param invalidWords
+ * Returns a map of invalid words (consisted in @param invalidWords) and their corresponding
+ * positions (starting position and end position) inside of a string.
+ */
+
+function findPositionsOfInvalidWords(text: string, invalidWords: string[]) {
+	const positions = new Map();
+	for (const word of invalidWords) {
+		positions.set(word, [text.indexOf(word), text.indexOf(word) + word.length]);
+	}
+	return positions;
 }
