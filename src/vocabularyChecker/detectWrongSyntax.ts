@@ -1,6 +1,7 @@
 import json from "./AllowedVocab.json";
 const punctuation = new RegExp(/[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-.\/:;<=>?@\[\]^_`{|}~]/g);
 const space = new RegExp(/\s+/g);
+const allExceptSpace = new RegExp(/^(?!\s*$).+/g);
 const allowedWords = json;
 
 /**
@@ -71,6 +72,9 @@ export function splitIntoWords(text: string) {
 						result[index] = result[index].substring(1, result[index].length); // delete the wrong whitespaces in the beginning
 				}
 		}
+		if (!text.replace(/\s/g, "").length) { //
+			return [];
+		}
 		return result;
 }
 
@@ -83,9 +87,7 @@ export function splitIntoWords(text: string) {
  */
 
 function preprocessText(text: string) {
-	const cleantext = eliminatePunctuation(text);
-	const textarray = splitIntoWords(cleantext);
-	return textarray;
+	return removeDuplicates(splitIntoWords(eliminatePunctuation(text)));
 }
 
 /**
