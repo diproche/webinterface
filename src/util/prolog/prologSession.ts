@@ -1,26 +1,38 @@
 import { format_answer, type } from "tau-prolog/modules/core";
 
 export class PrologSession {
+
 		public readonly session: any;
 
 		constructor(program: string, limit?: number) {
 				this.session = new type.Session(limit);
-				// Loadig the program already fetches writes to a file in case of open -> write -> close
 				this.session.consult(program);
 		}
 
-		public async executeQuery(query: string): Promise<string[][]> {
+		// Options
+		// 0 means return all values (boolean and variable values)
+		// 1 means only return boolean returns
+		// 2 means only return variable values
+		public async executeQuery(query: string, option: number = 0): Promise<string[][]> {
 				this.session.query(query);
 
 				const results: string[][] = [];
-
 				let result: string;
+
 				do {
 						result = await this.getNextAnswer();
-						this.formatMultiArray(result, results);
+						this.formatNestedArray(result, results);
 				} while (result[result.length - 1] !== ".");
 				// this could be checked more reliably with the this.session.step() method
 				// it returns an undefined if the end of the threat has been reached, but it does a step when called
+				// though it seems Tau-Prolog always signifies an end of program with "false."
+
+				// Tau-Prolog seems to always end a program with "false." which is different from SWI-Prolog
+				// when the return value is not a single false
+				// The second part might be unneccesary but is there assure only ["false"] will ever be removed.
+				if (results.length > 1 && results[results.length - 1][0] === "false") {
+					results.pop();
+				}
 
 				return results;
 		}
@@ -33,7 +45,7 @@ export class PrologSession {
 				});
 		}
 
-		private formatMultiArray(source: string, goal: string[][]): void {
+		private formatNestedArray(source: string, goal: string[][]): void {
 			goal.push([]);
 			// There is probably a more elegant way to fetch these cases
 			if (source.includes("true")) { goal[goal.length - 1][0] = "true"; return; }
