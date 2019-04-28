@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {checkInput, eliminatePunctuation, splitIntoWords} from "./detectWrongSyntax";
+import {checkInput, createMapOfInvalidWords, eliminatePunctuation, splitIntoWords} from "./detectWrongSyntax";
 
 it("Returns the correct word for a normal text", () => {
 		const wrongWords = checkInput("fu bar bloedsinn"); // fu and bar are indeed included in allowedVocab
@@ -18,17 +18,17 @@ it("Returns an invalid word only once, if it occurs multiple times", () => {
 });
 
 // maybe it should not care about case sensitivity, but that's more of a design choice
-it("Works for case sensitive words", () => {
+it("is case sensitive", () => {
 		const wrongWords = checkInput("fu Fu");
 		expect(wrongWords).toEqual(["Fu"]);
 });
 
-it("Works for spaces", () => {
+it("Does not return a wrong word, if a string consists only of a whitespace", () => {
 		const wrongWords = checkInput(" ");
 		expect(wrongWords).toEqual([]);
 });
 
-it("Works if everything is correct", () => {
+it("Does not detect a wrong word, if there is none", () => {
 		const wrongWords = checkInput("fu bar");
 		expect(wrongWords).toEqual([]);
 });
@@ -55,4 +55,9 @@ it("Eliminates Punctuation", () => {
 it("Transforms correctly", () => {
 		const textarray = splitIntoWords("Hel lo wo rld");
 		expect(textarray).toEqual(["Hel", "lo", "wo", "rld"]);
+});
+
+it("Creates a correct Map", () => {
+	const issues = createMapOfInvalidWords(`test`, [`test`]);
+	expect(issues).toEqual([[`test`, [0, 3]]]);
 });

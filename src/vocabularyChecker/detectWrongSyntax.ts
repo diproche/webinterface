@@ -25,11 +25,24 @@ export function checkInput(text: string) {
 		const preprocessedText: string[] = preprocessText(text);
 		const invalidWords = preprocessedText.filter(word => !allowedWords.includes(word));
 		// TODO: Make logInvalidWords dependent on this posOfInvalidWords.
-		const posOfInvalidWords = findPositionsOfInvalidWords(text, invalidWords);
-		logInvalidWords(invalidWords);
-		// How to change the Issuemessage?
-		Issue.message = invalidWords.toString();
+		const mapOfInvalidWords = createMapOfInvalidWords(text, invalidWords);
+		logInvalidWords(mapOfInvalidWords);
 		return invalidWords;
+}
+
+/**
+ * @param text
+ * @param invalidWords
+ * Returns a map of invalid words (consisted in @param invalidWords) and their corresponding
+ * positions (starting position and end position) inside of a string.
+ */
+
+export function createMapOfInvalidWords(text: string, invalidWords: string[]) {
+	const positions = new Map();
+	for (const word of invalidWords) {
+		positions.set(word, [text.indexOf(word), text.indexOf(word) + word.length - 1]);
+	}
+	return positions;
 }
 
 /**
@@ -114,28 +127,16 @@ function findSpacePositionsInStringArray(text: string) {
  * iff there are invalid Words.
  */
 
-function logInvalidWords(invalidWords: string[]) {
-	const errorMessage = invalidWords.length > 0 ? `${invalidWords.join(", ")} sind nicht erlaubte Wörter!` : undefined;
-	if (errorMessage !== undefined) {
-	 console.log(errorMessage);
-	}
+function logInvalidWords(invalidWords: Map<string, [number, number]>) {
+	return invalidWords.size > 0 ? `${invalidWords.forEach(logMapElement)}` : undefined;
 }
 
 function removeDuplicates(invalidWords: string[]) {
 	return invalidWords.filter((value, item) => invalidWords.indexOf(value) === item);
 }
 
-/**
- * @param text
- * @param invalidWords
- * Returns a map of invalid words (consisted in @param invalidWords) and their corresponding
- * positions (starting position and end position) inside of a string.
- */
-
-function findPositionsOfInvalidWords(text: string, invalidWords: string[]) {
-	const positions = new Map();
-	for (const word of invalidWords) {
-		positions.set(word, [text.indexOf(word), text.indexOf(word) + word.length]);
+function logMapElement(value: [number, number], key: string, map: Map<string, [number, number]>) {
+	return {message: `${key} an Stelle ${value} ist ein unerlaubtes Wort! \n`,
+		startPos: value[0],
+		endPos: value[1] };
 	}
-	return positions;
-}
