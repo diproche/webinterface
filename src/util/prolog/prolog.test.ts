@@ -1,75 +1,77 @@
 import { PrologSession } from "./prologSession";
+import { PrologResult } from "./prologSession";
+
 // Expected results are consistent with SWI-Prolog behavior except that they usually have an extra "false."
 
-describe("Session.executeQuery()", () => {
+describe("PrologSession.executeQuery() & PrologResult.getResults()", () => {
 	describe("Simple Programs", () => {
 		test("Truth Value (True)", async () => {
 				const session = new PrologSession("likes(lisa, bob).", 1000);
-				const result = await session.executeQuery("likes(lisa, bob).");
+				const result = (await session.executeQuery("likes(lisa, bob).")).getResults();
 
-				expect(result).toEqual([["true"], ["false"]]);
+				expect(result).toStrictEqual([["true"], ["false"]]);
 		});
 
 		test("Truth Value (False)", async () => {
 				const session = new PrologSession("likes(lisa, bob).", 1000);
-				const result = await session.executeQuery("likes(lisa, dieter).");
+				const result = (await session.executeQuery("likes(lisa, dieter).")).getResults();
 
-				expect(result).toEqual([["false"]]);
+				expect(result).toStrictEqual([["false"]]);
 		});
 
 		test("One Variable One Result", async () => {
 
 				const session = new PrologSession("likes(lisa, bob).", 1000);
-				const result = await session.executeQuery("likes(lisa, X).");
-				expect(result).toEqual([["bob"], ["false"]]);
+				const result = (await session.executeQuery("likes(lisa, X).")).getResults();
+				expect(result).toStrictEqual([["bob"], ["false"]]);
 
 		});
 
 		test("Two Variables One Result", async () => {
 				const session = new PrologSession("likes(lisa, bob, karl).", 1000);
-				const result = await session.executeQuery("likes(lisa, X, Y).");
+				const result = (await session.executeQuery("likes(lisa, X, Y).")).getResults();
 
-				expect(result).toEqual([["bob", "karl"], ["false"]]);
+				expect(result).toStrictEqual([["bob", "karl"], ["false"]]);
 
 		});
 
 		test("Three Variables One Result", async () => {
 				const session = new PrologSession("likes(lisa, bob, karl, friedrich).", 1000);
-				const result = await session.executeQuery("likes(lisa, X, Y, Z).");
+				const result = (await session.executeQuery("likes(lisa, X, Y, Z).")).getResults();
 
-				expect(result).toEqual([["bob", "karl", "friedrich"], ["false"]]);
+				expect(result).toStrictEqual([["bob", "karl", "friedrich"], ["false"]]);
 
 		});
 
 		test("Four Variables One Result", async () => {
 				const session = new PrologSession("likes(lisa, bob, karl, friedrich, dieter).", 1000);
-				const result = await session.executeQuery("likes(lisa, X, Y, Z, A).");
+				const result = (await session.executeQuery("likes(lisa, X, Y, Z, A).")).getResults();
 
-				expect(result).toEqual([["bob", "karl", "friedrich", "dieter"], ["false"]]);
+				expect(result).toStrictEqual([["bob", "karl", "friedrich", "dieter"], ["false"]]);
 
 		});
 
 		test("One Variable Two Results", async () => {
 
 				const session = new PrologSession("likes(lisa, bob). likes(lisa, dieter).", 1000);
-				const result = await session.executeQuery("likes(lisa, X).");
-				expect(result).toEqual([["bob"], ["dieter"], ["false"]]);
+				const result = (await session.executeQuery("likes(lisa, X).")).getResults();
+				expect(result).toStrictEqual([["bob"], ["dieter"], ["false"]]);
 
 		});
 
 		test("Two Variables Two Results", async () => {
 				const session = new PrologSession("likes(lisa, bob, karl). likes(lisa, karl, bob).", 1000);
-				const result = await session.executeQuery("likes(lisa, X, Y).");
+				const result = (await session.executeQuery("likes(lisa, X, Y).")).getResults();
 
-				expect(result).toEqual([["bob", "karl"], ["karl", "bob"], ["false"]]);
+				expect(result).toStrictEqual([["bob", "karl"], ["karl", "bob"], ["false"]]);
 
 		});
 
 		test("Three Variables Two Results", async () => {
 				const session = new PrologSession("likes(lisa, bob, karl, friedrich). likes(lisa, bob, friedrich, karl).", 1000);
-				const result = await session.executeQuery("likes(lisa, X, Y, Z).");
+				const result = (await session.executeQuery("likes(lisa, X, Y, Z).")).getResults();
 
-				expect(result).toEqual([["bob", "karl", "friedrich"], ["bob", "friedrich", "karl"], ["false"]]);
+				expect(result).toStrictEqual([["bob", "karl", "friedrich"], ["bob", "friedrich", "karl"], ["false"]]);
 
 		});
 
@@ -78,49 +80,67 @@ describe("Session.executeQuery()", () => {
 					likes(lisa, bob, karl, friedrich, dieter).
 					likes(lisa, bob, karl, dieter, friedrich).
 					`, 1000);
-				const result = await session.executeQuery("likes(lisa, X, Y, Z, A).");
+				const result = (await session.executeQuery("likes(lisa, X, Y, Z, A).")).getResults();
 
-				expect(result).toEqual([["bob", "karl", "friedrich", "dieter"], ["bob", "karl", "dieter", "friedrich"], ["false"]]);
+				expect(result).toStrictEqual(
+					[["bob", "karl", "friedrich", "dieter"], ["bob", "karl", "dieter", "friedrich"], ["false"]],
+				);
 
 		});
 
 		test("Cut Operator Maximum Function", async () => {
 
 				const session = new PrologSession("max(X,Y,Y)  :-  X  =<  Y, !. max(X, Y, X).", 1000);
-				const result = await session.executeQuery("max(3, 7, X).");
-				expect(result).toEqual([["7"], ["false"]]);
+				const result = (await session.executeQuery("max(3, 7, X).")).getResults();
+				expect(result).toStrictEqual([["7"], ["false"]]);
 
 		});
 
 		test("Cut Operator Endless Loop", async () => {
 
 				const session = new PrologSession("likes(lisa, bob, karl). likes(X, Y, Z):- likes(X, Z, Y), !.", 1000);
-				const result = await session.executeQuery("likes(lisa, Y, Z).");
-				expect(result).toEqual([["bob", "karl"], ["karl", "bob"], ["false"]]);
+				const result = (await session.executeQuery("likes(lisa, Y, Z).")).getResults();
+				expect(result).toStrictEqual([["bob", "karl"], ["karl", "bob"], ["false"]]);
 
 		});
 
 		test("Only Write", async () => {
 
 				const session = new PrologSession("write('Hello').", 1000);
-				const result = await session.executeQuery("");
-				expect(result).toEqual([["false"]]);
+				const result = (await session.executeQuery("")).getResults();
+				expect(result).toStrictEqual([["false"]]);
 
 		});
 
 		test("Write Function and Query", async () => {
 
 				const session = new PrologSession("write('Hello'). likes(lisa, bob).", 1000);
-				const result = await session.executeQuery("likes(lisa, bob).");
-				expect(result).toEqual([["true"], ["false"]]);
+				const result = (await session.executeQuery("likes(lisa, bob).")).getResults();
+				expect(result).toStrictEqual([["true"], ["false"]]);
+
+		});
+
+		test("filterBooleanResults()", async () => {
+
+				const session = new PrologSession("likes(lisa, bob). male(bob).", 1000);
+				const result = (await session.executeQuery("likes(lisa, X); male(X); true; false.")).filterBooleanResults();
+				expect(result).toStrictEqual([["true"], ["false"]]);
+
+		});
+
+		test("filterVariableResults()", async () => {
+
+				const session = new PrologSession("likes(lisa, bob). male(bob).", 1000);
+				const result = (await session.executeQuery("likes(lisa, X); male(X); true; false.")).filterVariableResults();
+				expect(result).toStrictEqual([["bob"], ["bob"]]);
 
 		});
 
 		test("Truth Value (True) Perfomance", async () => {
 				const session = new PrologSession("likes(bob, lisa).", 1000);
-				const result = await session.executeQuery("likes(bob, lisa).");
+				const result = (await session.executeQuery("likes(bob, lisa).")).getResults();
 
-				expect(result).toEqual([["true"], ["false"]]);
+				expect(result).toStrictEqual([["true"], ["false"]]);
 		});
 });
 
@@ -240,7 +260,26 @@ describe("Session.executeQuery()", () => {
 			${"grandmother(grandfatherm, son)."} |
 			${[["false"]]}
 	  `("The Query $input", async ({input, expectedResult}) => {
-			expect(await session.executeQuery(input)).toEqual(expectedResult);
+			expect((await session.executeQuery(input)).getResults()).toStrictEqual(expectedResult);
 		});
+	});
+});
+
+describe("Limit Cases", () => {
+	test("Single Call of PrologResult.getResults() (Comparison)", async () => {
+			const session = new PrologSession("likes(bob, lisa).", 1000);
+			const result = (await session.executeQuery("likes(bob, lisa).")).getResults();
+
+			expect(result).toStrictEqual([["true"], ["false"]]);
+	});
+
+	// The runtime should check against the single call.
+	// A second call should be quicker than the first call so the run time shouldn't double.
+	test("Double Call of PrologResult.getResults() (Run Time)", async () => {
+			const session = new PrologSession("likes(bob, lisa).", 1000);
+			const result = (await session.executeQuery("likes(bob, lisa).")).getResults();
+			const result2 = (await session.executeQuery("likes(bob, lisa).")).getResults();
+
+			expect(result2).toStrictEqual([["true"], ["false"]]);
 	});
 });
