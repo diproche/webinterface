@@ -27,14 +27,8 @@ export class PrologSession {
 				// it returns an undefined if the end of the threat has been reached, but it does a step when called
 				// though it seems Tau-Prolog always signifies an end of program with "false."
 
-				// Tau-Prolog seems to always end a program with "false." which is different from SWI-Prolog
-				// when the return value is not a single false
-				// The second part might be unneccesary but is there assure only ["false"] will ever be removed.
-				if (results.length > 1 && results[results.length - 1][0] === "false") {
-					results.pop();
-				}
+				return this.filterResults(results, option);
 
-				return results;
 		}
 
 		private getNextAnswer() {
@@ -45,16 +39,48 @@ export class PrologSession {
 				});
 		}
 
+		private filterResults(results: string[][], option: number): string[][] {
+			return results;
+
+			/*
+			if (option === 0) { return results; }
+
+			if (option === 1) {
+
+			}
+
+			if (option === 2) {
+
+				// ct - check true (if and where a ["true"] occurs)
+				// cf - check false (if and where a ["false"] occurs)
+				let ct: number = 0;
+				let cf: number = 0;
+
+				while (ct !== -1 || cf !== -1) {
+					// doesn't work since the indexOf doesn't work as expected with nested Arrays
+					ct = results.indexOf(["true"]);
+					cf = results.indexOf(["false"]);
+					results.splice(ct, 1);
+					results.splice(cf, 1);
+				}
+				results.indexOf(["false"]);
+			}
+			*/
+
+		}
+
 		private formatNestedArray(source: string, goal: string[][]): void {
+
 			goal.push([]);
+
 			// There is probably a more elegant way to fetch these cases
 			if (source.includes("true")) { goal[goal.length - 1][0] = "true"; return; }
 			if (source.includes("false")) { goal[goal.length - 1][0] = "false"; return; }
 
-			const pattern: any = /= (\w*|\[.*\])?(,| ;|.)/g;
-			const components: any = source.match(pattern);
+		 const pattern: any = /= (\w*|\[.*\])?(,| ;|.)/g;
+		 const components: any = source.match(pattern);
 
-			components.forEach((e: any) => {
+		 components.forEach((e: any) => {
 				// Throws out the first two chars (= and a blank) and the last char (either , ; or .)
 				const toAdd: string = e.substring(2, e.length - 1).trim();
 

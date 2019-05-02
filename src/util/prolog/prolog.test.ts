@@ -1,5 +1,5 @@
 import { PrologSession } from "./prologSession";
-// Expected results are consistent with SWI-Prolog behavior.
+// Expected results are consistent with SWI-Prolog behavior except that they usually have an extra "false."
 
 describe("Session.executeQuery()", () => {
 	describe("Simple Programs", () => {
@@ -7,7 +7,7 @@ describe("Session.executeQuery()", () => {
 				const session = new PrologSession("likes(lisa, bob).", 1000);
 				const result = await session.executeQuery("likes(lisa, bob).");
 
-				expect(result).toEqual([["true"]]);
+				expect(result).toEqual([["true"], ["false"]]);
 		});
 
 		test("Truth Value (False)", async () => {
@@ -21,7 +21,7 @@ describe("Session.executeQuery()", () => {
 
 				const session = new PrologSession("likes(lisa, bob).", 1000);
 				const result = await session.executeQuery("likes(lisa, X).");
-				expect(result).toEqual([["bob"]]);
+				expect(result).toEqual([["bob"], ["false"]]);
 
 		});
 
@@ -29,7 +29,7 @@ describe("Session.executeQuery()", () => {
 				const session = new PrologSession("likes(lisa, bob, karl).", 1000);
 				const result = await session.executeQuery("likes(lisa, X, Y).");
 
-				expect(result).toEqual([["bob", "karl"]]);
+				expect(result).toEqual([["bob", "karl"], ["false"]]);
 
 		});
 
@@ -37,7 +37,7 @@ describe("Session.executeQuery()", () => {
 				const session = new PrologSession("likes(lisa, bob, karl, friedrich).", 1000);
 				const result = await session.executeQuery("likes(lisa, X, Y, Z).");
 
-				expect(result).toEqual([["bob", "karl", "friedrich"]]);
+				expect(result).toEqual([["bob", "karl", "friedrich"], ["false"]]);
 
 		});
 
@@ -45,7 +45,7 @@ describe("Session.executeQuery()", () => {
 				const session = new PrologSession("likes(lisa, bob, karl, friedrich, dieter).", 1000);
 				const result = await session.executeQuery("likes(lisa, X, Y, Z, A).");
 
-				expect(result).toEqual([["bob", "karl", "friedrich", "dieter"]]);
+				expect(result).toEqual([["bob", "karl", "friedrich", "dieter"], ["false"]]);
 
 		});
 
@@ -53,7 +53,7 @@ describe("Session.executeQuery()", () => {
 
 				const session = new PrologSession("likes(lisa, bob). likes(lisa, dieter).", 1000);
 				const result = await session.executeQuery("likes(lisa, X).");
-				expect(result).toEqual([["bob"], ["dieter"]]);
+				expect(result).toEqual([["bob"], ["dieter"], ["false"]]);
 
 		});
 
@@ -61,7 +61,7 @@ describe("Session.executeQuery()", () => {
 				const session = new PrologSession("likes(lisa, bob, karl). likes(lisa, karl, bob).", 1000);
 				const result = await session.executeQuery("likes(lisa, X, Y).");
 
-				expect(result).toEqual([["bob", "karl"], ["karl", "bob"]]);
+				expect(result).toEqual([["bob", "karl"], ["karl", "bob"], ["false"]]);
 
 		});
 
@@ -69,7 +69,7 @@ describe("Session.executeQuery()", () => {
 				const session = new PrologSession("likes(lisa, bob, karl, friedrich). likes(lisa, bob, friedrich, karl).", 1000);
 				const result = await session.executeQuery("likes(lisa, X, Y, Z).");
 
-				expect(result).toEqual([["bob", "karl", "friedrich"], ["bob", "friedrich", "karl"]]);
+				expect(result).toEqual([["bob", "karl", "friedrich"], ["bob", "friedrich", "karl"], ["false"]]);
 
 		});
 
@@ -80,7 +80,7 @@ describe("Session.executeQuery()", () => {
 					`, 1000);
 				const result = await session.executeQuery("likes(lisa, X, Y, Z, A).");
 
-				expect(result).toEqual([["bob", "karl", "friedrich", "dieter"], ["bob", "karl", "dieter", "friedrich"]]);
+				expect(result).toEqual([["bob", "karl", "friedrich", "dieter"], ["bob", "karl", "dieter", "friedrich"], ["false"]]);
 
 		});
 
@@ -88,7 +88,7 @@ describe("Session.executeQuery()", () => {
 
 				const session = new PrologSession("max(X,Y,Y)  :-  X  =<  Y, !. max(X, Y, X).", 1000);
 				const result = await session.executeQuery("max(3, 7, X).");
-				expect(result).toEqual([["7"]]);
+				expect(result).toEqual([["7"], ["false"]]);
 
 		});
 
@@ -96,7 +96,7 @@ describe("Session.executeQuery()", () => {
 
 				const session = new PrologSession("likes(lisa, bob, karl). likes(X, Y, Z):- likes(X, Z, Y), !.", 1000);
 				const result = await session.executeQuery("likes(lisa, Y, Z).");
-				expect(result).toEqual([["bob", "karl"], ["karl", "bob"]]);
+				expect(result).toEqual([["bob", "karl"], ["karl", "bob"], ["false"]]);
 
 		});
 
@@ -112,7 +112,7 @@ describe("Session.executeQuery()", () => {
 
 				const session = new PrologSession("write('Hello'). likes(lisa, bob).", 1000);
 				const result = await session.executeQuery("likes(lisa, bob).");
-				expect(result).toEqual([["true"]]);
+				expect(result).toEqual([["true"], ["false"]]);
 
 		});
 
@@ -120,7 +120,7 @@ describe("Session.executeQuery()", () => {
 				const session = new PrologSession("likes(bob, lisa).", 1000);
 				const result = await session.executeQuery("likes(bob, lisa).");
 
-				expect(result).toEqual([["true"]]);
+				expect(result).toEqual([["true"], ["false"]]);
 		});
 });
 
@@ -173,26 +173,26 @@ describe("Session.executeQuery()", () => {
 		test.each`
 	    input | expectedResult
 	    ${"grandparent(X, daugther)."} |
-			${[["grandfatherm"], ["grandfatherf"], ["grandmotherm"], ["grandmotherf"]]}
+			${[["grandfatherm"], ["grandfatherf"], ["grandmotherm"], ["grandmotherf"], ["false"]]}
 
 			${"grandparent(X, son)."} |
-			${[["grandfatherm"], ["grandfatherf"], ["grandmotherm"], ["grandmotherf"]]}
+			${[["grandfatherm"], ["grandfatherf"], ["grandmotherm"], ["grandmotherf"], ["false"]]}
 
 
 			//Getting all grandmother
 			${"grandmother(X, daugther)."} |
-			${[["grandmotherm"], ["grandmotherf"]]}
+			${[["grandmotherm"], ["grandmotherf"], ["false"]]}
 
 			${"grandmother(X, son)."} |
-			${[["grandmotherm"], ["grandmotherf"]]}
+			${[["grandmotherm"], ["grandmotherf"], ["false"]]}
 
 
 			//Getting all grandfathers
 			${"grandfather(X, daugther)."} |
-			${[["grandfatherm"], ["grandfatherf"]]}
+			${[["grandfatherm"], ["grandfatherf"], ["false"]]}
 
 			${"grandfather(X, son)."} |
-			${[["grandfatherm"], ["grandfatherf"]]}
+			${[["grandfatherm"], ["grandfatherf"], ["false"]]}
 
 
 			//Getting all parents
@@ -201,36 +201,36 @@ describe("Session.executeQuery()", () => {
 			//prolog, but doesn't fall into the scope of the test
 			${"parent(X, _)."} |
 			${[["dad"], ["mom"], ["dad"], ["mom"], ["grandfatherm"],
-			["grandfatherf"], ["grandmotherm"], ["grandmotherf"]]}
+			["grandfatherf"], ["grandmotherm"], ["grandmotherf"], ["false"]]}
 
 			//Getting all children
 			//Same as for "Getting all parents"
 			${"parent(_, X)."} |
-			${[["daugther"], ["daugther"], ["son"], ["son"], ["mom"], ["dad"], ["mom"], ["dad"]]}
+			${[["daugther"], ["daugther"], ["son"], ["son"], ["mom"], ["dad"], ["mom"], ["dad"], ["false"]]}
 
 			//Getting all male people
 			${"male(X)."} |
-			${[["dad"], ["son"], ["grandfatherm"], ["grandfatherf"]]}
+			${[["dad"], ["son"], ["grandfatherm"], ["grandfatherf"], ["false"]]}
 
 			//Getting all female people
 			${"female(X)."} |
-			${[["mom"], ["daugther"], ["grandmotherm"], ["grandmotherf"]]}
+			${[["mom"], ["daugther"], ["grandmotherm"], ["grandmotherf"], ["false"]]}
 
 			//Is grandfatherm grandparent of daugther
 			${"grandparent(grandfatherm, daugther)."} |
-			${[["true"]]}
+			${[["true"], ["false"]]}
 
 			//Is grandfatherm grandparent of son
 			${"grandparent(grandfatherm, son)."} |
-			${[["true"]]}
+			${[["true"], ["false"]]}
 
 			//Is grandfatherm grandfather of daugther
 			${"grandfather(grandfatherm, daugther)."} |
-			${[["true"]]}
+			${[["true"], ["false"]]}
 
 			//Is grandfatherm grandfather of son
 			${"grandfather(grandfatherm, son)."} |
-			${[["true"]]}
+			${[["true"], ["false"]]}
 
 			//Is grandfatherm grandmother of daugther
 			${"grandmother(grandfatherm, daugther)."} |
