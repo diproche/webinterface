@@ -3,5 +3,5 @@ export default interface Issue {
 			fromIndex: number;
 			toIndex: number;
 		};
-		message: string;
+	message: string;
 	}

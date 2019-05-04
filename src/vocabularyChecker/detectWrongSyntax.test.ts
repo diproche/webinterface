@@ -1,7 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {checkInput, createMapOfInvalidWords, eliminatePunctuation, splitIntoWords} from "./detectWrongSyntax";
-
+import {checkInput, collectAllInvalidWords, createMapOfInvalidWords, eliminatePunctuation} from "./detectWrongSyntax";
+//import {checkInput, createMapOfInvalidWords, eliminatePunctuation, splitIntoWords} from "./detectWrongSyntax";
+/** 
 it("Returns the correct word for a normal text", () => {
 		const wrongWords = checkInput("fu bar bloedsinn"); // fu and bar are indeed included in allowedVocab
 		expect(wrongWords).toEqual(["bloedsinn"]);
@@ -60,4 +61,9 @@ it("Transforms correctly", () => {
 it("Creates a correct Map", () => {
 	const issues = createMapOfInvalidWords(`test`, [`test`]);
 	expect(issues).toEqual([[`test`, [0, 3]]]);
+});
+*/
+it("Recognizes the words correctly", () => {
+		const result = collectAllInvalidWords("Hallo Welt, fu. foo, bar");
+		expect(result).toEqual(["Hallo", "Welt", "foo"]);
 });
