@@ -6,8 +6,8 @@ import ReactDOM from "react-dom";
 // ---------------------------------------
 // IMPORT FUNCTIONS
 //import { detectExpressionElements, textToListFormat, sentenceIntoWordList, expressionFormatter, removeWhiteSpaces, replaceInputCaractersToReadablePrologCharacter } from "./text_formatter";
-import { textToListFormat, sentenceIntoWordList, detectExpressionElements, replaceInputCaractersToReadablePrologCharacter, removeWhiteSpaces, expressionFormatter } from "./text_formatter";
-
+import { textToListFormat, sentenceIntoWordList, replaceInputCaractersToReadablePrologCharacter, removeWhiteSpaces, checkAmountOfBrackets } from "./text_formatter";
+import { detectExpressionElements } from "./allowed_Expression_Detectors";
 // ---------------------------------------
 // TESTS FOR SPLITTING TEXT
 // ---------------------------------------
@@ -50,6 +50,18 @@ test("Test: splitting full text into full listFormat including expressions and p
 	expect(result).toEqual(expectedResult);
 });
 
+test("Test: count if amount of brackets is correct.", () => {
+	const bracketList = ["[", "]", "[", "[", "]", "[", "]", "]"];
+	const result = checkAmountOfBrackets(bracketList);
+	const expectedResult = false;
+	expect(result).toEqual(expectedResult);
+});
 
-//-------TO DO: count if amount of brackets is correct---------
-//-------TO DO: format expressions into prolog format----------
+test("Test: if amount of left and right brackets are different.", () => {
+	const bracketList = ["[", "[", "[", "[", "[", "]", "]"];
+	const result = checkAmountOfBrackets(bracketList);
+	const expectedResult = true;
+	expect(result).toEqual(expectedResult);
+});
+
+//-------TO DO: format expressions into prolog format----------2
