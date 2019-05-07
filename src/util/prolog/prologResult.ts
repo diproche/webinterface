@@ -1,6 +1,9 @@
 export class PrologResult {
-	private readonly results: string[][];
 	private readonly rawResults: string[];
+	private readonly results: string[][];
+
+	// First Group will be the variable value. Doesn't fetch the variable names
+	private readonly prologAnswerPattern: string = " = (\\w*|\\[.*\\])?(,| ;|.)";
 
 	constructor(rawResults: string[]) {
 		this.rawResults = rawResults;
@@ -17,11 +20,17 @@ export class PrologResult {
 		return this.results;
 	}
 
+	public getResultsFor(variable: string): string[] {
+		// Group 1 will be the content of the variable independent of the variable length.
+	 const pattern: any = new RegExp(variable + this.prologAnswerPattern, "g");
+	 return this.regexGroupToArray(this.rawResults.toString(), pattern, 1);
+	}
+
 	public filterBooleanResults(): string[][] {
 		const copy: string[][] = this.getResults();
 		return copy.filter((e: any) => {
 			return e[0] === "true" || e[0] === "false";
-		} );
+		});
 	}
 
 	public filterVariableResults(): string[][] {
@@ -33,22 +42,22 @@ export class PrologResult {
 
 	private rawResultsToInnerArray(source: string): string[] {
 
-		if (source.includes("true")) { return ["true"]; }
-		if (source.includes("false")) { return["false"]; }
+	if (source.includes("true")) { return ["true"]; }
+	if (source.includes("false")) { return["false"]; }
 
-		// Fetches everything after the = including the =
-	 const pattern: any = /= (\w*|\[.*\])?(,| ;|.)/g;
-	 const components: any = source.match(pattern);
+	const pattern: any = new RegExp(this.prologAnswerPattern, "g");
+	return this.regexGroupToArray(source, pattern, 1);
+	}
 
-	 const result: string[] = [];
+	private regexGroupToArray(basis: string, pattern: any, group: number): string[] {
+		const groupContent: string[] = [];
+		let aux: string[];
 
-	 components.forEach((e: any) => {
-			// Throws out the first two chars (= and a blank) and the last char (either , ; or .)
-			const toAdd: string = e.substring(2, e.length - 1).trim();
-			result.push(toAdd);
-	});
+		while ((aux = pattern.exec(basis)) !== null) {
+			groupContent.push(aux[group]);
+		}
 
-	 return result;
+		return groupContent;
 	}
 
 }
