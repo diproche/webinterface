@@ -1,5 +1,6 @@
+import { PrologResult } from "./prologResult";
 import { PrologSession } from "./prologSession";
-import { PrologResult } from "./prologSession";
+import * as program from "./testPrograms";
 
 // Expected results are consistent with SWI-Prolog behavior except that they usually have an extra "false."
 
@@ -139,57 +140,11 @@ describe("PrologSession.executeQuery() & PrologResult.getResults()", () => {
 		test("Truth Value (True) Perfomance", async () => {
 				const session = new PrologSession("likes(bob, lisa).", 1000);
 				const result = (await session.executeQuery("likes(bob, lisa).")).getResults();
-
 				expect(result).toStrictEqual([["true"], ["false"]]);
 		});
 });
 
 	describe("Family Program", () => {
-		// To make it more clear what the code is supposed to give back the family title is used
-		// instead of names
-		// grandfatherf for grandfather father side of the family
-		// grandfatherm for grandfather mother side of the family
-		const session = new PrologSession(`
-			male(dad).
-			male(son).
-			male(grandfatherm).
-			male(grandfatherf).
-
-			female(mom).
-			female(daugther).
-			female(grandmotherm).
-			female(grandmotherf).
-
-			parent(dad, daugther).
-			parent(mom, daugther).
-			parent(dad, son).
-			parent(mom, son).
-			parent(grandfatherm, mom).
-			parent(grandfatherf, dad).
-			parent(grandmotherm, mom).
-			parent(grandmotherf, dad).
-
-			father(X, Y):-
-			parent(X, Y),
-			male(X).
-
-			mother(X, Y):-
-			parent(X, Y),
-			female(X).
-
-			grandparent(X, Z):-
-			parent(X, Y),
-			parent(Y, Z).
-
-			grandfather(X, Z):-
-			grandparent(X, Z),
-			male(X).
-
-			grandmother(X, Z):-
-			grandparent(X, Z),
-			female(X).
-				`, 1000);
-
 		test.each`
 	    input | expectedResult
 	    ${"grandparent(X, daugther)."} |
@@ -259,8 +214,19 @@ describe("PrologSession.executeQuery() & PrologResult.getResults()", () => {
 			//Is grandfatherm grandmother of son
 			${"grandmother(grandfatherm, son)."} |
 			${[["false"]]}
-	  `("The Query $input", async ({input, expectedResult}) => {
-			expect((await session.executeQuery(input)).getResults()).toStrictEqual(expectedResult);
+	  `("The Query $input returns the expected Result", async ({input, expectedResult}) => {
+			expect((await program.familySession.executeQuery(input)).getResults()).toStrictEqual(expectedResult);
+		});
+	});
+});
+
+describe("PrologResult.getResultsFor()", () => {
+	describe("Family Program", () => {
+		test.each`
+			input | expectedResult
+			${"parent(mom, X), male(X)."} | ${["son"]}
+		`("The Query $input returns the expected result", async ({input, expectedResult}) => {
+			expect((await program.familySession.executeQuery(input)).getResultsFor("X")).toStrictEqual(expectedResult);
 		});
 	});
 });
