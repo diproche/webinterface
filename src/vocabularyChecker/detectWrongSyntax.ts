@@ -2,7 +2,7 @@ import json from "./AllowedVocab.json";
 import Issue from "./Issue";
 const punctuation = new RegExp(/[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-.\/:;<=>?@\[\]^_`{|}~]/g);
 const space = new RegExp(/\s+/g);
-const anyWord = new RegExp(/\b(\w*.)\b/g);
+const anyWord = new RegExp(/\b(\w*\S)\b/g);
 const allExceptSpace = new RegExp(/^(?!\s*$).+/g);
 const allowedWords = json;
 interface Position { fromIndex: number; toIndex: number; }
@@ -53,14 +53,17 @@ function preprocessText(text: string) {
 
 /**
  * The following function is my new idea to replace a huge
- * part of the pipeline. Right now
+ * part of the pipeline. Right now it only finds any word.
+ * This needs to be filteres with the words from allowedVocab.json
  */
 export function collectAllInvalidWords(text: string): string[] {
-	const result = text.match(anyWord) || [];
-	const pos = anyWord.exec(text);
-	if (pos) {
-		console.log(pos.index);
-	}
+	const temp = text.match(anyWord) || [];
+	const result: string[] = [];
+	temp.forEach(element => {
+		if (!allowedWords.includes(element)) {
+		result.push(element);
+		}
+	});
  return result;
 }
 
