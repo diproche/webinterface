@@ -68,7 +68,7 @@ it("Logs a String containing multiple words correctly", () => {
 
 it("Creates a correct Map", () => {
 	const issues = createMapOfInvalidWords(`test`, [`test`]);
-	expect(issues).toEqual(["test", [0, 3]]);
+	expect(issues.entries()).toEqual(["test", [0, 3]]);
 });
 
 it("Creates a correct error message", () => {
