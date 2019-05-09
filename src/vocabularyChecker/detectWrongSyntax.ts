@@ -1,5 +1,9 @@
 import json from "./AllowedVocab.json";
+/**
+ * Interface containing @param fromIndex: number, @param toIndex: number, @param message: string
+ */
 import Issue from "./Issue";
+//
 const anyWord = new RegExp(/\b(\w*\S)\b/g);
 const allowedWords = json;
 interface Position { fromIndex: number; toIndex: number; }
@@ -62,7 +66,7 @@ export function logMapElement(value: [number, number], key: string): Issue {
 	return {message: `${key} an Stelle ${value} ist ein unerlaubtes Wort! \n`,
 		position: {
 			fromIndex: value[0],
-			toIndex: value[1]
+			toIndex: value[1],
 		},
 		};
 	}
