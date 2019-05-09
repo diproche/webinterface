@@ -1,9 +1,6 @@
 import json from "./AllowedVocab.json";
 import Issue from "./Issue";
-const punctuation = new RegExp(/[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,\-.\/:;<=>?@\[\]^_`{|}~]/g);
-const space = new RegExp(/\s+/g);
 const anyWord = new RegExp(/\b(\w*\S)\b/g);
-const allExceptSpace = new RegExp(/^(?!\s*$).+/g);
 const allowedWords = json;
 interface Position { fromIndex: number; toIndex: number; }
 
@@ -39,7 +36,7 @@ export function checkInput(text: string): string[] {
  * positions (starting position and end position) inside of a string.
  */
 
-export function createMapOfInvalidWords(text: string, invalidWords: string[]) {
+export function createMapOfInvalidWords(text: string, invalidWords: string[]): Map<string, [number, number]> {
 	const positions = new Map<string, [number, number]>();
 	for (const word of invalidWords) {
 		positions.set(word, [text.indexOf(word), text.indexOf(word) + word.length - 1]);
@@ -48,7 +45,7 @@ export function createMapOfInvalidWords(text: string, invalidWords: string[]) {
 }
 
 function preprocessText(text: string) {
-	return removeDuplicates(collectAllInvalidWords(eliminatePunctuation(text)));
+	return removeDuplicates(collectAllInvalidWords(text));
 }
 
 /**
@@ -67,6 +64,10 @@ export function collectAllInvalidWords(text: string): string[] {
  return result;
 }
 
+function removeDuplicates(invalidWords: string[]) {
+	return invalidWords.filter((value, item) => invalidWords.indexOf(value) === item);
+}
+
 /**
  * (input:) @param invalidWords.
  * Prints out a error message on the console (later to the user),
@@ -75,14 +76,6 @@ export function collectAllInvalidWords(text: string): string[] {
 
 function logInvalidWords(invalidWords: Map<string, [number, number]>) {
 	return invalidWords.size > 0 ? `${invalidWords.forEach(logMapElement)}` : undefined;
-}
-
-export function eliminatePunctuation(text: string) {
-	return text.replace(punctuation, " ").replace(space, " ");
-}
-
-function removeDuplicates(invalidWords: string[]) {
-	return invalidWords.filter((value, item) => invalidWords.indexOf(value) === item);
 }
 
 function logMapElement(value: [number, number], key: string) {
