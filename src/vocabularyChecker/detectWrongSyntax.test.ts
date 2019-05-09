@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {checkInput, collectAllInvalidWords, createMapOfInvalidWords, eliminatePunctuation} from "./detectWrongSyntax";
+import {collectAllInvalidWords, createMapOfInvalidWords, preprocessText} from "./detectWrongSyntax";
 //import {checkInput, createMapOfInvalidWords, eliminatePunctuation, splitIntoWords} from "./detectWrongSyntax";
 /**
 it("Eliminates Punctuation", () => {
@@ -19,38 +19,38 @@ it("Creates a correct Map", () => {
 });
 */
 it("Returns the correct word for a normal text", () => {
-	const wrongWords = checkInput("fu bar bloedsinn"); // fu and bar are indeed included in allowedVocab
+	const wrongWords = preprocessText("fu bar bloedsinn"); // fu and bar are indeed included in allowedVocab
 	expect(wrongWords).toEqual(["bloedsinn"]);
 });
 
 it("Returns an empty array, if input is the empty string", () => {
-	const wrongWords = checkInput("");
+	const wrongWords = preprocessText("");
 	expect(wrongWords).toEqual([]);
 });
 
 it("Returns an invalid word only once, if it occurs multiple times", () => {
-	const wrongWords = checkInput("bloedsinn bloedsinn");
+	const wrongWords = preprocessText("bloedsinn bloedsinn");
 	expect(wrongWords).toEqual(["bloedsinn"]);
 });
 
 // maybe it should not care about case sensitivity, but that's more of a design choice
 it("is case sensitive", () => {
-	const wrongWords = checkInput("fu Fu");
+	const wrongWords = preprocessText("fu Fu");
 	expect(wrongWords).toEqual(["Fu"]);
 });
 
 it("Does not return a wrong word, if a string consists only of a whitespace", () => {
-	const wrongWords = checkInput(" ");
+	const wrongWords = preprocessText(" ");
 	expect(wrongWords).toEqual([]);
 });
 
 it("Does not detect a wrong word, if there is none", () => {
-	const wrongWords = checkInput("fu bar");
+	const wrongWords = preprocessText("fu bar");
 	expect(wrongWords).toEqual([]);
 });
 
-it("Works for long strings", () => { // the following String contains an extra a
-	const wrongWords = checkInput(`This is just a really long String to test some extreme case so
+it("Works for long strings", () => {
+	const wrongWords = preprocessText(`This is just a really long String to test some extreme case so
 the next letters will only be some copies of the letter a.
 aaaaaaaaaaaaaaaaaaaaaaaaaaa`);
 	expect(wrongWords).toEqual(["This", "is", "just", "a", "really", "long", "String", "to", "test",
@@ -59,6 +59,6 @@ aaaaaaaaaaaaaaaaaaaaaaaaaaa`);
 });
 
 it("Recognizes the words correctly", () => {
-		const result = collectAllInvalidWords("Hallo Welt, fu. foo, bar");
+		const result = preprocessText("Hallo Welt, fu. foo, bar");
 		expect(result).toEqual(["Hallo", "Welt", "foo"]);
 });

@@ -5,31 +5,6 @@ const allowedWords = json;
 interface Position { fromIndex: number; toIndex: number; }
 
 /**
- * (input:) @param text
- * This method takes the user input as a parameter.
- * At first it prepocesses @param text by calling
- * @function preprocessText thus calls the two
- * functions @function eliminatePunctuation and @function splitIntoWords.
- * For their functionality see the corresponding comments.
- * @function checkInput then filters out all wrong @param word
- * from @param text and puts them all into @param allWrongWords,
- * which is printed in the console log by calling @function logInvalidWords.
- * This is for debugging purposes and should later be changed to
- * be displayed to the user. For further postprocessing all wrong
- * words are collected in a @returns @param invalidWords of
- * @type string array.
- */
-
-export function checkInput(text: string): string[] {
-		const preprocessedText: string[] = preprocessText(text);
-		const invalidWords = preprocessedText.filter(word => !allowedWords.includes(word));
-		// TODO: Make logInvalidWords dependent on this posOfInvalidWords.
-		const mapOfInvalidWords = createMapOfInvalidWords(text, invalidWords);
-		logInvalidWords(mapOfInvalidWords);
-		return invalidWords;
-}
-
-/**
  * @param text
  * @param invalidWords
  * Returns a map of invalid words (consisted in @param invalidWords) and their corresponding
@@ -44,7 +19,7 @@ export function createMapOfInvalidWords(text: string, invalidWords: string[]): M
 	return positions;
 }
 
-function preprocessText(text: string) {
+export function preprocessText(text: string): string[] {
 	return removeDuplicates(collectAllInvalidWords(text));
 }
 
@@ -64,7 +39,7 @@ export function collectAllInvalidWords(text: string): string[] {
  return result;
 }
 
-function removeDuplicates(invalidWords: string[]) {
+function removeDuplicates(invalidWords: string[]): string[] {
 	return invalidWords.filter((value, item) => invalidWords.indexOf(value) === item);
 }
 
