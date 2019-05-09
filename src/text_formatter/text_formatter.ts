@@ -5,11 +5,21 @@ import { createPortal } from "react-dom";
 import { ProofEditor } from "../components/proofEditor/proofEditor";
 import { detectExpressionElements } from "./allowed_Expression_Detectors";
 
-// --------------------------------------
-// @author: Ronja K.
-// ---------------------------------------
 
-// ---------format the input of a user into a full list of senteces including a list of words, formatted expressions, and paragraph marker-------
+/**
+ * --------------------------------------
+ * @author: Ronja K.
+ * ---------------------------------------
+ */
+
+
+/**
+* format the input of a user into a full list of senteces including a list of words, formatted expressions, and paragraph marker
+* ---------------------------------------
+* @param //{string} n - A string param
+* @return //{string} A good string
+*
+*/
 export function textToListFormat(input: String) {
 
 	input = input.replace("$", "$EXPRESSIONMARKER");                            // prepare expressionsdetector; this is needed as marker to finde the expressions after the $ disappear by calling the split-method
@@ -53,7 +63,12 @@ export function textToListFormat(input: String) {
 	return listFormat;
 }
 
-// ---------format the words from a sentence-string into a list of words-------
+/**
+ * format the words from a sentence-string into a list of words
+ * ---------------------------------------
+ * @param
+ * @return
+ */
 export function sentenceIntoWordList(input: String) {
 	const separator = /[ ,$]+/; // List all the values where the content of a sentence will get splitted: whitespace[ ] and comma[,]
 	const splittedSentenceIntoListOfWords = input.split(separator);
@@ -75,7 +90,12 @@ export function sentenceIntoWordList(input: String) {
 
 }
 
-// this function is the formatter for expressions; it calls "detectExpressionElements", "removeWhiteSpaces" and "replaceInputCaractersToReadablePrologCharacter";
+/**
+* this function is the formatter for expressions; it calls "detectExpressionElements", "removeWhiteSpaces" and "replaceInputCaractersToReadablePrologCharacter";
+* ---------------------------------------
+* @param
+* @return
+*/
 export function expressionFormatter(input: string) {
 	const detectedExpression = detectExpressionElements(input);
 	const separators = /(bracketLeft|bracketRight|equivalence|implication|negation|conjunction|disjunction)+/g;
@@ -92,13 +112,26 @@ export function expressionFormatter(input: string) {
 	return finalExpressionArray;
 }
 
-// remove every type of whitespace inside the expression
+
+
+/**
+* remove every type of whitespace inside the expression
+* ---------------------------------------
+* @param
+* @return
+*/
 export function removeWhiteSpaces(input: string) {
 	const output = input.replace(/\s+/g, ""); // delete all white spaces
 	return output;
 }
 
-// --------replace expression elements into readable prolog Code---------
+/**
+* replace expression elements into readable prolog Code
+* ---------------------------------------
+* @param
+* @return
+*/
+
 export function replaceInputCaractersToReadablePrologCharacter(input: string) {
 	input = input.replace(/(bracketLeft)/g, "\[");
 	input = input.replace(/(bracketRight)/g, "\]");
@@ -110,7 +143,12 @@ export function replaceInputCaractersToReadablePrologCharacter(input: string) {
 	return input;
 }
 
-// check the expression if the amount of opened and closed brackets is correct; it can detect user mistakes; RETURN true if the user made a mistake;
+/**
+* check the expression if the amount of opened and closed brackets is correct; it can detect user mistakes; RETURN true if the user made a mistake;
+* ---------------------------------------
+* @param
+* @return
+*/
 export function checkAmountOfBrackets(formattedExpression: string[]) {
 	let bracketLeftCount = 0;
 	let bracketRightCount = 0;
