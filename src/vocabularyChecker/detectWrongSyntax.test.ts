@@ -2,19 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {collectAllInvalidWords, createErrorMessages} from "./detectWrongSyntax";
 import {createMapOfInvalidWords, logMapElement, preprocessText} from "./detectWrongSyntax";
-//import {checkInput, createMapOfInvalidWords, eliminatePunctuation, splitIntoWords} from "./detectWrongSyntax";
-/**
-it("Eliminates Punctuation", () => {
-		const noPunctuation = eliminatePunctuation("Hel.lo,world?");
-		expect(noPunctuation).toEqual("Hel lo world ");
-});
-
-it("Transforms correctly", () => {
-		const textarray = splitIntoWords("Hel lo wo rld");
-		expect(textarray).toEqual(["Hel", "lo", "wo", "rld"]);
-});
-
-*/
 it("Returns the correct word for a normal text", () => {
 	const wrongWords = preprocessText("fu bar bloedsinn"); // fu and bar are indeed included in allowedVocab
 	expect(wrongWords).toEqual(["bloedsinn"]);
@@ -62,8 +49,21 @@ it("Recognizes the words correctly", () => {
 
 it("Logs a map element correctly", () => {
 	const issues = logMapElement([0, 4], `test`);
-	expect(issues).toEqual({message: "test an Stelle 0,4 ist ein unerlaubtes Wort! ",
+	expect(issues).toEqual({message: "test an Stelle 0,4 ist ein unerlaubtes Wort! \n",
 	position: {fromIndex: 0, toIndex: 4}});
+});
+
+it("Logs a empty String correctly", () => {
+	const issues = logMapElement([0, 0], ``);
+	expect(issues).toEqual({message: " an Stelle 0,0 ist ein unerlaubtes Wort! \n",
+	position: {fromIndex: 0, toIndex: 0}});
+});
+
+it("Logs a String containing multiple words correctly", () => {
+	const text = `test Test`;
+	const issues = logMapElement([0, text.length], text);
+	expect(issues).toEqual({message: text + " an Stelle 0," + text.length + " ist ein unerlaubtes Wort! \n",
+	position: {fromIndex: 0, toIndex: text.length}});
 });
 
 it("Creates a correct Map", () => {
@@ -72,6 +72,6 @@ it("Creates a correct Map", () => {
 });
 
 it("Creates a correct error message", () => {
-	const issues = createErrorMessages(`test2`, [`test1`]);
-	expect(issues).toEqual("test");
+	const issues = createErrorMessages(`test1`, [`test1`]);
+	expect(issues).toEqual("test1");
 });
