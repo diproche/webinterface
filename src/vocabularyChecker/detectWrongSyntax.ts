@@ -19,6 +19,11 @@ export function createMapOfInvalidWords(text: string, invalidWords: string[]): M
 	return positions;
 }
 
+export function createErrorMessages(text: string, invalidWords: string[]): string|undefined {
+	const wrongWords = logInvalidWords(createMapOfInvalidWords(text, invalidWords));
+	return wrongWords;
+}
+
 export function preprocessText(text: string): string[] {
 	return removeDuplicates(collectAllInvalidWords(text));
 }
@@ -53,8 +58,11 @@ function logInvalidWords(invalidWords: Map<string, [number, number]>) {
 	return invalidWords.size > 0 ? `${invalidWords.forEach(logMapElement)}` : undefined;
 }
 
-function logMapElement(value: [number, number], key: string) {
+export function logMapElement(value: [number, number], key: string): Issue {
 	return {message: `${key} an Stelle ${value} ist ein unerlaubtes Wort! \n`,
-		startPos: value[0],
-		endPos: value[1] };
+		position: {
+			fromIndex: value[0],
+			toIndex: value[1]
+		},
+		};
 	}

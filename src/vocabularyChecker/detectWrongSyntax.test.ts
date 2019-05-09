@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {collectAllInvalidWords, createMapOfInvalidWords, preprocessText} from "./detectWrongSyntax";
+import {collectAllInvalidWords, createErrorMessages} from "./detectWrongSyntax";
+import {createMapOfInvalidWords, logMapElement, preprocessText} from "./detectWrongSyntax";
 //import {checkInput, createMapOfInvalidWords, eliminatePunctuation, splitIntoWords} from "./detectWrongSyntax";
 /**
 it("Eliminates Punctuation", () => {
@@ -13,10 +14,6 @@ it("Transforms correctly", () => {
 		expect(textarray).toEqual(["Hel", "lo", "wo", "rld"]);
 });
 
-it("Creates a correct Map", () => {
-	const issues = createMapOfInvalidWords(`test`, [`test`]);
-	expect(issues).toEqual([[`test`, [0, 3]]]);
-});
 */
 it("Returns the correct word for a normal text", () => {
 	const wrongWords = preprocessText("fu bar bloedsinn"); // fu and bar are indeed included in allowedVocab
@@ -61,4 +58,20 @@ aaaaaaaaaaaaaaaaaaaaaaaaaaa`);
 it("Recognizes the words correctly", () => {
 		const result = preprocessText("Hallo Welt, fu. foo, bar");
 		expect(result).toEqual(["Hallo", "Welt", "foo"]);
+});
+
+it("Logs a map element correctly", () => {
+	const issues = logMapElement([0, 4], `test`);
+	expect(issues).toEqual({message: "test an Stelle 0,4 ist ein unerlaubtes Wort! ",
+	position: {fromIndex: 0, toIndex: 4}});
+});
+
+it("Creates a correct Map", () => {
+	const issues = createMapOfInvalidWords(`test`, [`test`]);
+	expect(issues).toEqual(["test", [0, 3]]);
+});
+
+it("Creates a correct error message", () => {
+	const issues = createErrorMessages(`test2`, [`test1`]);
+	expect(issues).toEqual("test");
 });
