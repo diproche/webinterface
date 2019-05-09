@@ -23,45 +23,44 @@ import { detectExpressionElements } from "./allowed_Expression_Detectors";
 export function textToListFormat(input: String) {
 
 	input = input.replace("$", "$EXPRESSIONMARKER");                            // prepare expressionsdetector; this is needed as marker to finde the expressions after the $ disappear by calling the split-method
-	input = input.replace("\n", "\n PARAGRAPHMARKER.");                         // prepare paragraphmarker
+	//input = input.replace("\n", "\nPARAGRAPHMARKER.");                         // prepare paragraphmarker
 
-	const separator = /[\n.!?$]+/g;                                              // List all the values the input will get splitted; \n will split paragraphs, $ will split expressions, the rest split sentences
+	const separator = /([.!?$]|\n|$)+/g;
+	//const separator = /(\n|\.|\!|\?|\$)+/g;                                              // List all the values the input will get splitted; \n will split paragraphs, $ will split expressions, the rest split sentences
 
 	const splittedText = input.split(separator);
-	const temp = [];
-	// let sentenceCount = 0;                                                  //  |optional
-	// let expressionCount = 0;                                                //  |optional
-	// let paragraphCount = 0;                                                 //  |optional
+	const listOfLists = [];
+	//let sentenceCount = 0;                                                  //  |optional
+	//let expressionCount = 0;                                                //  |optional                                             //  |optional
 	for (let index = 0; index < splittedText.length; index++) {
-		let element = splittedText[index].trim();                               // whitespaces between sentences are not needed
-		if (element != "") {
+		let element = splittedText[index];                            // whitespaces between sentences are not needed
 
-			if (element.match(/(EXPRESSIONMARKER)/g)) {						   // DETECT AND ADD EXPRESSIONS TO LIST
-				// temp.push("Expression_" + (expressionCount + 1));           //  |optional
-				// expressionCount++;                                          //  |optional
-				element = element.replace("EXPRESSIONMARKER", "");
-				const formattedExpression = expressionFormatter(element);
-				temp.push(formattedExpression);
-			} else if (element.match(/(PARAGRAPHMARKER)/g)) {				   // DETECT AND ADD PARAGRAPH TO LIST
-				// temp.push("Paragraph_" + (paragraphCount + 1));             // |optional
-				// paragraphCount = 0;                                         // |optional
-				element = element.replace(/(PARAGRAPHMARKER)/g, "abs");
-				const ListWithparagraph = [];										// store paragraph marker in a own list
-				ListWithparagraph.push(element);
-				temp.push(ListWithparagraph);
-			} else {															// DETECT AND ADD WORDS TO LIST
-				// temp.push("Sentence_" + (sentenceCount + 1));                // |optional
-				// sentenceCount++;                                             // |optional
-				const ListOfWords = sentenceIntoWordList(element);
-				temp.push(ListOfWords);
-			}
-
+		//if (element.match(/[$]/g)) {
+		if (element.match(/(EXPRESSIONMARKER)/g)) {						   // DETECT AND ADD EXPRESSIONS TO LIST
+			//listOfLists.push("Expression_" + (expressionCount + 1));           //  |optional
+			//expressionCount++;                                          //  |optional
+			element = element.replace("EXPRESSIONMARKER", "");
+			const formattedExpression = expressionFormatter(element);
+			listOfLists.push(formattedExpression);
+		}
+		else if (element.match(/\n/)) {										//detect ans mark paragraphs in a own List
+			listOfLists.push([]);
+		}
+		else if (element.match(/([A-Za-zäöü]+)/g)) {						// If words are detected build a List of it;
+			//listOfLists.push("Sentence_" + (sentenceCount + 1));             // |optional
+			//sentenceCount++;                                            	 // |optional
+			const ListOfWords = sentenceIntoWordList(element.trim());
+			listOfLists.push(ListOfWords);
 		}
 
+
 	}
-	const listFormat = temp;
+	const listFormat = listOfLists;
 	return listFormat;
 }
+
+//(/[A-Za-zäöü]+/g) //scan for words
+
 
 /**
  * format the words from a sentence-string into a list of words
@@ -70,19 +69,15 @@ export function textToListFormat(input: String) {
  * @return
  */
 export function sentenceIntoWordList(input: String) {
-	const separator = /[ ,$]+/; // List all the values where the content of a sentence will get splitted: whitespace[ ] and comma[,]
+	const separator = /[ ,]+/; // List all the values where the content of a sentence will get splitted: whitespace[ ] and comma[,]
 	const splittedSentenceIntoListOfWords = input.split(separator);
 	const temp = [];
-	const index = 0;
 	for (let index = 0; index < splittedSentenceIntoListOfWords.length; index++) {
 		// remove all elements(senteces) which are a empty String after splitting
-		if (splittedSentenceIntoListOfWords[index] == "") {
+		if (splittedSentenceIntoListOfWords[index].trim() == "") {
 			splittedSentenceIntoListOfWords.splice(index, 1);
 		} else {
-			const word = splittedSentenceIntoListOfWords[index].trim();
-			word.trim();
-			splittedSentenceIntoListOfWords[index] = word;
-			temp.push(splittedSentenceIntoListOfWords[index]);
+			temp.push(splittedSentenceIntoListOfWords[index].trim());
 		}
 	}
 	const ListOfWords = temp;
@@ -122,6 +117,8 @@ export function expressionFormatter(input: string) {
 */
 export function removeWhiteSpaces(input: string) {
 	const output = input.replace(/\s+/g, ""); // delete all white spaces
+	//const output = input.replace(/(?!\n)\s/g, "");
+
 	return output;
 }
 

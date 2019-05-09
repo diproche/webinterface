@@ -47,8 +47,8 @@ test("white Space remover between expressions.", () => {
 });
 
 test("splitting full text into full listFormat including expressions and paragraph marker: ", () => {
-	const result = textToListFormat("Hello, this is a test! Is it Working? I               hope so. \n Here is also a expression: $[A UND [B <==> C] -> D ODER NOT E]$");
-	const expectedResult = [["Hello", "this", "is", "a", "test"], ["Is", "it", "Working"], ["I", "hope", "so"], ["abs"], ["Here", "is", "also", "a", "expression:"], ["[", "A", "and", "[", "B", "<->", "C", "]", "->", "D", "or", "neg", "E", "]"]];
+	const result = textToListFormat("Hello, this is a test! Is it Working? I               hope so. \n Paragraphs are marked with an empty List: \n \n \n Here is also an expression: $[A UND [B <==> C] -> D ODER NOT E]$");
+	const expectedResult = [["Hello", "this", "is", "a", "test"], ["Is", "it", "Working"], ["I", "hope", "so"], [], ["Paragraphs", "are", "marked", "with", "an", "empty", "List:"], [], [], [], ["Here", "is", "also", "an", "expression:"], ["[", "A", "and", "[", "B", "<->", "C", "]", "->", "D", "or", "neg", "E", "]"]];
 	expect(result).toEqual(expectedResult);
 });
 
