@@ -9,24 +9,11 @@
 import { textToListFormat, sentenceIntoWordList, replaceInputCaractersToReadablePrologCharacter, removeWhiteSpaces, checkAmountOfBrackets } from "./text_formatter";
 import { detectExpressionElements } from "./allowed_Expression_Detectors";
 
-
-/**
- * ---------------------------------------
- * TESTS FOR SPLITTING TEXT
- * --------------------------------------
- */
-
 test("splitting a single sentences into List of words: ", () => {
 	const result = sentenceIntoWordList("Hello, this is a test");
 	const expectedResult = ["Hello", "this", "is", "a", "test"];
 	expect(result).toEqual(expectedResult);
 });
-
-/**
- * ---------------------------------------
- * TESTS FOR EXPRESSIONS-LOGIC
- * --------------------------------------
- */
 
 test("Test if the elements of a expression is detected correctly:", () => {
 	const result = detectExpressionElements("[AUNDTest[B<==>C]->DODERNOTNOTE]");

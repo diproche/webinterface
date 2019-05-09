@@ -14,7 +14,6 @@
 * @param
 * @return
 */
-
 export function detectExpressionElements(input: string) {
 	var formattedInputExpression; // this one should get formatted
 

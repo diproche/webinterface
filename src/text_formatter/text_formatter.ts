@@ -1,17 +1,10 @@
-import { newExpression, stringLiteral } from "@babel/types";
-import { elementType } from "prop-types";
-import React, { Component } from "react";
-import { createPortal } from "react-dom";
-import { ProofEditor } from "../components/proofEditor/proofEditor";
 import { detectExpressionElements } from "./allowed_Expression_Detectors";
-
 
 /**
  * --------------------------------------
  * @author: Ronja K.
  * ---------------------------------------
  */
-
 
 /**
 * format the input of a user into a full list of senteces including a list of words, formatted expressions, and paragraph marker
@@ -23,10 +16,8 @@ import { detectExpressionElements } from "./allowed_Expression_Detectors";
 export function textToListFormat(input: String) {
 
 	input = input.replace("$", "$EXPRESSIONMARKER");                            // prepare expressionsdetector; this is needed as marker to finde the expressions after the $ disappear by calling the split-method
-	//input = input.replace("\n", "\nPARAGRAPHMARKER.");                         // prepare paragraphmarker
 
-	const separator = /([.!?$]|\n|$)+/g;
-	//const separator = /(\n|\.|\!|\?|\$)+/g;                                              // List all the values the input will get splitted; \n will split paragraphs, $ will split expressions, the rest split sentences
+	const separator = /([.!?$]|\n)+/g;                                      // List all the values the input will get splitted; \n will split paragraphs, $ will split expressions, the rest split sentences
 
 	const splittedText = input.split(separator);
 	const listOfLists = [];
@@ -37,13 +28,13 @@ export function textToListFormat(input: String) {
 
 		//if (element.match(/[$]/g)) {
 		if (element.match(/(EXPRESSIONMARKER)/g)) {						   // DETECT AND ADD EXPRESSIONS TO LIST
-			//listOfLists.push("Expression_" + (expressionCount + 1));           //  |optional
+			//listOfLists.push("Expression_" + (expressionCount + 1));       //  |optional
 			//expressionCount++;                                          //  |optional
 			element = element.replace("EXPRESSIONMARKER", "");
 			const formattedExpression = expressionFormatter(element);
 			listOfLists.push(formattedExpression);
 		}
-		else if (element.match(/\n/)) {										//detect ans mark paragraphs in a own List
+		else if (element.match(/\n/)) {										//detect paragraphs in build a own empty list for them
 			listOfLists.push([]);
 		}
 		else if (element.match(/([A-Za-zäöü]+)/g)) {						// If words are detected build a List of it;
@@ -59,14 +50,11 @@ export function textToListFormat(input: String) {
 	return listFormat;
 }
 
-//(/[A-Za-zäöü]+/g) //scan for words
-
-
 /**
  * format the words from a sentence-string into a list of words
  * ---------------------------------------
- * @param
- * @return
+ * @param a string including words
+ * @return a string-array where each element is one word
  */
 export function sentenceIntoWordList(input: String) {
 	const separator = /[ ,]+/; // List all the values where the content of a sentence will get splitted: whitespace[ ] and comma[,]
@@ -88,8 +76,8 @@ export function sentenceIntoWordList(input: String) {
 /**
 * this function is the formatter for expressions; it calls "detectExpressionElements", "removeWhiteSpaces" and "replaceInputCaractersToReadablePrologCharacter";
 * ---------------------------------------
-* @param
-* @return
+* @param a input string of an expression where all operator has been formatted
+* @return a string array where each element is a element of the expression
 */
 export function expressionFormatter(input: string) {
 	const detectedExpression = detectExpressionElements(input);
@@ -107,28 +95,23 @@ export function expressionFormatter(input: string) {
 	return finalExpressionArray;
 }
 
-
-
 /**
 * remove every type of whitespace inside the expression
 * ---------------------------------------
-* @param
-* @return
+* @param a string
+* @return same string without any whitespaces left
 */
 export function removeWhiteSpaces(input: string) {
 	const output = input.replace(/\s+/g, ""); // delete all white spaces
-	//const output = input.replace(/(?!\n)\s/g, "");
-
 	return output;
 }
 
 /**
 * replace expression elements into readable prolog Code
 * ---------------------------------------
-* @param
+* @param 
 * @return
 */
-
 export function replaceInputCaractersToReadablePrologCharacter(input: string) {
 	input = input.replace(/(bracketLeft)/g, "\[");
 	input = input.replace(/(bracketRight)/g, "\]");
