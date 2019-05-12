@@ -1,7 +1,4 @@
 import json from "./AllowedVocab.json";
-/**
- * Interface containing @param fromIndex: number, @param toIndex: number, @param message: string
- */
 import Issue from "./Issue";
 /**
  * Regular expression that looks for any and all words. A word is defined as some sequence of
@@ -21,10 +18,10 @@ interface Position { fromIndex: number; toIndex: number; }
  * positions (starting position and end position) inside of a string.
  */
 
-export function createMapOfInvalidWords(text: string, invalidWords: string[]): Map<string, [number, number]> {
-	const positions = new Map<string, [number, number]>();
+export function createMapOfInvalidWords(text: string, invalidWords: string[]): Map<string, Position[]> {
+	const positions = new Map<string, Position[]>();
 	for (const word of invalidWords) {
-		positions.set(word, [text.indexOf(word), text.indexOf(word) + word.length - 1]);
+		positions.set(word,  text.indexOf(word), (text.indexOf(word) + word.length - 1);
 	}
 	return positions;
 }
@@ -46,7 +43,7 @@ export function createErrorMessages(text: string, invalidWords: string[]): strin
  * @function removeDuplicates.
  * @returns a Stringarray containing exactly one copy of each wrong word in @param text.
  */
-export function preprocessText(text: string): string[] {
+export function getInvalidWords(text: string): string[] {
 	return removeDuplicates(collectAllInvalidWords(text));
 }
 
@@ -55,14 +52,8 @@ export function preprocessText(text: string): string[] {
  * @returns a Stringarray containing every occurrence of each wrong word in @param text.
  */
 export function collectAllInvalidWords(text: string): string[] {
-	const temp = text.match(anyWord) || [];
-	const result: string[] = [];
-	temp.forEach(element => {
-		if (!allowedWords.includes(element)) {
-		result.push(element);
-		}
-	});
- return result;
+	const words = text.match(anyWord) || [];
+	return words.filter(word => !(allowedWords.includes(word)));
 }
 
 /**
@@ -70,7 +61,7 @@ export function collectAllInvalidWords(text: string): string[] {
  * @returns a Stringarray containing the same elements as @param invalidWords
  * minus duplicate elements.
  */
-function removeDuplicates(invalidWords: string[]): string[] {
+function removeDuplicates<T>(invalidWords: T[]): T[] {
 	return invalidWords.filter((value, item) => invalidWords.indexOf(value) === item);
 }
 
