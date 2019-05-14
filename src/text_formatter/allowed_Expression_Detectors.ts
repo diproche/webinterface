@@ -1,105 +1,39 @@
-/**
-* --------------------------------------
-* @author: Ronja K.
-* ---------------------------------------
-*/
-
-
 // TO DO: USE TOKENIZATION INSTEAD OF INPUT
 
+/**
+* ---------CurrentExpressionFormatter------------
+* @param expression written by a user
+* @return a formatted expression as String
+*/
+export function formatExpressionElements(expression: string) {
+	const formattedInputExpression: string = expression;
+	return formattedInputExpression
+		.replace(/(\[|\()/g, " bracketLeft ")
+		.replace(/(\]|\))/g, " bracketRight ")
+		.replace(/(<-->|<==>|<=>|<->)/g, " equivalence ")
+		.replace(/(->|-->|=>|==>)/g, " implication ")
+		.replace(/(neq|not|nicht|¬|-)/ig, " negation ")
+		.replace(/(and|und|&|∧)/ig, " conjunction ")
+		.replace(/(or|oder|\||∨)/ig, " disjunction ")
+		.trim()								// delete white spaces at the beginn and the end of an expression
+		.replace(/\s{1,}/g, ","); 			// each element of an expression should seperated with a comma
+}
 
 /**
-* ---------CurrentExpressionDetector------------
-* ---------every element have their own detect-function--------
-* @param
-* @return
-*/
-export function detectExpressionElements(input: string) {
-	var formattedInputExpression; // this one should get formatted
-
-	input = detectBracketLeft(input);
-	input = detectBracketRight(input);
-	input = detectEquivalence(input);
-	input = detectImplication(input);
-	input = detectNegation(input);
-	input = detectConjunction(input);
-	input = detectDisjunction(input);
-	return input;
-}
-
-/** 
-* detect and mark left brackets
+* replace expression elements into readable prolog Code
 * ---------------------------------------
-* @param
-* @return
+* @param formattedExpression 
+* @return finalExpression 
 */
-function detectBracketLeft(input: string) {
-	input = input.replace(/(\[|\()/g, " bracketLeft ");
-	return input;
-}
-
-/** 
-* detect and mark right brackets
-* ---------------------------------------
-* @param
-* @return
-*/
-function detectBracketRight(input: string) {
-	input = input.replace(/(\]|\))/g, " bracketRight ");
-	return input;
-}
-
-/** 
-* detect and mark equivalences
-* ---------------------------------------
-* @param
-* @return
-*/
-function detectEquivalence(input: string) {
-	input = input.replace(/(<-->|<==>|<=>|<->)/g, " equivalence ");
-	return input;
-}
-
-/** 
-* detect and mark implications
-* ---------------------------------------
-* @param
-* @return
-*/
-function detectImplication(input: string) {
-	input = input.replace(/(->|-->|=>|==>)/g, " implication ");
-	return input;
-}
-
-/** 
-* detect and mark negations
-* ---------------------------------------
-* @param
-* @return
-*/
-function detectNegation(input: string) {
-	input = input.replace(/(neq|NEQ|Neq|NOT|Not|not|NICHT|Nicht|nicht|¬)/g, " negation ");
-	return input;
-}
-
-/** 
-* detect and mark conjunctions
-* ---------------------------------------
-* @param
-* @return
-*/
-function detectConjunction(input: string) {
-	input = input.replace(/(and|And|AND|und|Und|UND|&|∧)/g, " conjunction ");
-	return input;
-}
-
-/** 
-* detect and mark disjunctions
-* ---------------------------------------
-* @param
-* @return
-*/
-function detectDisjunction(input: string) {
-	input = input.replace(/(or|Or|OR|oder|Oder|ODER|\||∨)/g, " disjunction ");
-	return input;
+export function replaceInputCaractersToReadablePrologCharacter(formattedExpression: string) {
+	const finalExpression: string = formattedExpression;
+	return finalExpression
+		.replace(/(bracketLeft)/g, "\[")
+		.replace(/(bracketRight)/g, "\]")
+		.replace(/(equivalence)/g, "<->")
+		.replace(/(implication)/g, "->")
+		.replace(/(negation)/g, "neg")
+		.replace(/(conjunction)/g, "and")
+		.replace(/(disjunction)/g, "or")
+		;
 }

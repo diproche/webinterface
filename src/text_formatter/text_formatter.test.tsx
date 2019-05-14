@@ -1,13 +1,6 @@
-
-/**
- * --------------------------------------
- * @author: Ronja K.
- * ---------------------------------------
- */
-
 // IMPORTS
-import { textToListFormat, sentenceIntoWordList, replaceInputCaractersToReadablePrologCharacter, removeWhiteSpaces, checkAmountOfBrackets } from "./text_formatter";
-import { detectExpressionElements } from "./allowed_Expression_Detectors";
+import { formatExpressionElements, replaceInputCaractersToReadablePrologCharacter } from "./allowed_Expression_Detectors";
+import { checkAmountOfBrackets, removeWhiteSpaces, sentenceIntoWordList, textToListFormat } from "./text_formatter";
 
 test("splitting a single sentences into List of words: ", () => {
 	const result = sentenceIntoWordList("Hello, this is a test");
@@ -15,9 +8,9 @@ test("splitting a single sentences into List of words: ", () => {
 	expect(result).toEqual(expectedResult);
 });
 
-test("Test if the elements of a expression is detected correctly:", () => {
-	const result = detectExpressionElements("[AUNDTest[B<==>C]->DODERNOTNOTE]");
-	const expectedResult = " bracketLeft A conjunction Test bracketLeft B equivalence C bracketRight  implication D disjunction  negation  negation E bracketRight ";
+test("Test if the elements of a expression is detected and formatted correctly:", () => {
+	const result = formatExpressionElements("[AUNDTest[B<==>C]->DODERNOTNOTE]");
+	const expectedResult = "bracketLeft,A,conjunction,Test,bracketLeft,B,equivalence,C,bracketRight,implication,D,disjunction,negation,negation,E,bracketRight";
 	expect(result).toEqual(expectedResult);
 });
 
@@ -53,4 +46,4 @@ test("if amount of left and right brackets are different.", () => {
 	expect(result).toEqual(expectedResult);
 });
 
-//-------TO DO: format expressions into prolog format----------2
+// -------TO DO: format expressions into prolog format----------2
