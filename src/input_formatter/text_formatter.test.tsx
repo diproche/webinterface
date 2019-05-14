@@ -1,6 +1,6 @@
 // IMPORTS
-import { formatExpressionElements, replaceInputCaractersToReadablePrologCharacter } from "./allowed_Expression_Detectors";
-import { detectBracketErrors, removeWhiteSpaces, sentenceIntoWordList, textFormatter } from "./text_formatter";
+import { preFormatExpressionFromImput, replaceExpressionElementsIntoPrologCode, detectBracketErrors} from "./expression_formatter";
+import { sentenceIntoWordList, textFormatter } from "./text_formatter";
 
 test("splitting a single sentences into List of words: ", () => {
 	const result = sentenceIntoWordList("Hello, this is a test");
@@ -9,20 +9,14 @@ test("splitting a single sentences into List of words: ", () => {
 });
 
 test("Test if the elements of a expression is detected and formatted correctly:", () => {
-	const result = formatExpressionElements("[AUNDTest[B<==>C]->DODERNOTNOTE]");
-	const expectedResult = "bracketLeft,A,conjunction,Test,bracketLeft,B,equivalence,C,bracketRight,implication,D,disjunction,negation,negation,E,bracketRight";
+	const result = preFormatExpressionFromImput("[AUNDTest[B<==>C]->DODERNOTNOTE]");
+	const expectedResult = ["bracketLeft", "A", "conjunction","Test", "bracketLeft", "B", "equivalence", "C", "bracketRight", "implication", "D", "disjunction", "negation", "negation", "E", "bracketRight"];
 	expect(result).toEqual(expectedResult);
 });
 
 test("replace detected expression-elements into readable prolog commands", () => {
-	const result = replaceInputCaractersToReadablePrologCharacter("bracketLeft A conjunction RANDOMTEXTHERE bracketLeft B equivalence C bracketRight bracketRight");
-	const expectedResult = "[ A and RANDOMTEXTHERE [ B <-> C ] ]";
-	expect(result).toEqual(expectedResult);
-});
-
-test("white Space remover between expressions.", () => {
-	const result = removeWhiteSpaces("(5 + 6       = 11=>89F  allFOR, orf <-> test*h)");
-	const expectedResult = "(5+6=11=>89FallFOR,orf<->test*h)";
+	const result = replaceExpressionElementsIntoPrologCode(["bracketLeft", "A", "conjunction", "RANDOMTEXTHERE", "bracketLeft", "B", "equivalence", "C", "bracketRight", "bracketRight"]);
+	const expectedResult = ["[", "A", "and", "RANDOMTEXTHERE", "[", "B", "<->", "C", "]", "]"];
 	expect(result).toEqual(expectedResult);
 });
 
