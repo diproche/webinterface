@@ -1,6 +1,6 @@
 // IMPORTS
 import { formatExpressionElements, replaceInputCaractersToReadablePrologCharacter } from "./allowed_Expression_Detectors";
-import { checkAmountOfBrackets, removeWhiteSpaces, sentenceIntoWordList, textToListFormat } from "./text_formatter";
+import { detectBracketErrors, removeWhiteSpaces, sentenceIntoWordList, textFormatter } from "./text_formatter";
 
 test("splitting a single sentences into List of words: ", () => {
 	const result = sentenceIntoWordList("Hello, this is a test");
@@ -27,21 +27,28 @@ test("white Space remover between expressions.", () => {
 });
 
 test("splitting full text into full listFormat including expressions and paragraph marker: ", () => {
-	const result = textToListFormat("Hello, this is a test! Is it Working? I               hope so. \n Paragraphs are marked with an empty List: \n \n \n Here is also an expression: $[A UND [B <==> C] -> D ODER NOT E]$");
+	const result = textFormatter("Hello, this is a test! Is it Working? I               hope so. \n Paragraphs are marked with an empty List: \n \n \n Here is also an expression: $[A UND [B <==> C] -> D ODER NOT E]$");
 	const expectedResult = [["Hello", "this", "is", "a", "test"], ["Is", "it", "Working"], ["I", "hope", "so"], [], ["Paragraphs", "are", "marked", "with", "an", "empty", "List:"], [], [], [], ["Here", "is", "also", "an", "expression:"], ["[", "A", "and", "[", "B", "<->", "C", "]", "->", "D", "or", "neg", "E", "]"]];
 	expect(result).toEqual(expectedResult);
 });
 
-test("count if amount of brackets is correct.", () => {
+test("scan for bracket errors - test 1", () => {
 	const bracketList = ["[", "]", "[", "[", "]", "[", "]", "]"];
-	const result = checkAmountOfBrackets(bracketList);
+	const result = detectBracketErrors(bracketList);
 	const expectedResult = false;
 	expect(result).toEqual(expectedResult);
 });
 
-test("if amount of left and right brackets are different.", () => {
-	const bracketList = ["[", "[", "[", "[", "[", "]", "]"];
-	const result = checkAmountOfBrackets(bracketList);
+test("scan for bracket errors - test 2", () => {
+	const bracketList = ["[", "[", "bracketLeft", "[", "[", "]", "]"];
+	const result = detectBracketErrors(bracketList);
+	const expectedResult = true;
+	expect(result).toEqual(expectedResult);
+});
+
+test("scan for bracket errors - test 3", () => {
+	const bracketList = ["]", "bracketLeft"];
+	const result = detectBracketErrors(bracketList);
 	const expectedResult = true;
 	expect(result).toEqual(expectedResult);
 });
