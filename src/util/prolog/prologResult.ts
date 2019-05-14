@@ -1,42 +1,32 @@
-import * as ld from "lodash";
-
 // First Group will be the variable value. Doesn't fetch the variable names
 const prologAnswerPattern: string = " = (\\w*|\\[.*\\])?(,| ;|.)";
 
 export class PrologResult {
 	private readonly rawResults: string[];
-	private readonly results: Map<string, Map<number, string|boolean>>;
+	private results: Map<string, Array<string | boolean>> | undefined;
 
 	constructor(rawResults: string[]) {
 		this.rawResults = rawResults;
-		this.results = new Map();
 	}
 
-	public getResults(): Map<string, Map<number, string|boolean>> {
-		if (this.results.size !== 0) { return this.results; }
+	/**
+		* Generates (if needed) and returns the results.
+		*
+		* @return{Map<string, Map<number, string|boolean>>} First level is the Variable Name or "Boolean".
+		*/
+	public getResults(): Map<string, Array<string | boolean>> {
+		if (this.results !== undefined) { return this.results; }
 
 		const results = new Map();
-		let i: number;
 
 		this.getVariables().forEach((e: string) => {
-			results.set(e, new Map());
-			i = 0;
-
-			this.getResultsFor(e).forEach((e2: string) => {
-				results.get(e).set(i, e2);
-				i++;
-			});
+			results.set(e, this.getResultsFor(e));
 
 		});
 
-		results.set("Boolean", new Map());
-		i = 0;
+		results.set("Boolean", this.getBooleans());
 
-		this.getBooleans().forEach((e: boolean) => {
-			results.get("Boolean").set(i, e);
-			i++;
-		});
-
+		this.results = results;
 		return results;
 	}
 
@@ -51,7 +41,7 @@ export class PrologResult {
 
 	private getResultsFor(variable: string): string[] {
 		// Group 1 will be the content of the variable independent of the variable length.
-	 const pattern: any = new RegExp(variable + prologAnswerPattern, "g");
+	 const pattern = new RegExp(variable + prologAnswerPattern, "g");
 	 return this.regexGroupToArray(this.rawResults.toString(), pattern, 1);
 	}
 
@@ -60,61 +50,35 @@ export class PrologResult {
 	if (source.includes("true")) { return ["true"]; }
 	if (source.includes("false")) { return["false"]; }
 
-	const pattern: any = new RegExp(prologAnswerPattern, "g");
+	const pattern = new RegExp(prologAnswerPattern, "g");
 	return this.regexGroupToArray(source, pattern, 1);
 	}
 
 	private getVariables(): Set<string> {
-		const variables = new Set();
 
 		// Second group contains the variable names
-		const pattern: RegExp = /(^| )([A-Z]\w*)/g;
+		const pattern = /(^| )([A-Z]\w*)/g;
 		const rawVariables: string[] = this.regexGroupToArray(this.rawResults.toString(), pattern, 2);
 
-		rawVariables.forEach((e: string) => {
-			variables.add(e);
-		});
-	 return variables;
+		return new Set(rawVariables);
 	}
 
 	private getBooleans(): boolean[] {
-		const pattern: RegExp = /(true|false)(,| ;|.)/g;
-		let results: any[] = this.regexGroupToArray(this.rawResults.toString(), pattern, 1);
-		results = results.map((e: string) => {
-			return (e === "true") ? true : false;
-		});
+		const pattern = /(true|false)(,| ;|.)/g;
+		const results: string[] = this.regexGroupToArray(this.rawResults.toString(), pattern, 1);
+		const booleanResults: boolean[] = results.map((e: string) => e === "true");
 
-		return results;
+		return booleanResults;
 }
 
-private regexGroupToArray(basis: string, pattern: any, group: number): string[] {
-	const groupContent: string[] = [];
-	let aux: string[];
+	private regexGroupToArray(basis: string, pattern: any, group: number): string[] {
+		const groupContent: string[] = [];
+		let matchGroups: string[];
 
-	while ((aux = pattern.exec(basis)) !== null) {
-		groupContent.push(aux[group]);
-	}
+		while ((matchGroups = pattern.exec(basis)) !== null) {
+			groupContent.push(matchGroups[group]);
+		}
 
-	return groupContent;
+		return groupContent;
 }
-	/* With the usage of maps not necessary
-
-	public filterBooleanResults(): boolean[] {
-		let copy: string[][] = this.getResultArray();
-		copy = copy.filter((e: any) => e.length === 1 && (e[0] === "true" || e[0] === "false"));
-
-		const flatCopy: any[] = ld.flattenDeep(copy);
-
-		return flatCopy.map((e: any) => {
-			return (e === "true") ? true : false;
-		});
-	}
-
-	public filterVariableResults(): string[][] {
-		const copy: string[][] = this.getResultArray();
-		return copy.filter((e: any) => {
-			return !(e[0] === "true" || e[0] === "false");
-		} );
-	}
-	*/
 }

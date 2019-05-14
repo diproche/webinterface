@@ -271,26 +271,3 @@ describe("Limit Cases", () => {
 			expect(results).toStrictEqual(expectedMap);
 	});
 });
-
-/* Now private. Not necessary with the new usage of maps.
-describe("PrologResult.getResultsFor()", () => {
-	describe("Family Program", () => {
-		test.each`
-			input | expectedResults
-			${"parent(mom, X), male(X)."} | ${["son"]}
-
-			${"parent(mom, X), male(X); parent(mom, Y)."} | ${["son"]}
-
-			${"parent(mom, X)."} | ${["daugther", "son"]}
-
-			${"parent(Y, Z)."} | ${[]}
-
-			${"parent(X, Y), female(X)."} | ${["mom", "mom", "grandmotherm", "grandmotherf"]}
-
-			${"parent(X, Y), male(X)."} | ${["dad", "dad", "grandfatherm", "grandfatherf"]}
-		`("The Query $input", async ({input, expectedResults}) => {
-			expect((await program.familySession.executeQuery(input)).getResultsFor("X")).toStrictEqual(expectedResults);
-		});
-	});
-});
-*/
