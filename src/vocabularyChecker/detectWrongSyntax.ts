@@ -1,3 +1,4 @@
+import { Interface } from "readline";
 import json from "./AllowedVocab.json";
 import Issue from "./Issue";
 /**
@@ -9,7 +10,7 @@ const anyWord = new RegExp(/\b(\w*\S)\b/g);
  * Predefined dictionary containing all allowed Words
  */
 const allowedWords = json;
-interface Position { fromIndex: number; toIndex: number; }
+export interface Position { fromIndex: number; toIndex: number; }
 
 /**
  * @param text
@@ -20,8 +21,12 @@ interface Position { fromIndex: number; toIndex: number; }
 
 export function createMapOfInvalidWords(text: string, invalidWords: string[]): Map<string, Position[]> {
 	const positions = new Map<string, Position[]>();
+	let pos: Position[] = [];
 	for (const word of invalidWords) {
-		positions.set(word,  text.indexOf(word), (text.indexOf(word) + word.length - 1);
+		const temp: Position = {fromIndex: text.indexOf(word), toIndex: (text.indexOf(word) + word.length - 1)};
+		pos.push(temp);
+		positions.set(word, pos);
+		pos = [];
 	}
 	return positions;
 }
@@ -71,7 +76,7 @@ function removeDuplicates<T>(invalidWords: T[]): T[] {
  * iff there are invalid Words.
  */
 
-function logInvalidWords(invalidWords: Map<string, [number, number]>) {
+function logInvalidWords(invalidWords: Map<string, Position[]>) {
 	return invalidWords.size > 0 ? `${invalidWords.forEach(logMapElement)}` : undefined;
 }
 
@@ -81,11 +86,11 @@ function logInvalidWords(invalidWords: Map<string, [number, number]>) {
  * returns an Issue-like object, telling the user which word is not allowed and on which position it is.
  */
 
-export function logMapElement(value: [number, number], key: string): Issue {
-	return {message: `${key} an Stelle ${value} ist ein unerlaubtes Wort! \n`,
+export function logMapElement(from: number, to: number, word: string): Issue {
+	return {message: `${word} an Stelle ${from} ist ein unerlaubtes Wort! \n`,
 		position: {
-			fromIndex: value[0],
-			toIndex: value[1],
-		},
+			fromIndex: from,
+			toIndex: to,
+			},
 		};
 	}
