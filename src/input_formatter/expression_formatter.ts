@@ -1,4 +1,8 @@
 const allowedExpressionToken = /(bracketLeft|bracketRight|equivalence|implication|negation|conjunction|disjunction)+/;
+const logicConnector = /(conjunction|disjunction|equivalence|implication)+/;
+const negation = /(negation)+/;
+const bracket = /(bracketLeft|bracketRight)+/;
+const test = /(bracketLeft|bracketRight|negation)+/;
 
 /**
 * ---------CurrentExpressionFormatter------------
@@ -9,7 +13,7 @@ export function expressionFormatter(expression: string) {
 	const preFormattedExpression: string[] = preFormatExpressionFromImput(expression);
 	// errorDetector(preFormattedExpression); //TO DO SOME STUFF WITH THE TOKENS AND THE ARRAY; FORMAT THE ARRAY AND CATCH ERRORS
 	const finalFormattedExpression: string[] =
-	replaceExpressionElementsIntoPrologCode(preFormattedExpression);
+		replaceExpressionElementsIntoPrologCode(preFormattedExpression);
 	return finalFormattedExpression;
 }
 
@@ -38,7 +42,7 @@ export function preFormatExpressionFromImput(expression: string) {
 
 export function replaceExpressionElementsIntoPrologCode(formattedExpression: string[]) {
 	const finalFormattedExpression: string[] = [];
- let index = 0;
+	let index = 0;
 	while (index < formattedExpression.length) {
 		if (formattedExpression[index].match(allowedExpressionToken)) {
 			const element2: string = replaceASingleExpressionElementIntoPrologCode(formattedExpression[index]);
@@ -73,16 +77,22 @@ export function replaceASingleExpressionElementIntoPrologCode(formattedExpressio
 
 // i know its not really useful to return a boolean list actually but i will work on it soon to make this function some more usefull;
 // im planning to improve this into a exception detector soon and export it into a own ts file
+//TO DO: USE THE INDEX AS MARKER WHERE THE ERROR WAS DETECTED AND BUILD A ERROR HASH MAP instead of returning a boolean
 export function errorDetector(preFormattedExpression: string[]) {
 
 	const detectedErrors: boolean[] = [];
 	if (detectBracketErrors(preFormattedExpression) === true) {
 		detectedErrors.push(detectBracketErrors(preFormattedExpression));
 	}
-	// maybe do something with the errorlist or not....TO DO STUFF HERE
+	if (detectMissingStatementsOrConnector(preFormattedExpression) === true) {
+		detectedErrors.push(detectMissingStatementsOrConnector(preFormattedExpression));
+	}
 
+	// maybe do something with the errorlist or not....TO DO STUFF HERE
 }
 
+
+//TO DO: USE THE INDEX AS MARKER WHERE THE ERROR WAS DETECTED AND BUILD A ERROR HASH MAP instead of returning a boolean
 /**
 * check the expression if the amount of opened and closed brackets is correct; it can detect user mistakes; RETURN true if the user made a mistake;
 * ---------------------------------------
@@ -102,11 +112,43 @@ export function detectBracketErrors(formattedExpression: string[]) {
 		index++;
 	}
 	if (bracketCount > 0) {
-		// THROW EXCEPTION HERE: Bracket Error; some brackets are not closed;
+		// THROW EXCEPTION HERE: Bracket Error; some brackets are not closed; ADD ERROR NUMBER
 		return true;
 	} else if (bracketCount < 0) {
-		// THROW EXCEPTION HERE: Bracket Error; too much brackets has been closed or has been closed before a bracket were opened;
+		// THROW EXCEPTION HERE: Bracket Error; too much brackets has been closed or has been closed before a bracket were opened; ADD ERROR NUMBER
 		return true;
 	}
 	return false;
+}
+
+//TO DO: USE THE INDEX AS MARKER WHERE THE ERROR WAS DETECTED AND BUILD A ERROR HASH MAP instead of returning a boolean
+export function detectMissingStatementsOrConnector(formattedExpression: string[]) {
+	let index = 0;
+	let connector = true;
+	let statement = false;
+	while (index < formattedExpression.length) {
+		if (formattedExpression[index].match(test)) {	// ignore negations and brackets here
+			index++;
+		} else if (formattedExpression[index].match(logicConnector)) {
+			if (connector === true) {
+				return true; // ERROR: missing statement; ADD ERROR NUMBER
+			}
+			connector = true;											// mark, that a connector was found
+			statement = false;											// unmark statement marker
+			index++;
+		} else {														//else case means that a statement was found
+			if (statement === true) {
+				return true; // ERROR: missing connector; ADD ERROR NUMBER
+			}
+			connector = false;											// unmark connector marker
+			statement = true;											// mark, that a statement was found
+			index++;
+		}
+		
+	}
+	if (statement === false || connector === true){
+		return true; // ERROR: missing statement at the end of the expression; ADD ERROR NUMBER
+	}
+
+	return false;			// no error detected;
 }
