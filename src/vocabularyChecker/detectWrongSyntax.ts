@@ -5,7 +5,7 @@ import Issue from "./Issue";
  * Regular expression that looks for any and all words. A word is defined as some sequence of
  * characters (\w*S) betweeen wordbarriers (\b)
  */
-const anyWord = new RegExp(/\b(\w*\S)\b/g);
+const anyWord = new RegExp(/\b\w+\b/g);
 /**
  * Predefined dictionary containing all allowed Words
  */
@@ -86,11 +86,11 @@ function logInvalidWords(invalidWords: Map<string, Position[]>) {
  * returns an Issue-like object, telling the user which word is not allowed and on which position it is.
  */
 
-export function logMapElement(from: number, to: number, word: string): Issue {
-	return {message: `${word} an Stelle ${from} ist ein unerlaubtes Wort! \n`,
+export function logMapElement(position: Position, word: string): Issue {
+	return {message: `${word} an Stelle ${position.fromIndex} ist ein unerlaubtes Wort! \n`,
 		position: {
-			fromIndex: from,
-			toIndex: to,
+			fromIndex: position.fromIndex,
+			toIndex: position.toIndex,
 			},
 		};
 	}
