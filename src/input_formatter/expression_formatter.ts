@@ -1,3 +1,7 @@
+// IMPORTS
+import { addErrorToErrorMap } from "../error_map/error_map";
+
+
 const allowedExpressionToken = /(bracketLeft|bracketRight|equivalence|implication|negation|conjunction|disjunction)+/;
 const logicConnector = /(conjunction|disjunction|equivalence|implication)+/;
 const negation = /(negation)+/;
@@ -91,8 +95,6 @@ export function errorDetector(preFormattedExpression: string[]) {
 	// maybe do something with the errorlist or not....TO DO STUFF HERE
 }
 
-
-//TO DO: USE THE INDEX AS MARKER WHERE THE ERROR WAS DETECTED AND BUILD A ERROR HASH MAP instead of returning a boolean
 /**
 * check the expression if the amount of opened and closed brackets is correct; it can detect user mistakes; RETURN true if the user made a mistake;
 * ---------------------------------------
@@ -112,16 +114,15 @@ export function detectBracketErrors(formattedExpression: string[]) {
 		index++;
 	}
 	if (bracketCount > 0) {
-		// THROW EXCEPTION HERE: Bracket Error; some brackets are not closed; ADD ERROR NUMBER
+		addErrorToErrorMap(200);	//"200|Bracket Error: some brackets are not closed."
 		return true;
 	} else if (bracketCount < 0) {
-		// THROW EXCEPTION HERE: Bracket Error; too much brackets has been closed or has been closed before a bracket were opened; ADD ERROR NUMBER
+		addErrorToErrorMap(201);	//"201|Bracket Error: too much brackets has been closed or has been closed before a bracket were opened."
 		return true;
 	}
 	return false;
 }
 
-//TO DO: USE THE INDEX AS MARKER WHERE THE ERROR WAS DETECTED AND BUILD A ERROR HASH MAP instead of returning a boolean
 export function detectMissingStatementsOrConnector(formattedExpression: string[]) {
 	let index = 0;
 	let connector = true;
@@ -131,14 +132,16 @@ export function detectMissingStatementsOrConnector(formattedExpression: string[]
 			index++;
 		} else if (formattedExpression[index].match(logicConnector)) {
 			if (connector === true) {
-				return true; // ERROR: missing statement; ADD ERROR NUMBER
-			}
+			addErrorToErrorMap(202);				//"202|Missing Statement Error: It seems, you forgot some statements inside your logic expression."
+			return true;
+		}
 			connector = true;											// mark, that a connector was found
 			statement = false;											// unmark statement marker
 			index++;
 		} else {														//else case means that a statement was found
 			if (statement === true) {
-				return true; // ERROR: missing connector; ADD ERROR NUMBER
+			addErrorToErrorMap(204);				//"204|Missing Connector Error: It seems, you forgot some connector between your statements inside your logic expression."
+			return true;
 			}
 			connector = false;											// unmark connector marker
 			statement = true;											// mark, that a statement was found
@@ -147,7 +150,8 @@ export function detectMissingStatementsOrConnector(formattedExpression: string[]
 		
 	}
 	if (statement === false || connector === true){
-		return true; // ERROR: missing statement at the end of the expression; ADD ERROR NUMBER
+		addErrorToErrorMap(203);				//"203|Missing Statement Error: It seems, you forgot to add a statement at the end of your logic expression."
+		return true;
 	}
 
 	return false;			// no error detected;
