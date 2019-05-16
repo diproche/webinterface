@@ -1,3 +1,3 @@
-export function uniqueValues<T>(values: Iterable<T>): Iterable<T> {
+export default function uniqueValues<T>(values: Iterable<T>): Iterable<T> {
 		return new Set(values);
 	}

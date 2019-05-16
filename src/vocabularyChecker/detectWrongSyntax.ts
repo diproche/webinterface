@@ -1,5 +1,6 @@
 import json from "./AllowedVocab.json";
 import Issue from "./Issue";
+import uniqueValues from "./Iterators";
 /**
  * Regular expression that looks for any and all words. A word is defined as some sequence of
  * characters (\w+) betweeen wordbarriers (\b)
@@ -50,7 +51,7 @@ export function collectAllInvalidWords(text: string): string[] {
 }
 
 function removeDuplicates<T>(invalidWords: T[]): T[] {
-	return invalidWords.filter((value, item) => invalidWords.indexOf(value) === item);
+	return Array.from(uniqueValues(invalidWords));
 }
 
 /**
