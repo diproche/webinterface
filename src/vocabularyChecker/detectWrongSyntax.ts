@@ -2,7 +2,7 @@ import json from "./AllowedVocab.json";
 import Issue from "./Issue";
 /**
  * Regular expression that looks for any and all words. A word is defined as some sequence of
- * characters (\w*S) betweeen wordbarriers (\b)
+ * characters (\w+) betweeen wordbarriers (\b)
  */
 const anyWord = new RegExp(/\b\w+\b/g);
 /**

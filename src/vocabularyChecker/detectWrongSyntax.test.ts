@@ -123,4 +123,16 @@ describe("getAllIssues", () => {
 		expect(issues).toEqual(
 			[{message: "Te", position: {fromIndex: 0, toIndex: 2}}, {message: "st", position: {fromIndex: 3, toIndex: 5}}]);
 	});
+
+	it("Detects a String of word1.word2 as two words", () => {
+		const issues = getAllIssues("Te.st");
+		expect(issues).toEqual(
+			[{message: "Te", position: {fromIndex: 0, toIndex: 2}}, {message: "st", position: {fromIndex: 3, toIndex: 5}}]);
+	});
+
+	it("Detects a String of word1,;:<>=word2 as two words", () => {
+		const issues = getAllIssues("Te,;<>=st");
+		expect(issues).toEqual(
+			[{message: "Te", position: {fromIndex: 0, toIndex: 2}}, {message: "st", position: {fromIndex: 7, toIndex: 9}}]);
+	});
 });
