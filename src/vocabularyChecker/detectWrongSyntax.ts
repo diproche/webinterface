@@ -76,7 +76,7 @@ function removeDuplicates<T>(invalidWords: T[]): T[] {
  * iff there are invalid Words.
  */
 
-function logInvalidWords(invalidWords: Map<string, Position[]>) {
+function logInvalidWords(invalidWords: Map<Position[], string>) {
 	return invalidWords.size > 0 ? `${invalidWords.forEach(logMapElement)}` : undefined;
 }
 
@@ -86,7 +86,7 @@ function logInvalidWords(invalidWords: Map<string, Position[]>) {
  * returns an Issue-like object, telling the user which word is not allowed and on which position it is.
  */
 
-export function logMapElement(position: Position, word: string): Issue {
+export function logMapElement(word: string, position: Position): Issue {
 	return {message: `${word} an Stelle ${position.fromIndex} ist ein unerlaubtes Wort! \n`,
 		position: {
 			fromIndex: position.fromIndex,

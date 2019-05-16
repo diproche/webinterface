@@ -72,7 +72,9 @@ describe("logMapElement", () => {
 		const text = `test Test`;
 		const issues = logMapElement([0, text.length], text);
 		expect(issues).toEqual({message: text + " an Stelle 0," + text.length + " ist ein unerlaubtes Wort! \n",
-		position: {fromIndex: 0, toIndex: text.length}});
+		position: {
+			fromIndex: 0,
+			toIndex: text.length}});
 	});
 }),
 
