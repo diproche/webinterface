@@ -51,18 +51,18 @@ export class PrologResult {
 
 	private getResultsFor(variable: string): string[] {
 		// Group 1 will be the content of the variable independent of the variable length.
-	 const pattern = new RegExp(variable + variableAnswerPattern, "g");
-	 return this.regexGroupToArray(this.rawResults.toString(), pattern, 1);
+		const pattern = new RegExp(variable + variableAnswerPattern, "g");
+		return this.regexGroupToArray(this.rawResults.toString(), pattern, 1);
 	}
 
 	private rawResultsToInnerArray(source: string): string[] {
 
-	// Returns ["true"] or ["false"] in case of boolean answers
-	const booleanAnswer = booleanAnswerRegExp.exec(source);
-	if (booleanAnswer !== null) { return [booleanAnswer[1]]; }
+		// Returns ["true"] or ["false"] in case of boolean answers
+		const booleanAnswer = booleanAnswerRegExp.exec(source);
+		if (booleanAnswer !== null) { return [booleanAnswer[1]]; }
 
-	const pattern = new RegExp(variableAnswerPattern, "g");
-	return this.regexGroupToArray(source, pattern, 1);
+		const pattern = new RegExp(variableAnswerPattern, "g");
+		return this.regexGroupToArray(source, pattern, 1);
 	}
 
 	private getVariables(): Set<string> {

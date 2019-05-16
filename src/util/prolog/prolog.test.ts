@@ -1,5 +1,3 @@
-
-import { PrologSession } from "./prologSession";
 import * as programs from "./testPrograms";
 
 // Tau-Prolog always uses "false." to signify the end of the output stream. This behavior deviates from
@@ -95,7 +93,10 @@ describe("PrologResult.getResults()", () => {
 		const session = programs.evenNumbersFacts;
 		const results = (await session.executeQuery("even(X).")).getResults();
 
-		const expectedResults = new Map().set("X", ["2", "4", "6", "8"]).set("booleanAnswers", [false]);
+		const expectedResults =
+			new Map<string, Array<string | boolean>>()
+				.set("X", ["2", "4", "6", "8"])
+				.set("booleanAnswers", [false]);
 
 		expect(results).toStrictEqual(expectedResults);
 	});
@@ -104,7 +105,10 @@ describe("PrologResult.getResults()", () => {
 		const session = programs.family;
 		const results = (await session.executeQuery("grandmother(X, son).")).getResults();
 
-		const expectedResults = new Map().set("X", ["grandmotherm", "grandmotherf"]).set("booleanAnswers", [false]);
+		const expectedResults =
+			new Map<string, Array<string | boolean>>()
+				.set("X", ["grandmotherm", "grandmotherf"])
+				.set("booleanAnswers", [false]);
 
 		expect(results).toStrictEqual(expectedResults);
 	});

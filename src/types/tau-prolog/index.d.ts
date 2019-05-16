@@ -1,10 +1,5 @@
-export namespace type {
-  export class Session{
-    constructor(stepLimit: number);
-    consult(codebase: string): void;
-    query(query: string): void;
-    answer(callbackFunction: (x: any) => void): void;
-  }
-}
+declare module 'tau-prolog/modules/core'{
+  export namespace type{ const session: any; }
+  export function format_answer(answer: any): string;
 
-export function format_answer(output: any): string;
+};
