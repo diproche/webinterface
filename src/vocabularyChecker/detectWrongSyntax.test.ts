@@ -129,16 +129,18 @@ describe("CollectAllInvalidWordsInIssues", () => {
 	it("Creates a correct Issue-array for a word consisting only of a Whitespace", () => {
 		const issues = collectInvalidWordsInIssues("Te st", [" "]);
 		expect(issues).toEqual(
-			[{
-				code: 1,
-				message: " ",
-				position: {
-					fromIndex: 2,
-					toIndex: 3,
+			[
+				{
+					code: 1,
+					message: " ",
+					position: {
+						fromIndex: 2,
+						toIndex: 3,
+					},
+					severity: 3,
 				},
-				severity: 3,
-			},
-		]);
+			],
+		);
 	});
 });
 
@@ -146,87 +148,98 @@ describe("getAllIssues", () => {
 	it("Creates a correct Issue-array for one wrong word containing only this word", () => {
 		const issues = getAllIssues("WrongWord RightWord");
 		expect(issues).toEqual(
-			[{
-				code: 1,
-				message: "WrongWord",
-				position: {
-					fromIndex: 0,
-					toIndex: 9,
+			[
+				{
+					code: 1,
+					message: "WrongWord",
+					position: {
+						fromIndex: 0,
+						toIndex: 9,
+					},
+					severity: 3,
 				},
-				severity: 3,
-			},
-		]);
-	});
+			],
+		);
+	},
+);
 
 	it("Creates a correct Issue-array for two words seperated by a Whitespace", () => {
 		const issues = getAllIssues("Te st");
 		expect(issues).toEqual(
-			[{
-				code: 1,
-				message: "Te",
-				position: {
-					fromIndex: 0,
-					toIndex: 2,
+			[
+				{
+					code: 1,
+					message: "Te",
+					position: {
+						fromIndex: 0,
+						toIndex: 2,
+					},
+					severity: 3,
 				},
-				severity: 3,
-			},
-			{
-				code: 1,
-				message: "st",
-				position: {
-					fromIndex: 3,
-					toIndex: 5,
+				{
+					code: 1,
+					message: "st",
+					position: {
+						fromIndex: 3,
+						toIndex: 5,
+					},
+					severity: 3,
 				},
-				severity: 3,
-			}]);
-	});
+			],
+		);
+	},
+);
 
 	it("Detects a String of word1.word2 as two words", () => {
 		const issues = getAllIssues("Te.st");
 		expect(issues).toEqual(
-			[{
-				code: 1,
-				message: "Te",
-				position: {
-					fromIndex: 0,
-					toIndex: 2,
+			[
+				{
+					code: 1,
+					message: "Te",
+					position: {
+						fromIndex: 0,
+						toIndex: 2,
+					},
+					severity: 3,
 				},
-				severity: 3,
-			},
-			{
-				code: 1,
-				message: "st",
-				position: {
-					fromIndex: 3,
-					toIndex: 5,
+				{
+					code: 1,
+					message: "st",
+					position: {
+						fromIndex: 3,
+						toIndex: 5,
+					},
+					severity: 3,
 				},
-				severity: 3,
-			},
-		],
-	);
-});
+			],
+		);
+	},
+);
 
 	it("Detects a String of word1,;:<>=word2 as two words", () => {
 		const issues = getAllIssues("Te,;<>=st");
 		expect(issues).toEqual(
-			[{
-				code: 1,
-				message: "Te",
-				position: {
-					fromIndex: 0,
-					toIndex: 2,
-				},
-				severity: 3,
-			},
+			[
 				{
-				code: 1,
-				message: "st",
-				position: {
-					fromIndex: 7,
-					toIndex: 9,
+					code: 1,
+					message: "Te",
+					position: {
+						fromIndex: 0,
+						toIndex: 2,
+					},
+					severity: 3,
 				},
-				severity: 3,
-			},
-		]);
+				{
+					code: 1,
+					message: "st",
+					position: {
+						fromIndex: 7,
+						toIndex: 9,
+					},
+					severity: 3,
+				},
+			],
+		);
 	});
 });
