@@ -14,7 +14,7 @@ export interface Position { fromIndex: number; toIndex: number; }
 /**
  * Takes all wrong words of a text and puts them into an array of Issues.
  * For example: "WrongWord RightWord" should result in an
- * result Issue[] = {message = "wrongWord", position: {fromIndex = 0, toIndex = 8}}
+ * result Issue[] = {message = "wrongWord", position: {fromIndex = 0, toIndex = 9}}
  */
 
 export function collectInvalidWordsInIssues(text: string, invalidWords: string[]): Issue[] {
