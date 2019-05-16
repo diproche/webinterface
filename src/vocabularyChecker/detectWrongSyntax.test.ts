@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Severity } from "../checking/issue";
 import {collectAllInvalidWords, collectInvalidWordsInIssues, getAllIssues} from "./detectWrongSyntax";
 import {getInvalidWords, logMultipleOccurences, logMultipleWords, logSingleWord} from "./detectWrongSyntax";
 import {Position} from "./detectWrongSyntax";
-import { Severity } from "../checking/issue";
 
 describe("getInvalidWords", () => {
 	it("Returns the correct word for a normal text", () => {
