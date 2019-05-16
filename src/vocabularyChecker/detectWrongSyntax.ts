@@ -61,33 +61,32 @@ export function collectAllInvalidWords(text: string): string[] {
 	return words.filter(word => !(allowedWords.includes(word)));
 }
 
-/**
- * @param invalidWords
- * @returns a Stringarray containing the same elements as @param invalidWords
- * minus duplicate elements.
- */
 function removeDuplicates<T>(invalidWords: T[]): T[] {
 	return invalidWords.filter((value, item) => invalidWords.indexOf(value) === item);
 }
 
 /**
- * (input:) @param invalidWords.
- * Prints out a error message on the console (later to the user),
- * iff there are invalid Words.
+ * The next three functions print a Message for every occurence of every invalid word.
  */
 
-function logInvalidWords(invalidWords: Map<Position[], string>) {
-	return invalidWords.size > 0 ? `${invalidWords.forEach(logMapElement)}` : undefined;
+export function logMultipleWords(words: string[], positions: Position[]): Issue[][] {
+	const result = [];
+	for (const word of words) {
+		result.push(logMultipleOccurences(word, positions));
+	}
+	return result;
 }
 
-/**
- * @param value consisting of value[0], the fromIndex and value[1], the toIndex
- * @param key
- * returns an Issue-like object, telling the user which word is not allowed and on which position it is.
- */
+export function logMultipleOccurences(word: string, position: Position[]): Issue[] {
+	const result = [];
+	for (const pos of position) {
+		result.push(logSingleWord(word, pos));
+	}
+	return result;
+}
 
-export function logMapElement(word: string, position: Position): Issue {
-	return {message: `${word} an Stelle ${position.fromIndex} ist ein unerlaubtes Wort! \n`,
+export function logSingleWord(word: string, position: Position): Issue {
+	return {message: `${word} an der Stelle ${position.fromIndex} ist ein unerlaubtes Wort! \n`,
 		position: {
 			fromIndex: position.fromIndex,
 			toIndex: position.toIndex,
