@@ -1,4 +1,10 @@
-declare module "tau-prolog/modules/core" {
-    export const type: any;
-    export const format_answer: any;
+export namespace type {
+  export class Session{
+    constructor(stepLimit: number);
+    consult(codebase: string): void;
+    query(query: string): void;
+    answer(callbackFunction: (x: any) => void): void;
+  }
 }
+
+export function format_answer(output: any): string;

@@ -1,6 +1,11 @@
 // First Group will be the variable value. Doesn't fetch the variable names
 const variableAnswerPattern: string = " = (\\w*|\\[.*\\])?(,| ;|.)";
+
+// First Group contains true or false
 const booleanAnswerRegExp = /^(true|false)( ;|,|.)$/;
+
+// Second group contains the variable names
+const variableNameRegExp = /(^| )([A-Z]\w*)/g;
 
 export class PrologResult {
 	private readonly rawResults: string[];
@@ -19,7 +24,7 @@ export class PrologResult {
 		*
 		*
 		*/
-	public getResults(): Map<string, Array<string | boolean>> {
+	public getResults(): ReadonlyMap<string, Array<string | boolean>> {
 		if (this.results !== undefined) { return this.results; }
 
 		const results = new Map();
@@ -61,10 +66,7 @@ export class PrologResult {
 	}
 
 	private getVariables(): Set<string> {
-
-		// Second group contains the variable names
-		const pattern = /(^| )([A-Z]\w*)/g;
-		const rawVariables: string[] = this.regexGroupToArray(this.rawResults.toString(), pattern, 2);
+		const rawVariables: string[] = this.regexGroupToArray(this.rawResults.toString(), variableNameRegExp, 2);
 
 		return new Set(rawVariables);
 	}
@@ -77,9 +79,9 @@ export class PrologResult {
 		return booleanResults;
 	}
 
-	private regexGroupToArray(basis: string, pattern: any, group: number): string[] {
+	private regexGroupToArray(basis: string, pattern: RegExp, group: number): string[] {
 		const groupContent: string[] = [];
-		let matchGroups: string[];
+		let matchGroups: string[] | null;
 
 		while ((matchGroups = pattern.exec(basis)) !== null) {
 			groupContent.push(matchGroups[group]);
