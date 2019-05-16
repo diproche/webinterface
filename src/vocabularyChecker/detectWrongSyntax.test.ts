@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import {collectAllInvalidWords, collectInvalidWordsInIssues, getAllIssues} from "./detectWrongSyntax";
 import {getInvalidWords, logMultipleOccurences, logMultipleWords, logSingleWord} from "./detectWrongSyntax";
 import {Position} from "./detectWrongSyntax";
+import { Severity } from "../checking/issue";
 
 describe("getInvalidWords", () => {
 	it("Returns the correct word for a normal text", () => {
@@ -61,11 +62,15 @@ describe("logSingleWord", () => {
 		const position: Position = {fromIndex: 0, toIndex: 4};
 		const issues = logSingleWord("Hello", position);
 		expect(issues).toEqual(
-			{message: `${"Hello"} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
-		position: {
-			fromIndex: position.fromIndex,
-			toIndex: position.toIndex,
-			}});
+			{
+			code: 1,
+			message: `${"Hello"} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
+			position: {
+				fromIndex: position.fromIndex,
+				toIndex: position.toIndex,
+			},
+			severity: 3,
+		});
 	});
 
 /**
@@ -78,22 +83,30 @@ describe("logSingleWord", () => {
 		const position: Position = {fromIndex: 0, toIndex: 0};
 		const issues = logSingleWord("", position);
 		expect(issues).toEqual(
-			{message: `${""} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
-		position: {
-			fromIndex: position.fromIndex,
-			toIndex: position.toIndex,
-			}});
+			{
+			code: 1,
+			message: `${""} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
+			position: {
+				fromIndex: position.fromIndex,
+				toIndex: position.toIndex,
+			},
+			severity : 3,
+		});
 	});
 
 	it("Logs a word consisting only of a whitespace correctly", () => {
 		const position: Position = {fromIndex: 0, toIndex: 1};
 		const issues = logSingleWord(" ", position);
 		expect(issues).toEqual(
-			{message: `${" "} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
+			{
+			code: 1,
+			message: `${" "} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
 			position: {
-			fromIndex: position.fromIndex,
-			toIndex: position.toIndex,
-		}});
+				fromIndex: position.fromIndex,
+				toIndex: position.toIndex,
+			},
+			severity: 3,
+		});
 	});
 });
 
@@ -101,13 +114,31 @@ describe("CollectAllInvalidWordsInIssues", () => {
 	it("Creates a correct Issue-array for one wrong word containing only this word", () => {
 		const issues = collectInvalidWordsInIssues("WrongWord RightWord", ["WrongWord"]);
 		expect(issues).toEqual(
-			[{message: "WrongWord", position: {fromIndex: 0, toIndex: 9}}]);
+			[{
+				code: 1,
+				message: "WrongWord",
+				position: {
+					fromIndex: 0,
+					toIndex: 9,
+				},
+				severity: 3,
+			},
+		]);
 	});
 
 	it("Creates a correct Issue-array for a word consisting only of a Whitespace", () => {
 		const issues = collectInvalidWordsInIssues("Te st", [" "]);
 		expect(issues).toEqual(
-			[{message: " ", position: {fromIndex: 2, toIndex: 3}}]);
+			[{
+				code: 1,
+				message: " ",
+				position: {
+					fromIndex: 2,
+					toIndex: 3,
+				},
+				severity: 3,
+			},
+		]);
 	});
 });
 
@@ -115,26 +146,87 @@ describe("getAllIssues", () => {
 	it("Creates a correct Issue-array for one wrong word containing only this word", () => {
 		const issues = getAllIssues("WrongWord RightWord");
 		expect(issues).toEqual(
-			[{message: "WrongWord", position: {fromIndex: 0, toIndex: 9}}]);
+			[{
+				code: 1,
+				message: "WrongWord",
+				position: {
+					fromIndex: 0,
+					toIndex: 9,
+				},
+				severity: 3,
+			},
+		]);
 	});
 
 	it("Creates a correct Issue-array for two words seperated by a Whitespace", () => {
 		const issues = getAllIssues("Te st");
 		expect(issues).toEqual(
-			[{message: "Te", position: {fromIndex: 0, toIndex: 2}}, {message: "st", position: {fromIndex: 3, toIndex: 5}}]);
+			[{
+				code: 1,
+				message: "Te",
+				position: {
+					fromIndex: 0,
+					toIndex: 2,
+				},
+				severity: 3,
+			},
+			{
+				code: 1,
+				message: "st",
+				position: {
+					fromIndex: 3,
+					toIndex: 5,
+				},
+				severity: 3,
+			}]);
 	});
 
 	it("Detects a String of word1.word2 as two words", () => {
 		const issues = getAllIssues("Te.st");
 		expect(issues).toEqual(
-			[{message: "Te", position: {fromIndex: 0, toIndex: 2}}, {message: "st", position: {fromIndex: 3, toIndex: 5}}]);
-	});
+			[{
+				code: 1,
+				message: "Te",
+				position: {
+					fromIndex: 0,
+					toIndex: 2,
+				},
+				severity: 3,
+			},
+			{
+				code: 1,
+				message: "st",
+				position: {
+					fromIndex: 3,
+					toIndex: 5,
+				},
+				severity: 3,
+			},
+		],
+	);
+});
 
 	it("Detects a String of word1,;:<>=word2 as two words", () => {
 		const issues = getAllIssues("Te,;<>=st");
 		expect(issues).toEqual(
-			[{message: "Te", position: {fromIndex: 0, toIndex: 2}},
-			{message: "st", position: {fromIndex: 7, toIndex: 9}},
+			[{
+				code: 1,
+				message: "Te",
+				position: {
+					fromIndex: 0,
+					toIndex: 2,
+				},
+				severity: 3,
+			},
+				{
+				code: 1,
+				message: "st",
+				position: {
+					fromIndex: 7,
+					toIndex: 9,
+				},
+				severity: 3,
+			},
 		]);
 	});
 });

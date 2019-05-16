@@ -1,6 +1,11 @@
+import Issue, { Severity } from "../checking/issue";
+import IssueCode from "../checking/issueCodes";
 import json from "./AllowedVocab.json";
-import Issue from "./Issue";
 import uniqueValues from "./Iterators";
+
+const vocabularyIssueSeverity = Severity.FatalError;
+const vocabIssueCode = IssueCode.VocabularyIssue;
+
 /**
  * Regular expression that looks for any and all words. A word is defined as some sequence of
  * characters (\w+) betweeen wordbarriers (\b)
@@ -30,7 +35,11 @@ export function collectInvalidWordsInIssues(text: string, invalidWords: string[]
 			fromIndex: text.indexOf(word),
 			toIndex: (text.indexOf(word) + word.length)};
 		positions.push(temp);
-		issues.push({message: word, position: temp});
+		issues.push({message: word,
+					 position: temp,
+					 severity: vocabularyIssueSeverity,
+					 code: vocabIssueCode,
+					});
 	}
 	return issues;
 }
@@ -75,5 +84,7 @@ export function logSingleWord(word: string, position: Position): Issue {
 			fromIndex: position.fromIndex,
 			toIndex: position.toIndex,
 			},
+			severity: vocabularyIssueSeverity,
+			code: vocabIssueCode,
 		};
 	}
