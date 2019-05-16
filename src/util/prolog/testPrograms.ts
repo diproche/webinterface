@@ -4,7 +4,7 @@ import {PrologSession} from "./prologSession";
 // instead of names
 // grandfatherf for grandfather father side of the family
 // grandfatherm for grandfather mother side of the family
-export const familySession = new PrologSession(`
+export const family = new PrologSession(`
   male(dad).
   male(son).
   male(grandfatherm).
@@ -43,4 +43,23 @@ export const familySession = new PrologSession(`
   grandmother(X, Z):-
   grandparent(X, Z),
   female(X).
-    `, 1000);
+  `, 1000);
+
+export const max = new PrologSession(`
+  max(X,Y,Y)  :-  X  =<  Y, !.
+  max(X, Y, X).
+  `, 1000);
+
+export const evenNumbersFacts = new PrologSession(`
+  even(2).
+  even(4).
+  even(6).
+  even(8).
+  `, 1000);
+
+export const emptyCode = new PrologSession("", 1000);
+
+export const likingFacts = new PrologSession(`
+  likes(lisa, bob).
+  likes(frank, lisa).
+  `, 1000);
