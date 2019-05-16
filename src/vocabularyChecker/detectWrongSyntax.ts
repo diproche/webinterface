@@ -17,6 +17,10 @@ export interface Position { fromIndex: number; toIndex: number; }
  * result Issue[] = {message = "wrongWord", position: {fromIndex = 0, toIndex = 9}}
  */
 
+export function getAllIssues(text: string): Issue[] {
+	return collectInvalidWordsInIssues(text, collectAllInvalidWords(text));
+}
+
 export function collectInvalidWordsInIssues(text: string, invalidWords: string[]): Issue[] {
 	const issues = [];
 	const positions: Position[] = [];

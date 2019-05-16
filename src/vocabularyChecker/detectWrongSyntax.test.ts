@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {collectAllInvalidWords, collectInvalidWordsInIssues} from "./detectWrongSyntax";
+import {collectAllInvalidWords, collectInvalidWordsInIssues, getAllIssues} from "./detectWrongSyntax";
 import {getInvalidWords, logMultipleOccurences, logMultipleWords, logSingleWord} from "./detectWrongSyntax";
 import {Position} from "./detectWrongSyntax";
 
@@ -98,10 +98,29 @@ describe("logSingleWord", () => {
 });
 
 describe("CollectAllInvalidWordsInIssues", () => {
-	it("Creates a correct Issue-array for one wrong word", () => {
-		const position: Position = {fromIndex: 0, toIndex: "WrongWord".length - 1};
+	it("Creates a correct Issue-array for one wrong word containing only this word", () => {
 		const issues = collectInvalidWordsInIssues("WrongWord RightWord", ["WrongWord"]);
 		expect(issues).toEqual(
 			[{message: "WrongWord", position: {fromIndex: 0, toIndex: 9}}]);
+	});
+
+	it("Creates a correct Issue-array for a word consisting only of a Whitespace", () => {
+		const issues = collectInvalidWordsInIssues("Te st", [" "]);
+		expect(issues).toEqual(
+			[{message: " ", position: {fromIndex: 2, toIndex: 3}}]);
+	});
+});
+
+describe("getAllIssues", () => {
+	it("Creates a correct Issue-array for one wrong word containing only this word", () => {
+		const issues = getAllIssues("WrongWord RightWord");
+		expect(issues).toEqual(
+			[{message: "WrongWord", position: {fromIndex: 0, toIndex: 9}}]);
+	});
+
+	it("Creates a correct Issue-array for two words seperated by a Whitespace", () => {
+		const issues = getAllIssues("Te st");
+		expect(issues).toEqual(
+			[{message: "Te", position: {fromIndex: 0, toIndex: 2}}, {message: "st", position: {fromIndex: 3, toIndex: 5}}]);
 	});
 });
