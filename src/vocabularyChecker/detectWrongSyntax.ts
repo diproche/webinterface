@@ -19,27 +19,15 @@ export interface Position { fromIndex: number; toIndex: number; }
  * positions (starting position and end position) inside of a string.
  */
 
-export function createMapOfInvalidWords(text: string, invalidWords: string[]): Map<string, Position[]> {
-	const positions = new Map<string, Position[]>();
-	let pos: Position[] = [];
+export function collectInvalidWordsInIssues(text: string, invalidWords: string[]): Issue[] {
+	const issues = [];
+	const positions: Position[] = [];
 	for (const word of invalidWords) {
 		const temp: Position = {fromIndex: text.indexOf(word), toIndex: (text.indexOf(word) + word.length - 1)};
-		pos.push(temp);
-		positions.set(word, pos);
-		pos = [];
+		positions.push(temp);
+		issues.push({message : word, position: temp});
 	}
-	return positions;
-}
-
-/**
- * @param text
- * @param invalidWords
- * Returns message that tells the user which words are not allowed and on which
- * position those are within @param text.
- */
-export function createErrorMessages(text: string, invalidWords: string[]): string|undefined {
-	const wrongWords = logInvalidWords(createMapOfInvalidWords(text, invalidWords));
-	return wrongWords;
+	return issues;
 }
 
 /**
@@ -86,7 +74,7 @@ export function logMultipleOccurences(word: string, position: Position[]): Issue
 }
 
 export function logSingleWord(word: string, position: Position): Issue {
-	return {message: `${word} an der Stelle ${position.fromIndex} ist ein unerlaubtes Wort! \n`,
+	return {message: `${word} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
 		position: {
 			fromIndex: position.fromIndex,
 			toIndex: position.toIndex,
