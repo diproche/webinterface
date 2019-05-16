@@ -26,9 +26,11 @@ export function collectInvalidWordsInIssues(text: string, invalidWords: string[]
 	const issues = [];
 	const positions: Position[] = [];
 	for (const word of invalidWords) {
-		const temp: Position = {fromIndex: text.indexOf(word), toIndex: (text.indexOf(word) + word.length)};
+		const temp: Position = {
+			fromIndex: text.indexOf(word),
+			toIndex: (text.indexOf(word) + word.length)};
 		positions.push(temp);
-		issues.push({message : word, position: temp});
+		issues.push({message: word, position: temp});
 	}
 	return issues;
 }
@@ -59,23 +61,16 @@ function removeDuplicates<T>(invalidWords: T[]): T[] {
  */
 
 export function logMultipleWords(words: string[], positions: Position[]): Issue[][] {
-	const result = [];
-	for (const word of words) {
-		result.push(logMultipleOccurences(word, positions));
-	}
-	return result;
+	return words.map(word => logMultipleOccurences(word, positions));
 }
 
 export function logMultipleOccurences(word: string, position: Position[]): Issue[] {
-	const result = [];
-	for (const pos of position) {
-		result.push(logSingleWord(word, pos));
-	}
-	return result;
+	return position.map(pos => logSingleWord(word, pos));
 }
 
 export function logSingleWord(word: string, position: Position): Issue {
-	return {message: `${word} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
+	return {
+		message: `${word} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
 		position: {
 			fromIndex: position.fromIndex,
 			toIndex: position.toIndex,

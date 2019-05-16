@@ -90,10 +90,10 @@ describe("logSingleWord", () => {
 		const issues = logSingleWord(" ", position);
 		expect(issues).toEqual(
 			{message: `${" "} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
-		position: {
+			position: {
 			fromIndex: position.fromIndex,
 			toIndex: position.toIndex,
-			}});
+		}});
 	});
 });
 
@@ -133,6 +133,8 @@ describe("getAllIssues", () => {
 	it("Detects a String of word1,;:<>=word2 as two words", () => {
 		const issues = getAllIssues("Te,;<>=st");
 		expect(issues).toEqual(
-			[{message: "Te", position: {fromIndex: 0, toIndex: 2}}, {message: "st", position: {fromIndex: 7, toIndex: 9}}]);
+			[{message: "Te", position: {fromIndex: 0, toIndex: 2}},
+			{message: "st", position: {fromIndex: 7, toIndex: 9}},
+		]);
 	});
 });
