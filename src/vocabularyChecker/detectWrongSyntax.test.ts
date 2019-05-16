@@ -1,7 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {collectAllInvalidWords, createErrorMessages} from "./detectWrongSyntax";
-import {createMapOfInvalidWords, getInvalidWords, logMapElement} from "./detectWrongSyntax";
+import {collectAllInvalidWords, collectInvalidWordsInIssues} from "./detectWrongSyntax";
+import {getInvalidWords, logMultipleOccurences, logMultipleWords, logSingleWord} from "./detectWrongSyntax";
+import {Position} from "./detectWrongSyntax";
 
 describe("getInvalidWords", () => {
 	it("Returns the correct word for a normal text", () => {
@@ -53,9 +54,48 @@ describe("getInvalidWords", () => {
 		const result = getInvalidWords("hello.world");
 		expect(result).toEqual(["hello", "world"]);
 	});
-}),
+});
 
-describe("logMapElement", () => {
+describe("logSingleWord", () => {
+	it("Logs a ordinary word correctly", () => {
+		const position: Position = {fromIndex: 0, toIndex: 4};
+		const issues = logSingleWord("Hello", position);
+		expect(issues).toEqual(
+			{message: `${"Hello"} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
+		position: {
+			fromIndex: position.fromIndex,
+			toIndex: position.toIndex,
+			}});
+	});
+
+	it("Logs a empty word correctly", () => {
+		const position: Position = {fromIndex: 0, toIndex: 0};
+		const issues = logSingleWord("", position);
+		expect(issues).toEqual(
+			{message: `${""} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
+		position: {
+			fromIndex: position.fromIndex,
+			toIndex: position.toIndex,
+			}});
+	});
+
+	it("Logs a word consisting only of a whitespace correctly", () => {
+		const position: Position = {fromIndex: 0, toIndex: 1};
+		const issues = logSingleWord(" ", position);
+		expect(issues).toEqual(
+			{message: `${" "} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
+		position: {
+			fromIndex: position.fromIndex,
+			toIndex: position.toIndex,
+			}});
+	});
+});
+
+/**
+ * 
+ * Reimplement the following tests with the new functions
+ * 
+ * describe("logMapElement", () => {
 	it("Logs a map element correctly", () => {
 		const issues = logMapElement([0, 4], `test`);
 		expect(issues).toEqual({message: "test an Stelle 0,4 ist ein unerlaubtes Wort! \n",
@@ -91,3 +131,4 @@ describe("createErrorMessages", () => {
 		expect(issues).toEqual("test1");
 	});
 });
+ */

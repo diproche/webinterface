@@ -1,4 +1,3 @@
-import { Interface } from "readline";
 import json from "./AllowedVocab.json";
 import Issue from "./Issue";
 /**
