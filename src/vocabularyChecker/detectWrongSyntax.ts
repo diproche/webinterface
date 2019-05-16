@@ -12,17 +12,16 @@ const allowedWords = json;
 export interface Position { fromIndex: number; toIndex: number; }
 
 /**
- * @param text
- * @param invalidWords
- * Returns a map of invalid words (consisted in @param invalidWords) and their corresponding
- * positions (starting position and end position) inside of a string.
+ * Takes all wrong words of a text and puts them into an array of Issues.
+ * For example: "WrongWord RightWord" should result in an
+ * result Issue[] = {message = "wrongWord", position: {fromIndex = 0, toIndex = 8}}
  */
 
 export function collectInvalidWordsInIssues(text: string, invalidWords: string[]): Issue[] {
 	const issues = [];
 	const positions: Position[] = [];
 	for (const word of invalidWords) {
-		const temp: Position = {fromIndex: text.indexOf(word), toIndex: (text.indexOf(word) + word.length - 1)};
+		const temp: Position = {fromIndex: text.indexOf(word), toIndex: (text.indexOf(word) + word.length)};
 		positions.push(temp);
 		issues.push({message : word, position: temp});
 	}
@@ -30,18 +29,16 @@ export function collectInvalidWordsInIssues(text: string, invalidWords: string[]
 }
 
 /**
- * @param text
- * Just a function to bundle the functionalities of @function collectAllInvalidWords and
+ * Bundling the functionalities of @function collectAllInvalidWords and
  * @function removeDuplicates.
- * @returns a Stringarray containing exactly one copy of each wrong word in @param text.
+ * @returns a Stringarray containing exactly one copy of each wrong word in a text.
  */
 export function getInvalidWords(text: string): string[] {
 	return removeDuplicates(collectAllInvalidWords(text));
 }
 
 /**
- * @param text
- * @returns a Stringarray containing every occurrence of each wrong word in @param text.
+ * @returns a Stringarray containing every occurrence of each wrong word in a text.
  */
 export function collectAllInvalidWords(text: string): string[] {
 	const words = text.match(anyWord) || [];

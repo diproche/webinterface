@@ -68,6 +68,12 @@ describe("logSingleWord", () => {
 			}});
 	});
 
+/**
+ * The next two testcases should never actually appear in practice. Since an empty word and a single whitespace
+ * are not classified as "words" for our purposes. For the sake of completeness those cases are
+ * tested nonetheless
+ */
+
 	it("Logs a empty word correctly", () => {
 		const position: Position = {fromIndex: 0, toIndex: 0};
 		const issues = logSingleWord("", position);
@@ -91,44 +97,11 @@ describe("logSingleWord", () => {
 	});
 });
 
-/**
- * 
- * Reimplement the following tests with the new functions
- * 
- * describe("logMapElement", () => {
-	it("Logs a map element correctly", () => {
-		const issues = logMapElement([0, 4], `test`);
-		expect(issues).toEqual({message: "test an Stelle 0,4 ist ein unerlaubtes Wort! \n",
-		position: {fromIndex: 0, toIndex: 4}});
-	});
-
-	it("Logs a empty String correctly", () => {
-		const issues = logMapElement([0, 0], ``);
-		expect(issues).toEqual({message: " an Stelle 0,0 ist ein unerlaubtes Wort! \n",
-		position: {fromIndex: 0, toIndex: 0}});
-	});
-
-	it("Logs a String containing multiple words correctly", () => {
-		const text = `test Test`;
-		const issues = logMapElement([0, text.length], text);
-		expect(issues).toEqual({message: text + " an Stelle 0," + text.length + " ist ein unerlaubtes Wort! \n",
-		position: {
-			fromIndex: 0,
-			toIndex: text.length}});
-	});
-}),
-
-describe("createMapOfInvalidWords", () => {
-	it("Creates a correct Map", () => {
-		const issues = createMapOfInvalidWords(`test`, [`test`]);
-		expect(issues.entries()).toEqual(["test", [0, 3]]);
-	});
-}),
-
-describe("createErrorMessages", () => {
-	it("Creates a correct error message", () => {
-		const issues = createErrorMessages(`test1`, [`test1`]);
-		expect(issues).toEqual("test1");
+describe("CollectAllInvalidWordsInIssues", () => {
+	it("Creates a correct Issue-array for one wrong word", () => {
+		const position: Position = {fromIndex: 0, toIndex: "WrongWord".length - 1};
+		const issues = collectInvalidWordsInIssues("WrongWord RightWord", ["WrongWord"]);
+		expect(issues).toEqual(
+			[{message: "WrongWord", position: {fromIndex: 0, toIndex: 9}}]);
 	});
 });
- */
