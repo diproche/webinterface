@@ -1,5 +1,6 @@
 // First Group will be the variable value. Doesn't fetch the variable names
-const prologAnswerPattern: string = " = (\\w*|\\[.*\\])?(,| ;|.)";
+const variableAnswerPattern: string = " = (\\w*|\\[.*\\])?(,| ;|.)";
+const booleanAnswerRegExp = /^(true|false)( ;|,|.)$/;
 
 export class PrologResult {
 	private readonly rawResults: string[];
@@ -9,22 +10,26 @@ export class PrologResult {
 		this.rawResults = rawResults;
 	}
 
+	public getRawResults() {
+		return this.rawResults;
+	}
+
 	/**
 		* Generates (if needed) and returns the results.
 		*
-		* @return{Map<string, Map<number, string|boolean>>} First level is the Variable Name or "Boolean".
+		*
 		*/
 	public getResults(): Map<string, Array<string | boolean>> {
 		if (this.results !== undefined) { return this.results; }
 
 		const results = new Map();
 
-		this.getVariables().forEach((e: string) => {
-			results.set(e, this.getResultsFor(e));
+		this.getVariables().forEach((variable: string) => {
+			results.set(variable, this.getResultsFor(variable));
 
 		});
 
-		results.set("Boolean", this.getBooleans());
+		results.set("booleanAnswers", this.getBooleans());
 
 		this.results = results;
 		return results;
@@ -41,16 +46,17 @@ export class PrologResult {
 
 	private getResultsFor(variable: string): string[] {
 		// Group 1 will be the content of the variable independent of the variable length.
-	 const pattern = new RegExp(variable + prologAnswerPattern, "g");
+	 const pattern = new RegExp(variable + variableAnswerPattern, "g");
 	 return this.regexGroupToArray(this.rawResults.toString(), pattern, 1);
 	}
 
 	private rawResultsToInnerArray(source: string): string[] {
 
-	if (source.includes("true")) { return ["true"]; }
-	if (source.includes("false")) { return["false"]; }
+	// Returns ["true"] or ["false"] in case of boolean answers
+	const booleanAnswer = booleanAnswerRegExp.exec(source);
+	if (booleanAnswer !== null) { return [booleanAnswer[1]]; }
 
-	const pattern = new RegExp(prologAnswerPattern, "g");
+	const pattern = new RegExp(variableAnswerPattern, "g");
 	return this.regexGroupToArray(source, pattern, 1);
 	}
 
@@ -69,7 +75,7 @@ export class PrologResult {
 		const booleanResults: boolean[] = results.map((e: string) => e === "true");
 
 		return booleanResults;
-}
+	}
 
 	private regexGroupToArray(basis: string, pattern: any, group: number): string[] {
 		const groupContent: string[] = [];
@@ -80,5 +86,5 @@ export class PrologResult {
 		}
 
 		return groupContent;
-}
+	}
 }
