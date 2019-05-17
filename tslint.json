@@ -16,5 +16,10 @@
 		"no-conditional-assignment": false,
 		"arrow-parens": false
 	},
-	"rulesDirectory": []
+	"rulesDirectory": [],
+	"linterOptions": {
+		"exclude": [
+			"src/serviceWorker.ts"
+		]
+	}
 }
