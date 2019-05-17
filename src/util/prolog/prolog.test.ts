@@ -78,14 +78,6 @@ describe("Tau-Prolog Behavior", () => {
 
 		expect(results).toStrictEqual(["true ;", "false."]);
 	});
-
-	test("Evaluates the maplist/3 Function Correctly", async () => {
-		const session = programs.emptyCode;
-		const results = (await session.executeQuery("maplist(plus(1), [1,2,3], X).")).getRawResults();
-
-		expect(results).toStrictEqual(["X = [2,3,4] ;", "false."]);
-	});
-
 });
 
 describe("PrologResult.getResults()", () => {
