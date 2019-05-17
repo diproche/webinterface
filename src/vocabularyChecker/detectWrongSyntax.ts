@@ -1,6 +1,6 @@
 import Issue, { Severity } from "../checking/issue";
 import { IssueCode } from "../checking/issueCodes";
-import json from "./AllowedVocab.json";
+import json from "./allowedVocab.json";
 import uniqueValues from "./Iterators";
 
 const vocabularyIssueSeverity = Severity.FatalError;
