@@ -44,7 +44,7 @@ test("scan for bracket errors - test 1", () => {
 	expect(result).toEqual(expectedResult);
 });
 
-test("scan for bracket errors - test 2; also test error pipeline", () => {
+test("scan for bracket errors - test 2", () => {
 	const bracketList = ["bracketLeft", "bracketLeft", "bracketLeft",
 	"bracketLeft", "bracketLeft", "bracketRight", "bracketRight"];
 	const result = detectBracketErrors(bracketList);
@@ -52,14 +52,14 @@ test("scan for bracket errors - test 2; also test error pipeline", () => {
 	expect(result).toEqual(expectedResult);
 });
 
-test("scan for bracket errors - test 3; also test error pipeline", () => {
+test("scan for bracket errors - test 3", () => {
 	const bracketList = ["bracketRight", "bracketLeft"];
 	const result = detectBracketErrors(bracketList);
 	const expectedResult = true;
 	expect(result).toEqual(expectedResult);
 });
 
-test("scan for missing Statements or missing connectors - test 1: [ <-> ]; also test error pipeline", () => {
+test("scan for missing Statements or missing connectors - test 1: [ <-> ]", () => {
 	const testExpression = ["bracketLeft", "implication", "bracketRight"];
 	const result = detectMissingStatementsOrConnector(testExpression);
 	const expectedResult = true;
@@ -80,20 +80,20 @@ test("scan for missing Statements or missing connectors - test 3: [ and X ]", ()
 	expect( result).toEqual(expectedResult);
 });
 
-test("scan for missing Statements or missing connectors - test 4 [ A ]; also test error pipeline", () => {
+test("scan for missing Statements or missing connectors - test 4 [ A ]", () => {
 	const testExpression = ["bracketLeft", "A", "bracketRight"];
 	const result = detectMissingStatementsOrConnector(testExpression);
 	const expectedResult = false;
 	expect(result).toEqual(expectedResult);
 });
-test("scan for missing Statements or missing connectors - test 5: [ not A [ ] A ]; also test error pipeline", () => {
+test("scan for missing Statements or missing connectors - test 5: [ not A [ ] A ]", () => {
 	const testExpression = ["bracketLeft", "not", "A", "bracketLeft", "bracketRight", "A", "bracketRight"];
 	const result = detectMissingStatementsOrConnector(testExpression);
 	const expectedResult = true;
 	expect(result).toEqual(expectedResult);
 
 });
-test("scan for missing Statements or missing connectors - test 6: [ A -> B ]; also test error pipeline", () => {
+test("scan for missing Statements or missing connectors - test 6: [ A -> B ]", () => {
 	const testExpression = ["bracketLeft", "A", "implication", "B", "bracketRight"];
 	const result = detectMissingStatementsOrConnector(testExpression);
 	const expectedResult = false;
