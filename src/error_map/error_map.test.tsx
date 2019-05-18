@@ -1,7 +1,6 @@
 // IMPORTS
 import { addErrorToErrorMap, emptyErrorList, findErrorMessage, listCollectedErrors } from "./error_map";
 
-
 test("test if finding of error messages out from the referenc map works correctly;", () => {
 	emptyErrorList();
 	const testErrorMessage = 104;
