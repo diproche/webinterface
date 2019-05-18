@@ -1,6 +1,6 @@
 import Issue, { Severity } from "../checking/issue";
-import IssueCode from "../checking/issueCodes";
-import json from "./AllowedVocab.json";
+import { IssueCode } from "../checking/issueCodes";
+import json from "./allowedVocab.json";
 import uniqueValues from "./Iterators";
 
 const vocabularyIssueSeverity = Severity.FatalError;
@@ -33,13 +33,15 @@ export function collectInvalidWordsInIssues(text: string, invalidWords: string[]
 	for (const word of invalidWords) {
 		const temp: Position = {
 			fromIndex: text.indexOf(word),
-			toIndex: (text.indexOf(word) + word.length)};
+			toIndex: (text.indexOf(word) + word.length),
+		};
 		positions.push(temp);
-		issues.push({message: word,
-					 position: temp,
-					 severity: vocabularyIssueSeverity,
-					 code: vocabIssueCode,
-					});
+		issues.push({
+			message: word,
+			position: temp,
+			severity: vocabularyIssueSeverity,
+			code: vocabIssueCode,
+		});
 	}
 	return issues;
 }
@@ -83,8 +85,8 @@ export function logSingleWord(word: string, position: Position): Issue {
 		position: {
 			fromIndex: position.fromIndex,
 			toIndex: position.toIndex,
-			},
-			severity: vocabularyIssueSeverity,
-			code: vocabIssueCode,
-		};
-	}
+		},
+		severity: vocabularyIssueSeverity,
+		code: vocabIssueCode,
+	};
+}
