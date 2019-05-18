@@ -12,7 +12,6 @@ import { expressionFormatter} from "./expression_formatter";
 const inputSeparator = /([.!?$]|\n)+/g;                                      // List all the values the input will get splitted; \n will split paragraphs, $ will split expressions, the rest split sentences
 const wordSeparator = /[ ,]+/; // List all the values where the content of a sentence will get splitted: whitespace[ ] and comma[,]
 
-
 export function textFormatter(input: string) {
 
 	input = input.replace("$", "$EXPRESSIONMARKER");                            // prepare expressionsdetector; this is needed as marker to finde the expressions after the $ disappear by calling the split-method
@@ -59,6 +58,4 @@ export function sentenceIntoWordList(input: string) {
 	return listOfWords;
 
 }
-
-
-
+

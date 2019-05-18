@@ -1,6 +1,5 @@
 // IMPORTS
-//import { addErrorToErrorMap } from "../error_map/error_map";
-
+// import { addErrorToErrorMap } from "../error_map/error_map";
 
 const allowedExpressionToken = /(bracketLeft|bracketRight|equivalence|implication|negation|conjunction|disjunction)+/;
 const logicConnector = /(conjunction|disjunction|equivalence|implication)+/;
@@ -81,7 +80,7 @@ export function replaceASingleExpressionElementIntoPrologCode(formattedExpressio
 
 // i know its not really useful to return a boolean list actually but i will work on it soon to make this function some more usefull;
 // im planning to improve this into a exception detector soon and export it into a own ts file
-//TO DO: USE THE INDEX AS MARKER WHERE THE ERROR WAS DETECTED AND BUILD A ERROR HASH MAP instead of returning a boolean
+// TO DO: USE THE INDEX AS MARKER WHERE THE ERROR WAS DETECTED AND BUILD A ERROR HASH MAP instead of returning a boolean
 export function errorDetector(preFormattedExpression: string[]) {
 
 	const detectedErrors: boolean[] = [];
@@ -114,10 +113,10 @@ export function detectBracketErrors(formattedExpression: string[]) {
 		index++;
 	}
 	if (bracketCount > 0) {
-		//addErrorToErrorMap(200);	//"200|Bracket Error: some brackets are not closed."
+		// addErrorToErrorMap(200);	//"200|Bracket Error: some brackets are not closed."
 		return true;
 	} else if (bracketCount < 0) {
-		//addErrorToErrorMap(201);	//"201|Bracket Error: too much brackets has been closed or has been closed before a bracket were opened."
+		// addErrorToErrorMap(201);	//"201|Bracket Error: too much brackets has been closed or has been closed before a bracket were opened."
 		return true;
 	}
 	return false;
@@ -132,25 +131,25 @@ export function detectMissingStatementsOrConnector(formattedExpression: string[]
 			index++;
 		} else if (formattedExpression[index].match(logicConnector)) {
 			if (connector === true) {
-		//	addErrorToErrorMap(202);				//"202|Missing Statement Error: It seems, you forgot some statements inside your logic expression."
+		// 	addErrorToErrorMap(202);				//"202|Missing Statement Error: It seems, you forgot some statements inside your logic expression."
 			return true;
 		}
 			connector = true;											// mark, that a connector was found
 			statement = false;											// unmark statement marker
 			index++;
-		} else {														//else case means that a statement was found
+		} else {														// else case means that a statement was found
 			if (statement === true) {
-			//addErrorToErrorMap(204);				//"204|Missing Connector Error: It seems, you forgot some connector between your statements inside your logic expression."
+			// addErrorToErrorMap(204);				//"204|Missing Connector Error: It seems, you forgot some connector between your statements inside your logic expression."
 			return true;
 			}
 			connector = false;											// unmark connector marker
 			statement = true;											// mark, that a statement was found
 			index++;
 		}
-		
+
 	}
-	if (statement === false || connector === true){
-	//	addErrorToErrorMap(203);				//"203|Missing Statement Error: It seems, you forgot to add a statement at the end of your logic expression."
+	if (statement === false || connector === true) {
+	// 	addErrorToErrorMap(203);				//"203|Missing Statement Error: It seems, you forgot to add a statement at the end of your logic expression."
 		return true;
 	}
 
