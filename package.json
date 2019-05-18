@@ -1,35 +1,39 @@
 {
-  "name": "diproche-webinterface",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "node-sass": "^4.11.0",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6",
-    "react-scripts": "2.1.8",
-    "typescript": "3.4.2"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ],
-  "devDependencies": {
-    "@types/jest": "24.0.11",
-    "@types/node": "11.13.2",
-    "@types/react": "16.8.13",
-    "@types/react-dom": "16.8.3",
-    "@types/node-sass": "^4.11.0",
-    "tslint": "^5.15.0"
-  }
+	"name": "diproche-webinterface",
+	"version": "0.1.0",
+	"private": true,
+	"dependencies": {
+		"@types/lodash": "^4.14.123",
+		"lodash": "^4.17.11",
+		"node-sass": "^4.11.0",
+		"react": "^16.8.6",
+		"react-dom": "^16.8.6",
+		"react-scripts": "2.1.8",
+		"tau-prolog": "^0.2.65",
+		"typescript": "3.4.2"
+	},
+	"scripts": {
+		"start": "react-scripts start",
+		"lint": "tslint --project .",
+		"build": "react-scripts build",
+		"test": "react-scripts test",
+		"eject": "react-scripts eject"
+	},
+	"eslintConfig": {
+		"extends": "react-app"
+	},
+	"browserslist": [
+		">0.2%",
+		"not dead",
+		"not ie <= 11",
+		"not op_mini all"
+	],
+	"devDependencies": {
+		"@types/jest": "24.0.11",
+		"@types/node": "11.13.2",
+		"@types/react": "16.8.13",
+		"@types/react-dom": "16.8.3",
+		"@types/node-sass": "^4.11.0",
+		"tslint": "^5.15.0"
+	}
 }
