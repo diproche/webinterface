@@ -17,6 +17,10 @@
 		"arrow-parens": false
 	},
 	"rulesDirectory": [],
-	"linterOptions": {"exclude": ["./src/types/tau-prolog/index.d.ts"]}
-
+	"linterOptions": {
+		"exclude": [
+			"src/serviceWorker.ts",
+			"./src/types/tau-prolog/index.d.ts"
+		]
+	}
 }
