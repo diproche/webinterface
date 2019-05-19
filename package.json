@@ -4,6 +4,7 @@
 	"private": true,
 	"dependencies": {
 		"@types/lodash": "^4.14.123",
+		"diproche": "file:../diproche",
 		"lodash": "^4.17.11",
 		"node-sass": "^4.11.0",
 		"react": "^16.8.6",
