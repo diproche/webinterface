@@ -1,19 +1,34 @@
 {
 	"HINTS": {
-		"TEST": "this is just a test hint discription."
+		"TEST": {
+			"TEST": "this is just a test hint discription."
+		}
 	},
 	"WARNINGS": {
-		"TEST": "This is just a test warning discription.",
-		"BRACKET_UNDERCLOSING": "Some brackets are not closed.",
-		"BRACKET_OVERCLOSING": "Too much brackets has been closed or has been closed before a bracket were opened.",
-		"MISSING_CONNECTOR": "It seems, you forgot some connector between your statements inside your logic expression.",
-		"MISSING_STATEMENT_INSIDE": "It seems, you forgot some statements inside your logic expression.",
-		"MISSING_STATEMENT_AT_THE_END": "It seems, you forgot some statements at the end of your expression."
+		"BRACKET_UNDERCLOSING": {
+			"BRACKET_UNDERCLOSING": "Some brackets are not closed."
+		},
+		"BRACKET_OVERCLOSING": {
+			"BRACKET_OVERCLOSING": "Too much brackets has been closed or has been closed before a bracket were opened."
+		},
+		"MISSING_CONNECTOR": {
+			"MISSING_CONNECTOR": "It seems, you forgot some connector between your statements inside your logic expression."
+		},
+		"MISSING_STATEMENT_INSIDE": {
+			"MISSING_STATEMENT_INSIDE": "It seems, you forgot some statements inside your logic expression."
+		},
+		"MISSING_STATEMENT_AT_THE_END": {
+			"MISSING_STATEMENT_AT_THE_END": "It seems, you forgot some statements at the end of your expression."
+		}
 	},
 	"ERRORS": {
-		"TEST": "this is just a test error discription."
+		"TEST": {
+			"TEST": "this is just a test error discription."
+		}
 	},
 	"FATAL_ERRORS": {
-		"TEST": "this is just a test fatal-error discription."
+		"TEST": {
+			"TEST": "this is just a test fatal discription."
+		}
 	}
 }

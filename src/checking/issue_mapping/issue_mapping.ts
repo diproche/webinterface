@@ -1,77 +1,71 @@
-
 import data from "./known_issues.json";
-
-export enum Severity {
-	/** A problem that does not affect the correctness of the
-	 * input and can possibly be ignored.
-	 */
-	Hint,
-	/** A problem that is not technically making the input
-	 * incorrect, but is either indicating or encouraging a
-	 * real problem.
-	 */
-	Warning,
-	/** A solid incorrectness in the users input, that is not
-	 * preventing the further checking process to take place.
-	 */
-	Error,
-	/** A problem that is immediately stopping all further
-	 * attempts to check the input.
-	 */
-	FatalError,
-}
-
-
 
 export const knownIssueCodes = data;
 
+export class IssueObject {
+	public code!: string;
+	public message!: string;
+	public severity!: string;
+	public startposition?: number;
+	/**optional add a position instead a startposition*/
+	//public position?: Position;
+}
 export function emptyIssueList() {
-	issueReferenceMap.clear();
+	foundIssues = [];
 	emptyHintsList();
 	emptyWarningsList();
 	emptyErrorsList();
 	emptyFatalErrorsList();
 }
 export function emptyHintsList() {
-	foundHints.clear();
+	foundHints = [];
 }
 export function emptyWarningsList() {
-	foundWarnings.clear();
+	foundWarnings = [];
 }
 export function emptyErrorsList() {
-	foundErrors.clear();
+	foundErrors = [];
 }
 export function emptyFatalErrorsList() {
-	foundFatalErrors.clear();
+	foundFatalErrors = [];
 }
 
 // creating reference map with errormessages; could add some stuff to the map if needed
-const issueReferenceMap = new Map();
-const foundHints = new Map();
-const foundWarnings = new Map();
-const foundErrors = new Map();
-const foundFatalErrors = new Map();
+let foundHints: IssueObject[] = [];
+let foundWarnings: IssueObject[] = [];
+let foundErrors: IssueObject[] = [];
+let foundFatalErrors: IssueObject[] = [];
+let foundIssues: IssueObject[] = [];
 
-export function addIssueToIssueMap(severity: number, issueCode: string, inputStringStartIndex: number) {
-	issueReferenceMap.set(issueCode, inputStringStartIndex);
-	if (severity === 0) {
-		foundHints.set(issueCode, inputStringStartIndex);
-	} else if (severity === 1) {
-		foundWarnings.set(issueCode, inputStringStartIndex);
-	} else if (severity === 2) {
-		foundErrors.set(issueCode, inputStringStartIndex);
-	} else if (severity === 3) {
-		foundFatalErrors.set(issueCode, inputStringStartIndex);
-	}
-
+export function getIssueCodeFromJSON(issue: { [s: string]: {}; } | ArrayLike<{}>) {
+	const issueCodes = Object.keys(issue);
+	const issueCode = issueCodes[0];
+	return issueCode;
 }
 
-export function listAllIssues() {
-	return issueReferenceMap;
+export function addIssueToIssueMap(severity: number, issueCode: string, issueMessage: string, startPosition: number) {
+	const issue: IssueObject = new IssueObject();
+	issue.code = issueCode;
+	issue.startposition = startPosition;
+	issue.message = issueMessage;
+	if (severity === 0) {
+		issue.severity = "Hint";
+		foundHints.push(issue);
+	} else if (severity === 1) {
+		issue.severity = "Warning";
+		foundWarnings.push(issue);
+	} else if (severity === 2) {
+		issue.severity = "Error";
+		foundErrors.push(issue);
+	} else if (severity === 3) {
+		issue.severity = "Fatal Error";
+		foundFatalErrors.push(issue);
+	}
+	foundIssues.push(issue);
 }
 
 export function listHints() {
-	return issueReferenceMap;
+	return foundHints;
 }
 
 export function listWarnings() {
@@ -84,4 +78,8 @@ export function listErrors() {
 
 export function listFatalErrors() {
 	return foundFatalErrors;
+}
+
+export function listAllIssues() {
+	return foundIssues;
 }
