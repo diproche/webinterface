@@ -18,15 +18,7 @@ export class PrologSession {
 
 		constructor(program: string, defaultPath: string = __dirname, limit?: number) {
 				this.session = new type.Session(limit);
-
-				let matchGroups: string[] | null;
-				let importedCode: string;
-
-				while ((matchGroups = fetchPrologImportsRegExp.exec(program)) !== null) {
-					 importedCode = fs.readFileSync(defaultPath + path.sep + matchGroups[2] + ".pl", "utf-8");
-					 program = program.replace(fetchPrologImportsRegExp, importedCode);
-				}
-
+				program = this.resolveImports(program, defaultPath);
 				this.session.consult(program);
 		}
 
@@ -50,5 +42,17 @@ export class PrologSession {
 								resolve(format_answer(x));
 						});
 				});
+		}
+
+		private resolveImports(program: string, defaultPath: string): string {
+			let matchGroups: string[] | null;
+			let importedCode: string;
+
+			while ((matchGroups = fetchPrologImportsRegExp.exec(program)) !== null) {
+				 importedCode = fs.readFileSync(defaultPath + path.sep + matchGroups[2] + ".pl", "utf-8");
+				 program = program.replace(fetchPrologImportsRegExp, importedCode);
+			}
+
+			return program;
 		}
 }
