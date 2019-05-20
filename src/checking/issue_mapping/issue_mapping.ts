@@ -81,3 +81,16 @@ export function listFatalErrors() {
 export function listAllIssues() {
 	return foundIssues;
 }
+
+export function getIssueCodeFromIssue(obj: IssueObject) {
+	return obj.code;
+}
+export function getIssueMessageFromIssue(obj: IssueObject) {
+	return obj.message;
+}
+export function getIssueSeverityFromIssue(obj: IssueObject) {
+	return obj.severity;
+}
+export function getIssuePositionFromIssue(obj: IssueObject) {
+	return obj.startposition;
+}
