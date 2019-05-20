@@ -4,7 +4,7 @@ import { format_answer, type } from "tau-prolog/modules/core";
 import {PrologResult} from "./prologResult";
 
 // RegExp group one will be the file to be imported.
-const fetchPrologImportsRegExp = /:-( |)use_module\(([a-zA-Z1-9]*)\)\./g;
+const fetchPrologImportsRegExp = /:-( |)use_module\(([a-zA-Z1-9]*)\) *\./g;
 const fetchModuleDeclerationsRegExp = /:-( |)module\([^)]*\) *\./g;
 
 export function importFile(relativePath: string): PrologSession {
