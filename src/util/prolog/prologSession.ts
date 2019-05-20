@@ -17,14 +17,21 @@ function removeModuleDeclarations(program: string) {
 	return program.replace(fetchModuleDeclerationsRegExp, "");
 }
 
+function resolveImports(program: string, defaultPath: string): string {
+
+	return program.replace(fetchPrologImportsRegExp, (_, __, p2) => {
+		return fs.readFileSync(defaultPath + path.sep + p2 + ".pl", "utf-8");
+	});
+}
+
 export class PrologSession {
 
 		public readonly session: any;
 
 		constructor(program: string, defaultPath: string = __dirname, limit?: number) {
 				this.session = new type.Session(limit);
-				program = this.resolveImports(program, defaultPath);
-				this.session.consult(program);
+				program = resolveImports(program, defaultPath);
+				this.session.consult(removeModuleDeclarations(program));
 		}
 
 		public async executeQuery(query: string): Promise<PrologResult> {
@@ -47,14 +54,6 @@ export class PrologSession {
 								resolve(format_answer(x));
 						});
 				});
-		}
-
-		private resolveImports(program: string, defaultPath: string): string {
-
-			return program.replace(fetchPrologImportsRegExp, match => {
-				return removeModuleDeclarations(fs.readFileSync(defaultPath + path.sep + match[2] + ".pl", "utf-8"));
-			});
-
 		}
 
 }
