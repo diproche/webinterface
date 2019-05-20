@@ -7,8 +7,6 @@ export class IssueObject {
 	public message!: string;
 	public severity!: string;
 	public startposition?: number;
-	/**optional add a position instead a startposition*/
-	//public position?: Position;
 }
 export function emptyIssueList() {
 	foundIssues = [];
