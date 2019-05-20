@@ -37,7 +37,7 @@ export class PrologSession {
 		}
 
 		private getNextAnswer() {
-				return new Promise<string>((resolve, reject) => {
+				return new Promise<string>((resolve) => {
 						this.session.answers((x: any) => {
 								resolve(format_answer(x));
 						});
