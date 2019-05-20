@@ -12,9 +12,9 @@ test("test if adding and returning of error messages works correctly", () => {
 	ISSUE.addIssueToIssueMap(severityNumber, issueCode, issueMessage, positionNumber);
 
 	const result = ISSUE.listAllIssues();
-	//ignore that the tests dont make sense right now
+	// ignore that the tests dont make sense right now
 	const expectedResult = ISSUE.listAllIssues();
-	//const expectedResult = ["look the expected return to see how it works."];
+	// const expectedResult = ["look the expected return to see how it works."];
 
 	expect(result).toEqual(expectedResult);
 });
@@ -30,7 +30,7 @@ test("test if adding and returning of error messages works correctly", () => {
 	const positionNumber = 12;
 	ISSUE.addIssueToIssueMap(severityNumber, issueCode, issueMessage, positionNumber);
 
-	//ignore that the tests dont make sense right now
+	// ignore that the tests dont make sense right now
 	const result = ISSUE.listAllIssues();
 	const expectedResult = ISSUE.listAllIssues();
 	expect(result).toEqual(expectedResult);
