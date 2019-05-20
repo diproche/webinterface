@@ -3,8 +3,8 @@ import path from "path";
 import { format_answer, type } from "tau-prolog/modules/core";
 import {PrologResult} from "./prologResult";
 
-// RegExp group one will be the file to be imported. Note: not global
-const fetchPrologImportsRegExp = /:-( |)use_module\(([a-zA-Z1-9]*)\)\./;
+// RegExp group one will be the file to be imported.
+const fetchPrologImportsRegExp = /:-( |)use_module\(([a-zA-Z1-9]*)\)\./g;
 
 export function importFile(relativePath: string): PrologSession {
 	const absolutePath = path.resolve(__dirname, relativePath);
@@ -45,14 +45,10 @@ export class PrologSession {
 		}
 
 		private resolveImports(program: string, defaultPath: string): string {
-			let matchGroups: string[] | null;
-			let importedCode: string;
 
-			while ((matchGroups = fetchPrologImportsRegExp.exec(program)) !== null) {
-				 importedCode = fs.readFileSync(defaultPath + path.sep + matchGroups[2] + ".pl", "utf-8");
-				 program = program.replace(fetchPrologImportsRegExp, importedCode);
-			}
+			return program.replace(fetchPrologImportsRegExp, match => {
+				return fs.readFileSync(defaultPath + path.sep + match[2] + ".pl", "utf-8");
+			});
 
-			return program;
 		}
 }
