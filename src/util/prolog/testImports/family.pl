@@ -1,3 +1,5 @@
+:- module(family, [parent/2]).
+
 male(dad).
 male(son).
 male(grandfatherm).
