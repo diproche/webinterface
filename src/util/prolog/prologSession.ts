@@ -5,11 +5,16 @@ import {PrologResult} from "./prologResult";
 
 // RegExp group one will be the file to be imported.
 const fetchPrologImportsRegExp = /:-( |)use_module\(([a-zA-Z1-9]*)\)\./g;
+const fetchModuleDeclerationsRegExp = /:-( |)module\([^)]*\) *\./g;
 
 export function importFile(relativePath: string): PrologSession {
 	const absolutePath = path.resolve(__dirname, relativePath);
 	const program = fs.readFileSync(absolutePath, "utf-8");
 	return new PrologSession(program, path.dirname(absolutePath));
+}
+
+function removeModuleDeclarations(program: string) {
+	return program.replace(fetchModuleDeclerationsRegExp, "");
 }
 
 export class PrologSession {
@@ -47,8 +52,9 @@ export class PrologSession {
 		private resolveImports(program: string, defaultPath: string): string {
 
 			return program.replace(fetchPrologImportsRegExp, match => {
-				return fs.readFileSync(defaultPath + path.sep + match[2] + ".pl", "utf-8");
+				return removeModuleDeclarations(fs.readFileSync(defaultPath + path.sep + match[2] + ".pl", "utf-8"));
 			});
 
 		}
+
 }
