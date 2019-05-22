@@ -44,7 +44,7 @@ export class IssueObject {
 	/**
 	 * Each issue needs a severity, severitys are: Hint, Warning, Error or Fatal Error. More infos in ../issue;
 	 */
-	public severity!: string;
+	public severity!: Severity;
 	/**
 	 * optional: the position where issue is detected.
 	 */
@@ -52,33 +52,9 @@ export class IssueObject {
 }
 
 /**
- * lists to store IssueObjects
+ * list where IssueObjects are stored
  */
-let foundHints: IssueObject[] = [];
-let foundWarnings: IssueObject[] = [];
-let foundErrors: IssueObject[] = [];
-let foundFatalErrors: IssueObject[] = [];
 let foundIssues: IssueObject[] = [];
-
-export function emptyIssueList() {
-	foundIssues = [];
-	emptyHintsList();
-	emptyWarningsList();
-	emptyErrorsList();
-	emptyFatalErrorsList();
-}
-export function emptyHintsList() {
-	foundHints = [];
-}
-export function emptyWarningsList() {
-	foundWarnings = [];
-}
-export function emptyErrorsList() {
-	foundErrors = [];
-}
-export function emptyFatalErrorsList() {
-	foundFatalErrors = [];
-}
 
 /**
  * @param issue as jsonobject where the known issue is stored
@@ -91,48 +67,26 @@ export function getIssueCodeFromJSON(issue: { [s: string]: {}; } | ArrayLike<{}>
 }
 
 /**
- * @param severity of an IssueObject
  * @param issueCode of an IssueObject
  * @param issueMessage of an IssueObject
+ * @param severity of an IssueObject
  * @param position of an IssueObject (optional)
  */
-export function addIssueToIssueMap(severity: Severity, issueCode: string, issueMessage: string, position: number) {
-	const issue: IssueObject = new IssueObject();
-	issue.code = issueCode;
-	if (isNaN(position) === false) {
-		issue.position = position;
-	}
-	issue.message = issueMessage;
-	if (severity === 0) {
-		issue.severity = "Hint";
-		foundHints.push(issue);
-	} else if (severity === 1) {
-		issue.severity = "Warning";
-		foundWarnings.push(issue);
-	} else if (severity === 2) {
-		issue.severity = "Error";
-		foundErrors.push(issue);
-	} else if (severity === 3) {
-		issue.severity = "Fatal Error";
-		foundFatalErrors.push(issue);
-	}
+export function addIssueToIssueList(issue: IssueObject) {
 	foundIssues.push(issue);
 }
 
-export function listHints() {
-	return foundHints;
-}
+export function createIssue(issueCode: string, issueMessage: string, severity: Severity, position: number) {
+	const issue: IssueObject = new IssueObject();
+	issue.code = issueCode;
+	issue.message = issueMessage;
+	issue.severity = severity;
 
-export function listWarnings() {
-	return foundWarnings;
-}
-
-export function listErrors() {
-	return foundErrors;
-}
-
-export function listFatalErrors() {
-	return foundFatalErrors;
+	/** only add position if its a number */
+	if (isNaN(position) === false) {
+		issue.position = position;
+	}
+	return issue;
 }
 
 export function listAllIssues() {
@@ -150,4 +104,29 @@ export function getIssueSeverityFromIssue(obj: IssueObject) {
 }
 export function getIssuePositionFromIssue(obj: IssueObject) {
 	return obj.position;
+}
+
+/** empty the issueList */
+export function emptyIssueList() {
+	foundIssues = [];
+}
+
+/**
+ * @param issueCode to search in a list of issues
+ * @return the searched issueObject or the ISSUE-NOT-FOUND issueObject
+ */
+export function getIssueFromIssueListByCode(issueCode: string) {
+	foundIssues.forEach(element => {
+		if (element.code === issueCode) {
+			return element;
+		}
+	});
+	/** if the searched Issue is not added to issue list return the ISSUE NOT FOUND ERROR */
+	const newIssueCode = getIssueCodeFromJSON(knownIssueCodes.FATAL_ERRORS["ISSUE-NOT-FOUND"]);
+	const newIssueMessage = knownIssueCodes.FATAL_ERRORS["ISSUE-NOT-FOUND"]["ISSUE-NOT-FOUND"];
+	const severity = Severity.FatalError;
+	const position = NaN;
+	const issue: IssueObject = createIssue(newIssueCode, newIssueMessage, severity, position);
+
+	return issue;
 }

@@ -29,6 +29,9 @@
 	"FATAL_ERRORS": {
 		"TEST": {
 			"TEST": "this is just a test fatal discription."
+		},
+		"ISSUE-NOT-FOUND": {
+			"ISSUE-NOT-FOUND": "Issue is not found."
 		}
 	}
 }
