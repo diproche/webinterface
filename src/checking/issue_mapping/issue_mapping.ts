@@ -3,6 +3,29 @@
  */
 import data from "./known_issues.json";
 
+export enum Severity {
+	/** A problem that does not affect the correctness of the
+	 * input and can possibly be ignored.
+	 */
+	Hint,
+	/** A problem that is not technically making the input
+	 * incorrect, but is either indicating or encouraging a
+	 * real problem.
+	 */
+	Warning,
+	/** A solid incorrectness in the users input, that is not
+	 * preventing the further checking process to take place.
+	 */
+	Error,
+	/** A problem that is immediately stopping all further
+	 * attempts to check the input.
+	 */
+	FatalError,
+}
+
+/**
+ * export jsonFile as jsonObject named knownIssueCodes
+ */
 export const knownIssueCodes = data;
 
 /**
@@ -15,15 +38,21 @@ export class IssueObject {
 	public code!: string;
 
 	/**
-	 * Each issue needs a message
+	 * Each issue needs a issue message - known issue codes are listed in: ./known_issues.json
 	 */
 	public message!: string;
+	/**
+	 * Each issue needs a severity, severitys are: Hint, Warning, Error or Fatal Error. More infos in ../issue;
+	 */
 	public severity!: string;
+	/**
+	 * optional: the position where issue is detected.
+	 */
 	public position?: number;
 }
 
 /**
- * create some lists to store IssueObjects
+ * lists to store IssueObjects
  */
 let foundHints: IssueObject[] = [];
 let foundWarnings: IssueObject[] = [];
@@ -51,19 +80,28 @@ export function emptyFatalErrorsList() {
 	foundFatalErrors = [];
 }
 
+/**
+ * @param issue as jsonobject where the known issue is stored
+ * @return issueCode which is the key of the jsonobject
+ */
 export function getIssueCodeFromJSON(issue: { [s: string]: {}; } | ArrayLike<{}>) {
 	const issueCodes = Object.keys(issue);
 	const issueCode = issueCodes[0];
 	return issueCode;
 }
 
-export function addIssueToIssueMap(severity: number, issueCode: string, issueMessage: string, position: number) {
+/**
+ * @param severity of an IssueObject
+ * @param issueCode of an IssueObject
+ * @param issueMessage of an IssueObject
+ * @param position of an IssueObject (optional)
+ */
+export function addIssueToIssueMap(severity: Severity, issueCode: string, issueMessage: string, position: number) {
 	const issue: IssueObject = new IssueObject();
 	issue.code = issueCode;
 	if (isNaN(position) === false) {
 		issue.position = position;
 	}
-
 	issue.message = issueMessage;
 	if (severity === 0) {
 		issue.severity = "Hint";
@@ -111,5 +149,5 @@ export function getIssueSeverityFromIssue(obj: IssueObject) {
 	return obj.severity;
 }
 export function getIssuePositionFromIssue(obj: IssueObject) {
-	return obj.startposition;
+	return obj.position;
 }
