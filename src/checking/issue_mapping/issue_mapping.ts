@@ -1,13 +1,36 @@
+/**
+ * Imports
+ */
 import data from "./known_issues.json";
 
 export const knownIssueCodes = data;
 
+/**
+ * @constructor for IssueObjects
+ */
 export class IssueObject {
+	/**
+	 * Each issue needs a code - known issue codes are listed in: ./known_issues.json
+	 */
 	public code!: string;
+
+	/**
+	 * Each issue needs a message
+	 */
 	public message!: string;
 	public severity!: string;
-	public startposition?: number;
+	public position?: number;
 }
+
+/**
+ * create some lists to store IssueObjects
+ */
+let foundHints: IssueObject[] = [];
+let foundWarnings: IssueObject[] = [];
+let foundErrors: IssueObject[] = [];
+let foundFatalErrors: IssueObject[] = [];
+let foundIssues: IssueObject[] = [];
+
 export function emptyIssueList() {
 	foundIssues = [];
 	emptyHintsList();
@@ -28,23 +51,19 @@ export function emptyFatalErrorsList() {
 	foundFatalErrors = [];
 }
 
-// creating reference map with errormessages; could add some stuff to the map if needed
-let foundHints: IssueObject[] = [];
-let foundWarnings: IssueObject[] = [];
-let foundErrors: IssueObject[] = [];
-let foundFatalErrors: IssueObject[] = [];
-let foundIssues: IssueObject[] = [];
-
 export function getIssueCodeFromJSON(issue: { [s: string]: {}; } | ArrayLike<{}>) {
 	const issueCodes = Object.keys(issue);
 	const issueCode = issueCodes[0];
 	return issueCode;
 }
 
-export function addIssueToIssueMap(severity: number, issueCode: string, issueMessage: string, startPosition: number) {
+export function addIssueToIssueMap(severity: number, issueCode: string, issueMessage: string, position: number) {
 	const issue: IssueObject = new IssueObject();
 	issue.code = issueCode;
-	issue.startposition = startPosition;
+	if (isNaN(position) === false) {
+		issue.position = position;
+	}
+
 	issue.message = issueMessage;
 	if (severity === 0) {
 		issue.severity = "Hint";
