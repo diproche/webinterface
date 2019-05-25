@@ -1,3 +1,4 @@
+import { ifError } from "assert";
 import { PrologResult } from "../util/prolog/prologResult";
 import { getAllIssues } from "../vocabularyChecker/detectWrongSyntax";
 
@@ -30,4 +31,24 @@ function showVocabErrors(text: string) {
  * function showWrongSemantic(text: string) {
  *
  * }
+ *
  */
+
+export function bundleEverything(text: string) {
+	ifError(showVocabErrors(text)); {
+		showVocabErrors(text);
+		bundleEverything(text); // This text-variable should be the one new user input after (hopefully) correcting the error.
+		}
+/** ifError(showWrongSyntax(text)); {
+ *        showWrongSyntax(text);
+ *        bundleEverything(text); // This text should be the new user input.
+ * }
+ *
+ * convertPrologList(text);
+ *
+ * ifError(showWrongSemantic(text)) {
+ *      showWrongSemantic(text);
+ *      bundleEverything(text); // This text should be the new user input.
+ * }
+ */
+}
