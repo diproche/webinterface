@@ -5,7 +5,7 @@ import { PrologResult } from "./prologResult";
 import "./prologStringManipulation";
 
 // RegExp group one will be the file to be imported.
-const fetchPrologImportsRegExp = /:-( |)use_module\(([a-zA-Z1-9]*)\) *\./g;
+const fetchPrologImportsRegExp = /:-(?: |)use_module\(([a-zA-Z1-9]*)\) *\./g;
 
 export function importFile(relativePath: string): PrologSession {
 	const absolutePath = path.resolve(__dirname, relativePath);
@@ -14,9 +14,8 @@ export function importFile(relativePath: string): PrologSession {
 }
 
 function resolveImports(program: string, defaultPath: string): string {
-	program = program.removeNonFunctionalities();
-	return program.replace(fetchPrologImportsRegExp, (_, __, p2) => {
-		return fs.readFileSync(defaultPath + path.sep + p2 + ".pl", "utf-8");
+	return program.replace(fetchPrologImportsRegExp, (_, p1) => {
+		return fs.readFileSync(defaultPath + path.sep + p1 + ".pl", "utf-8");
 	});
 }
 
@@ -25,8 +24,10 @@ export class PrologSession {
 		public readonly session: any;
 
 		constructor(program: string, defaultPath: string = __dirname, limit?: number) {
-				this.session = new type.Session(limit);
+				program = program.removeNonFunctionalities();
 				program = resolveImports(program, defaultPath);
+
+				this.session = new type.Session(limit);
 				this.session.consult((program.removeModuleDeclarations()));
 		}
 
