@@ -1,5 +1,5 @@
 const fetchModuleDeclaration = /:-( |)module\([^)]*\) *\.[\r\t\f\v ]*\n?/g;
-const fetchPartialLineCommentsRegExp = /(^[^\n%]+)%[^\n]*\n/gm;
+const fetchPartialLineCommentsRegExp = /(^[^\n%]+)%[^\n\r]*(\r?\n)/gm;
 const fetchFullLineCommentsRegExp = /^[\r\t\f\v ]*%[^\n]*\n/gm;
 const fetchEmptyLinesRegExp = /\n(?:\s)*\n/gm;
 const fetchDoubleWhitespacesRegExp = /  */gm;
@@ -23,8 +23,8 @@ String.prototype.removeFullLineComments = function() {
 };
 
 String.prototype.removePartialLineComments = function() {
-	// The \r\n is due to windows standard. In Unix it would only be \n. Different EOL standards might be an issue
-	return this.replace(fetchPartialLineCommentsRegExp, (_, group1) => group1.trimRight() + "\r\n");
+	// group2 fetches the EOL standard in the file to fit both: Windows and UNIX
+	return this.replace(fetchPartialLineCommentsRegExp, (_, group1, group2) => group1.trimRight() + group2);
 };
 
 String.prototype.removeComments = function() {
