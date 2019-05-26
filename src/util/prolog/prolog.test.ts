@@ -1,4 +1,5 @@
 import {importFile} from "./prologSession";
+import "./prologStringManipulation";
 import * as assets from "./testAssets";
 
 // Tau-Prolog always uses "false." to signify the end of the output stream. This behavior deviates from
@@ -125,25 +126,63 @@ describe("PrologResult.getResultArray()", () => {
 });
 
 describe("PrologSession.importFile()", () => {
-	test('Imports the family.pl File Correctly"', async () => {
+	test("Imports the family.pl File Correctly", async () => {
 		const session = importFile("./testImports/family.pl");
 		const results = (await session.executeQuery("parent(X, daugther).")).getRawResults();
 
 		expect(results).toStrictEqual(["X = dad ;", "X = mom ;", "false."]);
 	});
 
-	test('Imports the importFamily.pl File And Evaluates One use_module/1 Correctly"', async () => {
+	test("Imports the importFamily.pl File And Evaluates One use_module/1 Correctly", async () => {
 		const session = importFile("./testImports/importFamily.pl");
 		const results = (await session.executeQuery("parent(X, daugther).")).getRawResults();
 
 		expect(results).toStrictEqual(["X = dad ;", "X = mom ;", "false."]);
 	});
 
-	test('Imports the importFamilyAndEvenNumbers.pl File And Evaluates Two use_module/1 Correctly"', async () => {
+	test("Imports the importFamilyAndEvenNumbers.pl File And Evaluates Two use_module/1 Correctly", async () => {
 		const session = importFile("./testImports/importFamilyAndEvenNumbers.pl");
 		const results = (await session.executeQuery("parent(X, daugther), even(Y).")).getRawResults();
 
 		expect(results).toStrictEqual(["X = dad, Y = 2 ;", "X = mom, Y = 2 ;", "false."]);
+	});
+
+});
+
+describe("prologStringManipulation String Expansion", () => {
+	test("removeModuleDeclarations() Removes \":-module(...).\" Substrings and It's Line If Isolated", async () => {
+		const results = assets.stringManipulationsBasis.removeModuleDeclarations();
+		expect(results).toEqual(assets.expectedRMD);
+	});
+
+	test("removePartialLineComments() Removes Partial Line Comments", async () => {
+		const results = assets.stringManipulationsBasis.removePartialLineComments();
+		expect(results).toEqual(assets.expectedRPLC);
+	});
+
+	test("removeFullLineComments() Removes Full Line Comments", async () => {
+		const results = assets.stringManipulationsBasis.removeFullLineComments();
+		expect(results).toEqual(assets.expectedRFLC);
+	});
+
+	test("removeComments() Removes Partial and Full Line Comments", async () => {
+		const results = assets.stringManipulationsBasis.removeComments();
+		expect(results).toEqual(assets.expectedRC);
+	});
+
+	test("removeEmptyLines() Removes All Emptpy Lines or Lines With Only Whitespace Characters", async () => {
+		const results = assets.stringManipulationsBasis.removeEmptyLines();
+		expect(results).toEqual(assets.expectedREL);
+	});
+
+	test("removeDoubleWhitespaces() Replaces Every Double (or more) Whitespace With One Whitespace", async () => {
+		const results = assets.rawDW.removeDoubleWhitespaces();
+		expect(results).toEqual(assets.expectedDW);
+	});
+
+	test("removeNonFunctionalities() Removes All Parts That Have No Influence In Prolog", async () => {
+		const results = assets.stringManipulationsBasis.removeNonFunctionalities();
+		expect(results).toEqual(assets.expectedNF);
 	});
 
 });

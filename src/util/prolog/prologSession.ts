@@ -1,11 +1,11 @@
 import fs from "fs";
 import path from "path";
 import { format_answer, type } from "tau-prolog/modules/core";
-import {PrologResult} from "./prologResult";
+import { PrologResult } from "./prologResult";
+import "./prologStringManipulation";
 
 // RegExp group one will be the file to be imported.
 const fetchPrologImportsRegExp = /:-( |)use_module\(([a-zA-Z1-9]*)\) *\./g;
-const fetchModuleDeclerationsRegExp = /:-( |)module\([^)]*\) *\./g;
 
 export function importFile(relativePath: string): PrologSession {
 	const absolutePath = path.resolve(__dirname, relativePath);
@@ -13,12 +13,8 @@ export function importFile(relativePath: string): PrologSession {
 	return new PrologSession(program, path.dirname(absolutePath));
 }
 
-function removeModuleDeclarations(program: string) {
-	return program.replace(fetchModuleDeclerationsRegExp, "");
-}
-
 function resolveImports(program: string, defaultPath: string): string {
-
+	program = program.removeNonFunctionalities();
 	return program.replace(fetchPrologImportsRegExp, (_, __, p2) => {
 		return fs.readFileSync(defaultPath + path.sep + p2 + ".pl", "utf-8");
 	});
@@ -31,7 +27,7 @@ export class PrologSession {
 		constructor(program: string, defaultPath: string = __dirname, limit?: number) {
 				this.session = new type.Session(limit);
 				program = resolveImports(program, defaultPath);
-				this.session.consult(removeModuleDeclarations(program));
+				this.session.consult((program.removeModuleDeclarations()));
 		}
 
 		public async executeQuery(query: string): Promise<PrologResult> {
