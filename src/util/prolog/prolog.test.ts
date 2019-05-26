@@ -126,22 +126,29 @@ describe("PrologResult.getResultArray()", () => {
 });
 
 describe("PrologSession.importFile()", () => {
-	test("Imports the family.pl File Correctly", async () => {
+	test("Can Import a File That Doesn't Import Any Modules", async () => {
 		const session = importFile("./testImports/family.pl");
 		const results = (await session.executeQuery("parent(X, daugther).")).getRawResults();
 
 		expect(results).toStrictEqual(["X = dad ;", "X = mom ;", "false."]);
 	});
 
-	test("Imports the importFamily.pl File And Evaluates One use_module/1 Correctly", async () => {
+	test("Can Import a File Which Imports a Module", async () => {
 		const session = importFile("./testImports/importFamily.pl");
 		const results = (await session.executeQuery("parent(X, daugther).")).getRawResults();
 
 		expect(results).toStrictEqual(["X = dad ;", "X = mom ;", "false."]);
 	});
 
-	test("Imports the importFamilyAndEvenNumbers.pl File And Evaluates Two use_module/1 Correctly", async () => {
+	test("Can Import a File Which Imports Two Modules", async () => {
 		const session = importFile("./testImports/importFamilyAndEvenNumbers.pl");
+		const results = (await session.executeQuery("parent(X, daugther), even(Y).")).getRawResults();
+
+		expect(results).toStrictEqual(["X = dad, Y = 2 ;", "X = mom, Y = 2 ;", "false."]);
+	});
+
+	test("Can Import a File Which Imports Files Recursively", async () => {
+		const session = importFile("./testImports/recursiveImport.pl");
 		const results = (await session.executeQuery("parent(X, daugther), even(Y).")).getRawResults();
 
 		expect(results).toStrictEqual(["X = dad, Y = 2 ;", "X = mom, Y = 2 ;", "false."]);

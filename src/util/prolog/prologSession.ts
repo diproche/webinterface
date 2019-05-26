@@ -8,6 +8,7 @@ import "./prologStringManipulation";
 // RegExp group one will be the file to be imported.
 const fetchPrologImportsRegExp = /:-(?: |)use_module\(([a-zA-Z1-9]*)\) *\./g;
 
+// relativePath is relative to this very file (prologSession.ts)
 export function importFile(relativePath: string): PrologSession {
 	const absolutePath = path.resolve(__dirname, relativePath);
 	const program = fs.readFileSync(absolutePath, "utf-8");
