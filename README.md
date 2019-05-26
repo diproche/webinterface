@@ -1,3 +1,5 @@
+[![Build Status](https://semaphoreci.com/api/v1/diproche/webinterface/branches/master/badge.svg)](https://semaphoreci.com/diproche/webinterface)
+
 # Diproche-Webinterface
 
 ## Developing
