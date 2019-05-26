@@ -3,7 +3,7 @@ import path from "path";
 import { format_answer, type } from "tau-prolog/modules/core";
 import {kahnAlgorithm, regexGroupToArray} from "../helperFunctions";
 import { PrologResult } from "./prologResult";
-import "./prologStringManipulation";
+import { removeFileExtension, removeModuleDeclarations, removeNonFunctionalities } from "./prologStringManipulation";
 
 // RegExp group one will be the file to be imported.
 const fetchPrologImportsRegExp = /:-(?: |)use_module\(([a-zA-Z1-9]*)\) *\./g;
@@ -12,7 +12,7 @@ const fetchPrologImportsRegExp = /:-(?: |)use_module\(([a-zA-Z1-9]*)\) *\./g;
 export function importFile(relativePath: string): PrologSession {
 	const absolutePath = path.resolve(__dirname, relativePath);
 	const program = fs.readFileSync(absolutePath, "utf-8");
-	const fileName = path.basename(absolutePath).removeFileExtension();
+	const fileName = removeFileExtension(path.basename(absolutePath));
 	return new PrologSession(program, path.dirname(absolutePath), fileName);
 }
 
@@ -55,11 +55,11 @@ export class PrologSession {
 		public readonly session: any;
 
 		constructor(program: string, defaultPath: string = __dirname, fileName?: string, limit?: number) {
-				program = program.removeNonFunctionalities();
+				program = removeNonFunctionalities(program);
 				program = resolveImports(program, defaultPath, fileName);
 
 				this.session = new type.Session(limit);
-				this.session.consult((program.removeModuleDeclarations()));
+				this.session.consult((removeModuleDeclarations(program)));
 		}
 
 		public async executeQuery(query: string): Promise<PrologResult> {

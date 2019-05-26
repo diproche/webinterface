@@ -5,49 +5,37 @@ const fetchFullLineCommentsRegExp = /^[\r\t\f\v ]*%[^\n]*\n/gm;
 const fetchEmptyLinesRegExp = /\n(?:\s)*\n/gm;
 const fetchDoubleWhitespacesRegExp = /  */gm;
 
-export interface String {
-	removeFileExtension(): string;
-	removeModuleDeclarations(): string;
-	removeFullLineComments(): string;
-	removePartialLineComments(): string;
-	removeComments(): string;
-	removeEmptyLines(): string;
-	removeDoubleWhitespaces(): string;
-	removeNonFunctionalities(): string;
-}
-
-String.prototype.removeFileExtension = function() {
-	const deWrapper: string = this.toString();
-	const fetch: string[] | null = fetchFileExtension.exec(deWrapper);
+export function removeFileExtension(path: string) {
+	const fetch: string[] | null = fetchFileExtension.exec(path);
 	if (fetch === null) { return ""; }
 	return fetch[1];
-};
+}
 
-String.prototype.removeModuleDeclarations = function() {
-	return this.replace(fetchModuleDeclaration, "");
-};
+export function removeModuleDeclarations(prologProgram: string) {
+	return prologProgram.replace(fetchModuleDeclaration, "");
+}
 
-String.prototype.removeFullLineComments = function() {
-	return this.replace(fetchFullLineCommentsRegExp, "");
-};
+function removeFullLineComments(prologProgram: string) {
+	return prologProgram.replace(fetchFullLineCommentsRegExp, "");
+}
 
-String.prototype.removePartialLineComments = function() {
+function removePartialLineComments(prologProgram: string) {
 	// group2 fetches the EOL standard in the file to fit both: Windows and UNIX
-	return this.replace(fetchPartialLineCommentsRegExp, (_, group1, group2) => group1.trimRight() + group2);
-};
+	return prologProgram.replace(fetchPartialLineCommentsRegExp, (_, group1, group2) => group1.trimRight() + group2);
+}
 
-String.prototype.removeComments = function() {
-	return this.removeFullLineComments().removePartialLineComments();
-};
+export function removeComments(prologProgram: string) {
+	return removeFullLineComments(removePartialLineComments(prologProgram));
+}
 
-String.prototype.removeEmptyLines = function() {
-	return this.replace(fetchEmptyLinesRegExp, "\n");
-};
+function removeEmptyLines(prologProgram: string) {
+	return prologProgram.replace(fetchEmptyLinesRegExp, "\n");
+}
 
-String.prototype.removeDoubleWhitespaces = function() {
-	return this.replace(fetchDoubleWhitespacesRegExp, " ");
-};
+function removeDoubleWhitespaces(prologProgram: string) {
+	return prologProgram.replace(fetchDoubleWhitespacesRegExp, " ");
+}
 
-String.prototype.removeNonFunctionalities = function() {
-	return this.removeComments().removeEmptyLines().removeDoubleWhitespaces();
-};
+export function removeNonFunctionalities(prologProgram: string) {
+	return removeComments(removeEmptyLines(removeDoubleWhitespaces(prologProgram)));
+}

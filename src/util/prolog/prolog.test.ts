@@ -1,5 +1,5 @@
 import {importFile} from "./prologSession";
-import "./prologStringManipulation";
+import * as PSM from "./prologStringManipulation";
 import * as assets from "./testAssets";
 
 // Tau-Prolog always uses "false." to signify the end of the output stream. This behavior deviates from
@@ -156,39 +156,24 @@ describe("PrologSession.importFile()", () => {
 
 });
 
-describe("prologStringManipulation String Expansion", () => {
+describe("prologStringManipulation Module", () => {
+	test("removeFileExtension() Removes The Last . And Everything After It", async () => {
+		const results = PSM.removeFileExtension("this.is.a.test.d.ts");
+		expect(results).toEqual("this.is.a.test.d");
+	});
+
 	test("removeModuleDeclarations() Removes \":-module(...).\" Substrings and It's Line If Isolated", async () => {
-		const results = assets.stringManipulationsBasis.removeModuleDeclarations();
+		const results = PSM.removeModuleDeclarations(assets.stringManipulationsBasis);
 		expect(results).toEqual(assets.expectedRMD);
 	});
 
-	test("removePartialLineComments() Removes Partial Line Comments", async () => {
-		const results = assets.stringManipulationsBasis.removePartialLineComments();
-		expect(results).toEqual(assets.expectedRPLC);
-	});
-
-	test("removeFullLineComments() Removes Full Line Comments", async () => {
-		const results = assets.stringManipulationsBasis.removeFullLineComments();
-		expect(results).toEqual(assets.expectedRFLC);
-	});
-
 	test("removeComments() Removes Partial and Full Line Comments", async () => {
-		const results = assets.stringManipulationsBasis.removeComments();
+		const results = PSM.removeComments(assets.stringManipulationsBasis);
 		expect(results).toEqual(assets.expectedRC);
 	});
 
-	test("removeEmptyLines() Removes All Emptpy Lines or Lines With Only Whitespace Characters", async () => {
-		const results = assets.stringManipulationsBasis.removeEmptyLines();
-		expect(results).toEqual(assets.expectedREL);
-	});
-
-	test("removeDoubleWhitespaces() Replaces Every Double (or more) Whitespace With One Whitespace", async () => {
-		const results = assets.rawDW.removeDoubleWhitespaces();
-		expect(results).toEqual(assets.expectedDW);
-	});
-
 	test("removeNonFunctionalities() Removes All Parts That Have No Influence In Prolog", async () => {
-		const results = assets.stringManipulationsBasis.removeNonFunctionalities();
+		const results = PSM.removeNonFunctionalities(assets.stringManipulationsBasis);
 		expect(results).toEqual(assets.expectedNF);
 	});
 
