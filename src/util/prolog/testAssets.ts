@@ -72,10 +72,7 @@ export const likingFacts = new PrologSession(`
 
 export const stringManipulationsBasis: string = readTestFile("stringManipulationsBasis");
 export const expectedRMD: string = readTestFile("removeModuleDeclarations");
-export const expectedRPLC: string = readTestFile("removePartialLineComments");
-export const expectedRFLC: string = readTestFile("removeFullLineComments");
 export const expectedRC: string = readTestFile("removeComments");
-export const expectedREL: string = readTestFile("removeEmptyLines");
 export const rawDW: string = "None So far.  Now one occurence. Three Whitespaces follow   Like this.    ";
 export const expectedDW: string = "None So far. Now one occurence. Three Whitespaces follow Like this. ";
 export const expectedNF: string = readTestFile("removeNonFunctionalities");
