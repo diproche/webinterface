@@ -1,5 +1,5 @@
 import { ifError } from "assert";
-import { PrologResult } from "../util/prolog/prologResult";
+import diprocheInterface from "../util/diproche/diprocheInterface";
 import { getAllIssues } from "../vocabularyChecker/detectWrongSyntax";
 
 function showVocabErrors(text: string) {
