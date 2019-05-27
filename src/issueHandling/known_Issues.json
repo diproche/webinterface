@@ -1,0 +1,52 @@
+{
+	"TESTHINT": {
+		"CODE": "TESTHINT",
+		"SEVERITY": "HINT",
+		"MESSAGE": "TESTHINTTEXT"
+	},
+	"TESTWARNING": {
+		"CODE": "TESTWARNING",
+		"SEVERITY": "WARNING",
+		"MESSAGE": "TESTWARNINGTEXT"
+	},
+	"TESTERROR": {
+		"CODE": "TESTERROR",
+		"SEVERITY": "ERROR",
+		"MESSAGE": "TESTERRORTEXT"
+	},
+	"TESTFATALERROR": {
+		"CODE": "TESTFATALERROR",
+		"SEVERITY": "FATALERROR",
+		"MESSAGE": "TESTFATALERRORTEXT"
+	},
+	"BRACKET_UNDERCLOSING": {
+		"CODE": "BRACKET_UNDERCLOSING",
+		"SEVERITY": "WARNING",
+		"MESSAGE": "Some brackets are not closed."
+	},
+	"BRACKET_OVERCLOSING": {
+		"CODE": "BRACKET_OVERCLOSING",
+		"SEVERITY": "WARNING",
+		"MESSAGE": "Too much brackets has been closed or has been closed before a bracket were opened."
+	},
+	"MISSING_CONNECTOR": {
+		"CODE": "MISSING_CONNECTOR",
+		"SEVERITY": "WARNING",
+		"MESSAGE": "It seems, you forgot some connector between your statements inside your logic expression."
+	},
+	"MISSING_STATEMENT_INSIDE": {
+		"CODE": "MISSING_STATEMENT_INSIDE",
+		"SEVERITY": "WARNING",
+		"MESSAGE": "It seems, you forgot some statements inside your logic expression."
+	},
+	"MISSING_STATEMENT_AT_THE_END": {
+		"CODE": "MISSING_STATEMENT_AT_THE_END",
+		"SEVERITY": "WARNING",
+		"MESSAGE": "It seems, you forgot some statements at the end of your expression."
+	},
+	"ISSUE_NOT_FOUND": {
+		"CODE": "ISSUE_NOT_FOUND",
+		"SEVERITY": "FATAL_ERROR",
+		"MESSAGE": "The searched Issue wasn't found."
+	}
+}
