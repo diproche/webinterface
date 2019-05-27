@@ -1,7 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Severity } from "../checking/issue";
-import IssueCode from "../checking/issueCodes";
+import InvalidWord from "../issueHandling/known_Issues.json";
 import { collectAllInvalidWords, collectInvalidWordsInIssues, getAllIssues } from "./detectWrongSyntax";
 import { getInvalidWords, logMultipleOccurences, logMultipleWords, logSingleWord } from "./detectWrongSyntax";
 import { Position } from "./detectWrongSyntax";
@@ -63,7 +62,7 @@ describe("logSingleWord", () => {
 		const position: Position = { fromIndex: 0, toIndex: 4 };
 		const issues = logSingleWord("Hello", position);
 		expect(issues).toEqual({
-			code: IssueCode.VocabularyIssue,
+			code: InvalidWord,
 			message: `${"Hello"} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
 			position: {
 				fromIndex: position.fromIndex,
@@ -83,7 +82,7 @@ describe("logSingleWord", () => {
 		const position: Position = { fromIndex: 0, toIndex: 0 };
 		const issues = logSingleWord("", position);
 		expect(issues).toEqual({
-			code: IssueCode.VocabularyIssue,
+			code: InvalidWord,
 			message: `${""} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
 			position: {
 				fromIndex: position.fromIndex,
@@ -97,7 +96,7 @@ describe("logSingleWord", () => {
 		const position: Position = { fromIndex: 0, toIndex: 1 };
 		const issues = logSingleWord(" ", position);
 		expect(issues).toEqual({
-			code: IssueCode.VocabularyIssue,
+			code: InvalidWord,
 			message: `${" "} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
 			position: {
 				fromIndex: position.fromIndex,
@@ -113,7 +112,7 @@ describe("CollectAllInvalidWordsInIssues", () => {
 		const issues = collectInvalidWordsInIssues("WrongWord RightWord", ["WrongWord"]);
 		expect(issues).toEqual([
 			{
-				code: IssueCode.VocabularyIssue,
+				code: InvalidWord,
 				message: "WrongWord",
 				position: {
 					fromIndex: 0,
@@ -128,7 +127,7 @@ describe("CollectAllInvalidWordsInIssues", () => {
 		const issues = collectInvalidWordsInIssues("Te st", [" "]);
 		expect(issues).toEqual([
 			{
-				code: IssueCode.VocabularyIssue,
+				code: InvalidWord,
 				message: " ",
 				position: {
 					fromIndex: 2,
@@ -145,7 +144,7 @@ describe("getAllIssues", () => {
 		const issues = getAllIssues("WrongWord RightWord");
 		expect(issues).toEqual([
 			{
-				code: IssueCode.VocabularyIssue,
+				code: InvalidWord,
 				message: "WrongWord",
 				position: {
 					fromIndex: 0,
@@ -161,7 +160,7 @@ describe("getAllIssues", () => {
 		const issues = getAllIssues("Te st");
 		expect(issues).toEqual([
 			{
-				code: IssueCode.VocabularyIssue,
+				code: InvalidWord,
 				message: "Te",
 				position: {
 					fromIndex: 0,
@@ -170,7 +169,7 @@ describe("getAllIssues", () => {
 				severity: 3,
 			},
 			{
-				code: IssueCode.VocabularyIssue,
+				code: InvalidWord,
 				message: "st",
 				position: {
 					fromIndex: 3,
@@ -186,7 +185,7 @@ describe("getAllIssues", () => {
 		const issues = getAllIssues("Te.st");
 		expect(issues).toEqual([
 			{
-				code: IssueCode.VocabularyIssue,
+				code: InvalidWord,
 				message: "Te",
 				position: {
 					fromIndex: 0,
@@ -195,7 +194,7 @@ describe("getAllIssues", () => {
 				severity: 3,
 			},
 			{
-				code: IssueCode.VocabularyIssue,
+				code: InvalidWord,
 				message: "st",
 				position: {
 					fromIndex: 3,
@@ -211,7 +210,7 @@ describe("getAllIssues", () => {
 		const issues = getAllIssues("Te,;<>=st");
 		expect(issues).toEqual([
 			{
-				code: IssueCode.VocabularyIssue,
+				code: InvalidWord,
 				message: "Te",
 				position: {
 					fromIndex: 0,
@@ -220,7 +219,7 @@ describe("getAllIssues", () => {
 				severity: 3,
 			},
 			{
-				code: IssueCode.VocabularyIssue,
+				code: InvalidWord,
 				message: "st",
 				position: {
 					fromIndex: 7,
