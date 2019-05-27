@@ -1,4 +1,8 @@
+import fs from "fs";
+import path from "path";
 import {PrologSession} from "./prologSession";
+
+// Programs
 
 // To make it more clear what the code is supposed to give back the family title is used
 // instead of names
@@ -63,3 +67,18 @@ export const likingFacts = new PrologSession(`
   likes(lisa, bob).
   likes(frank, lisa).
   `);
+
+// Strings
+
+export const stringManipulationsBasis: string = readTestFile("stringManipulationsBasis");
+export const expectedRMD: string = readTestFile("removeModuleDeclarations");
+export const expectedRC: string = readTestFile("removeComments");
+export const rawDW: string = "None So far.  Now one occurence. Three Whitespaces follow   Like this.    ";
+export const expectedDW: string = "None So far. Now one occurence. Three Whitespaces follow Like this. ";
+export const expectedNF: string = readTestFile("removeNonFunctionalities");
+
+// Helper Function
+
+function readTestFile(fileName: string) {
+	return fs.readFileSync(path.resolve(__dirname, "./testImports/" + fileName + ".pl"), "utf-8");
+}
