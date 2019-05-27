@@ -1,4 +1,4 @@
-import {regexGroupToArray} from "../helperFunctions";
+import {fetchAllMatchesForAGroup} from "../regExpUtils";
 
 // First Group will be the variable value. Doesn't fetch the variable names
 const variableAnswerPattern: string = " = (\\w*|\\[.*\\])?(,| ;|.)";
@@ -54,7 +54,7 @@ export class PrologResult {
 	private getResultsFor(variable: string): string[] {
 		// Group 1 will be the content of the variable independent of the variable length.
 		const pattern = new RegExp(variable + variableAnswerPattern, "g");
-		return regexGroupToArray(this.rawResults.toString(), pattern, 1);
+		return fetchAllMatchesForAGroup(this.rawResults.toString(), pattern, 1);
 	}
 
 	private rawResultsToInnerArray(source: string): string[] {
@@ -64,18 +64,18 @@ export class PrologResult {
 		if (booleanAnswer !== null) { return [booleanAnswer[1]]; }
 
 		const pattern = new RegExp(variableAnswerPattern, "g");
-		return regexGroupToArray(source, pattern, 1);
+		return fetchAllMatchesForAGroup(source, pattern, 1);
 	}
 
 	private getVariables(): Set<string> {
-		const rawVariables: string[] = regexGroupToArray(this.rawResults.toString(), variableNameRegExp, 2);
+		const rawVariables: string[] = fetchAllMatchesForAGroup(this.rawResults.toString(), variableNameRegExp, 2);
 
 		return new Set(rawVariables);
 	}
 
 	private getBooleans(): boolean[] {
 		const pattern = /(true|false)(,| ;|.)/g;
-		const results: string[] = regexGroupToArray(this.rawResults.toString(), pattern, 1);
+		const results: string[] = fetchAllMatchesForAGroup(this.rawResults.toString(), pattern, 1);
 		const booleanResults: boolean[] = results.map((e: string) => e === "true");
 
 		return booleanResults;

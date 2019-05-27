@@ -1,7 +1,8 @@
 import fs from "fs";
 import path from "path";
 import { format_answer, type } from "tau-prolog/modules/core";
-import {kahnAlgorithm, regexGroupToArray} from "../helperFunctions";
+import getTopologicalOrder, {Edge} from "../getTopologicalOrder";
+import {fetchAllMatchesForAGroup} from "../regExpUtils";
 import { PrologResult } from "./prologResult";
 import { removeFileExtension, removeModuleDeclarations, removeNonFunctionalities } from "./prologStringManipulation";
 
@@ -17,11 +18,18 @@ export function importFile(relativePath: string): PrologSession {
 }
 
 function resolveImports(program: string, defaultPath: string, currentFileName: string = "main"): string {
-		const dependencyGraph: Set<string[]> = getDependencyGraph(program, defaultPath, currentFileName);
-		const importList: string[] = kahnAlgorithm(dependencyGraph);
+		const dependencyGraph: Set<Edge> = getDependencyGraph(program, defaultPath, currentFileName);
+		const importList: string[] | Set<Edge> = getTopologicalOrder(dependencyGraph);
+
+		// Fetching an error; see in getTopologicalOrder.ts
+		if (importList instanceof Set) {
+			console.log("Residual Graph: " + importList.toString);
+			throw new Error("Cyclic Import. See the console for more information.");
+		}
+
 		let importedPrograms: string = "";
 		importList.forEach((importFileName: string) => {
-			const currentImport = fs.readFileSync(defaultPath + path.sep + importFileName + ".pl");
+			const currentImport = fs.readFileSync(path.resolve(defaultPath, importFileName + ".pl"), "utf-8");
 			importedPrograms = importedPrograms + currentImport;
 		});
 
@@ -32,22 +40,23 @@ function getDependencyGraph(
 	program: string,
 	defaultPath: string,
 	currentFileName: string,
-	currentGraph?: Set<string[]>) {
+	currentGraph?: Set<Edge>): Set<Edge> {
 
 		if (currentGraph === undefined) {
-			currentGraph = new Set<string[]>();
+			currentGraph = new Set<Edge>();
 		}
 
-		regexGroupToArray(program, fetchPrologImportsRegExp, 1).forEach((fileName: string) => {
-			// Note: The ! in currentGraph! is there to tell this object will not be undefined (or null)
-			// See: https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-0.html (Non-null assertion operator)
-			currentGraph!.add([currentFileName, fileName]);
-			const absolutePath = defaultPath + path.sep + fileName + ".pl";
+		const graph = currentGraph;
+
+		fetchAllMatchesForAGroup(program, fetchPrologImportsRegExp, 1).forEach((fileName: string) => {
+			const edgeToInsert: Edge = {origin: currentFileName, target: fileName};
+			graph.add(edgeToInsert);
+			const absolutePath = path.resolve(defaultPath, fileName + ".pl");
 			const importedProgram = fs.readFileSync(absolutePath, "utf-8");
 			getDependencyGraph(importedProgram, defaultPath, fileName, currentGraph);
 		});
 
-		return currentGraph;
+		return graph;
 }
 
 export class PrologSession {
