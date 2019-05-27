@@ -19,14 +19,7 @@ export function importFile(relativePath: string): PrologSession {
 
 function resolveImports(program: string, defaultPath: string, currentFileName: string = "main"): string {
 		const dependencyGraph: Set<Edge> = getDependencyGraph(program, defaultPath, currentFileName);
-		const importList: string[] | Set<Edge> = getTopologicalOrder(dependencyGraph);
-
-		// Fetching an error; see in getTopologicalOrder.ts
-		if (importList instanceof Set) {
-			console.log("Residual Graph: " + importList.toString);
-			throw new Error("Cyclic Import. See the console for more information.");
-		}
-
+		const importList: string[] = getTopologicalOrder(dependencyGraph);
 		let importedPrograms: string = "";
 		importList.forEach((importFileName: string) => {
 			const currentImport = fs.readFileSync(path.resolve(defaultPath, importFileName + ".pl"), "utf-8");

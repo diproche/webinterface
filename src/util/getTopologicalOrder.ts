@@ -4,7 +4,7 @@ export interface Edge {
 }
 
 // Uses the Khan Algorithm loosely
-export default function getTopologicalOrder(inputGraph: ReadonlySet<Edge>): string[] | Set<Edge> {
+export default function getTopologicalOrder(inputGraph: ReadonlySet<Edge>): string[] {
 	const graph: Set<Edge> = new Set(inputGraph);
 
 	const order: string[] = [];
@@ -33,7 +33,7 @@ export default function getTopologicalOrder(inputGraph: ReadonlySet<Edge>): stri
 
 	// If there are cycles in the graph the residual graph will be returned (which contains the cycles)
 	// This should be regarded as an error case
-	if (graph.size !== 0 ) { return graph; }
+	if (graph.size !== 0 ) { throw new Error("Cyclic Imports: " + graph.toString); }
 
 	// Returns the order if successful
 	return order;
