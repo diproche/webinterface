@@ -1,5 +1,5 @@
 import Issue from "../issueHandling/issue";
-import vocabissue from "../issueHandling/knownIssues.json";
+import issueJson from "../issueHandling/knownIssues.json";
 import json from "./allowedVocab.json";
 import uniqueValues from "./Iterators";
 
@@ -36,8 +36,8 @@ export function collectInvalidWordsInIssues(text: string, invalidWords: string[]
 		issues.push({
 			message: word,
 			position: temp,
-			severity: vocabissue.INVALID_WORD.severity,
-			code: vocabissue.INVALID_WORD.message,
+			severity: issueJson.INVALID_WORD.severity,
+			code: issueJson.INVALID_WORD.message,
 		});
 	}
 	return issues;
@@ -83,7 +83,7 @@ export function logSingleWord(word: string, position: Position): Issue {
 			fromIndex: position.fromIndex,
 			toIndex: position.toIndex,
 		},
-		severity: vocabissue.INVALID_WORD.severity,
-		code: vocabissue.INVALID_WORD.message,
+		severity: issueJson.INVALID_WORD.severity,
+		code: issueJson.INVALID_WORD.message,
 	};
 }
