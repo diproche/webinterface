@@ -1,6 +1,4 @@
-// IMPORTS
-// import { addErrorToErrorMap } from "../error_map/error_map";
-
+import { addIssue } from "../issueHandling/issueMapping";
 const allowedExpressionToken = /(bracketLeft|bracketRight|equivalence|implication|negation|conjunction|disjunction)+/;
 const logicConnector = /(conjunction|disjunction|equivalence|implication)+/;
 const negation = /(negation)+/;
@@ -115,11 +113,10 @@ export function detectBracketErrors(formattedExpression: string[]) {
 		index++;
 	}
 	if (bracketCount > 0) {
-		// addErrorToErrorMap(200);	//"200|Bracket Error: some brackets are not closed."
+		addIssue("BRACKET_UNDERCLOSING");
 		return true;
 	} else if (bracketCount < 0) {
-		// addErrorToErrorMap(201);	//"201|Bracket Error: too much brackets has been closed
-		// or has been closed before a bracket were opened."
+		addIssue("BRACKET_OVERCLOSING");
 		return true;
 	}
 	return false;
@@ -130,35 +127,31 @@ export function detectMissingStatementsOrConnector(formattedExpression: string[]
 	let connector = true;
 	let statement = false;
 	while (index < formattedExpression.length) {
-		if (formattedExpression[index].match(test)) {	// ignore negations and brackets here
+		if (formattedExpression[index].match(test)) {
 			index++;
 		} else if (formattedExpression[index].match(logicConnector)) {
 			if (connector === true) {
-				// 	addErrorToErrorMap(202);
-				// "202|Missing Statement Error: It seems, you forgot some statements inside your logic expression."
+				addIssue("MISSING_STATEMENT_INSIDE");
 				return true;
 			}
-			connector = true;											// mark, that a connector was found
-			statement = false;											// unmark statement marker
+			connector = true;
+			statement = false;
 			index++;
-		} else {														// else case means that a statement was found
+		} else {
 			if (statement === true) {
-				// addErrorToErrorMap(204);
-				// "204|Missing Connector Error: It seems, you forgot some connector between your statements
-				// inside your logic expression."
+				addIssue("MISSING_CONNECTOR");
 				return true;
 			}
-			connector = false;											// unmark connector marker
-			statement = true;											// mark, that a statement was found
+			connector = false;
+			statement = true;
 			index++;
 		}
 
 	}
 	if (statement === false || connector === true) {
-		// 	addErrorToErrorMap(203);
-		// "203|Missing Statement Error: It seems, you forgot to add a statement at the end of your logic expression."
+		addIssue("MISSING_STATEMENT_AT_THE_END");
 		return true;
 	}
 
-	return false;			// no error detected;
+	return false;
 }
