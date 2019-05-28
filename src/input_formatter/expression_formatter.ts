@@ -26,11 +26,10 @@ export function preFormatExpressionFromImput(expression: string) {
 		.replace(/(<-->|<==>|<=>|<->)/g, " equivalence ")
 		.replace(/(->|-->|=>|==>)/g, " implication ")
 		.replace(/(neq|not|nicht|¬|-)/ig, " negation ")
-		.replace(/(and|und|&|∧)/ig, " conjunction ")
-		.replace(/(or|oder|\||∨)/ig, " disjunction ")
-		.trim()								// delete white spaces at the beginn and the end of an expression
+		.replace(/(and|und|&|∧|\/\\)/ig, " conjunction ")
+		.replace(/(or|oder|\||∨|\\\/)/ig, " disjunction ")
+		.trim()
 		.replace(/\s{1,}/g, ",");
-	// each element of an expression should seperated with a comma so every left white space are replaced with comma here
 	const splittedExpression: string[] = formattedInputExpression.split(/[,]+/g);
 	return splittedExpression;
 
