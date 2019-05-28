@@ -21,6 +21,6 @@
 	},
 	"INVALID_WORD": {
 		"severity": "WARNING",
-		"message": "Die Eingabe enthält ein unerlaubted Wort."
+		"message": "Die Eingabe enthält ein unerlaubtes Wort."
 	}
 }
