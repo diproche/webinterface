@@ -25,7 +25,7 @@ test("check if the issuelist contains a searched issue", () => {
 
 	expect(issue).toEqual({
 		code: "MISSING_STATEMENT_INSIDE",
-		message: "It seems, you forgot some statements inside your logic expression.",
+		message: "Es fehlt mindestens ein Argumente zwischen zwei logischen Operatoren.",
 		severity: "WARNING",
 	});
 });
