@@ -1,5 +1,5 @@
 
-import { addIssue, emptyIssueList, listAllIssues } from "./issue_mapping";
+import { addIssue, emptyIssueList, listAllIssues } from "./issueMapping";
 
 test("check if the issuelist contains a searched issue but it doesn't", () => {
 	emptyIssueList();

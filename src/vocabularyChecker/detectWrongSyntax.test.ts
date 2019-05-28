@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import InvalidWord from "../issueHandling/known_Issues.json";
+import InvalidWord from "../issueHandling/knownIssues.json";
 import { collectAllInvalidWords, collectInvalidWordsInIssues, getAllIssues } from "./detectWrongSyntax";
 import { getInvalidWords, logMultipleOccurences, logMultipleWords, logSingleWord } from "./detectWrongSyntax";
 import { Position } from "./detectWrongSyntax";

@@ -1,5 +1,5 @@
 import Issue from "./issue";
-import issueJson from "./known_issues.json";
+import issueJson from "./knownIssues.json";
 import Position from "./position";
 
 /** All the valid issue-codes */

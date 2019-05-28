@@ -1,5 +1,5 @@
 import Issue from "../issueHandling/issue";
-import vocabissue from "../issueHandling/known_issues.json";
+import vocabissue from "../issueHandling/knownIssues.json";
 import json from "./allowedVocab.json";
 import uniqueValues from "./Iterators";
 
@@ -83,7 +83,7 @@ export function logSingleWord(word: string, position: Position): Issue {
 			fromIndex: position.fromIndex,
 			toIndex: position.toIndex,
 		},
-	severity: vocabissue.INVALID_WORD.severity,
-	code: vocabissue.INVALID_WORD.message,
+		severity: vocabissue.INVALID_WORD.severity,
+		code: vocabissue.INVALID_WORD.message,
 	};
 }
