@@ -62,13 +62,13 @@ describe("logSingleWord", () => {
 		const position: Position = { fromIndex: 0, toIndex: 4 };
 		const issues = logSingleWord("Hello", position);
 		expect(issues).toEqual({
-			code: InvalidWord,
+			code: InvalidWord.INVALID_WORD.message,
 			message: `${"Hello"} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
 			position: {
 				fromIndex: position.fromIndex,
 				toIndex: position.toIndex,
 			},
-			severity: 3,
+			severity: InvalidWord.INVALID_WORD.severity,
 		});
 	});
 
@@ -82,13 +82,13 @@ describe("logSingleWord", () => {
 		const position: Position = { fromIndex: 0, toIndex: 0 };
 		const issues = logSingleWord("", position);
 		expect(issues).toEqual({
-			code: InvalidWord,
+			code: InvalidWord.INVALID_WORD.message,
 			message: `${""} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
 			position: {
 				fromIndex: position.fromIndex,
 				toIndex: position.toIndex,
 			},
-			severity: 3,
+			severity: InvalidWord.INVALID_WORD.severity,
 		});
 	});
 
@@ -96,13 +96,13 @@ describe("logSingleWord", () => {
 		const position: Position = { fromIndex: 0, toIndex: 1 };
 		const issues = logSingleWord(" ", position);
 		expect(issues).toEqual({
-			code: InvalidWord,
+			code: InvalidWord.INVALID_WORD.message,
 			message: `${" "} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
 			position: {
 				fromIndex: position.fromIndex,
 				toIndex: position.toIndex,
 			},
-			severity: 3,
+			severity: InvalidWord.INVALID_WORD.severity,
 		});
 	});
 });
@@ -112,13 +112,13 @@ describe("CollectAllInvalidWordsInIssues", () => {
 		const issues = collectInvalidWordsInIssues("WrongWord RightWord", ["WrongWord"]);
 		expect(issues).toEqual([
 			{
-				code: InvalidWord,
+				code: InvalidWord.INVALID_WORD.message,
 				message: "WrongWord",
 				position: {
 					fromIndex: 0,
 					toIndex: 9,
 				},
-				severity: 3,
+				severity: InvalidWord.INVALID_WORD.severity,
 			},
 		]);
 	});
@@ -127,13 +127,13 @@ describe("CollectAllInvalidWordsInIssues", () => {
 		const issues = collectInvalidWordsInIssues("Te st", [" "]);
 		expect(issues).toEqual([
 			{
-				code: InvalidWord,
+				code: InvalidWord.INVALID_WORD.message,
 				message: " ",
 				position: {
 					fromIndex: 2,
 					toIndex: 3,
 				},
-				severity: 3,
+				severity: InvalidWord.INVALID_WORD.severity,
 			},
 		]);
 	});
@@ -144,13 +144,13 @@ describe("getAllIssues", () => {
 		const issues = getAllIssues("WrongWord RightWord");
 		expect(issues).toEqual([
 			{
-				code: InvalidWord,
+				code: InvalidWord.INVALID_WORD.message,
 				message: "WrongWord",
 				position: {
 					fromIndex: 0,
 					toIndex: 9,
 				},
-				severity: 3,
+				severity: InvalidWord.INVALID_WORD.severity,
 			},
 		]);
 	},
@@ -160,22 +160,22 @@ describe("getAllIssues", () => {
 		const issues = getAllIssues("Te st");
 		expect(issues).toEqual([
 			{
-				code: InvalidWord,
+				code: InvalidWord.INVALID_WORD.message,
 				message: "Te",
 				position: {
 					fromIndex: 0,
 					toIndex: 2,
 				},
-				severity: 3,
+				severity: InvalidWord.INVALID_WORD.severity,
 			},
 			{
-				code: InvalidWord,
+				code: InvalidWord.INVALID_WORD.message,
 				message: "st",
 				position: {
 					fromIndex: 3,
 					toIndex: 5,
 				},
-				severity: 3,
+				severity: InvalidWord.INVALID_WORD.severity,
 			},
 		]);
 	},
@@ -185,22 +185,22 @@ describe("getAllIssues", () => {
 		const issues = getAllIssues("Te.st");
 		expect(issues).toEqual([
 			{
-				code: InvalidWord,
+				code: InvalidWord.INVALID_WORD.message,
 				message: "Te",
 				position: {
 					fromIndex: 0,
 					toIndex: 2,
 				},
-				severity: 3,
+				severity: InvalidWord.INVALID_WORD.severity,
 			},
 			{
-				code: InvalidWord,
+				code: InvalidWord.INVALID_WORD.message,
 				message: "st",
 				position: {
 					fromIndex: 3,
 					toIndex: 5,
 				},
-				severity: 3,
+				severity: InvalidWord.INVALID_WORD.severity,
 			},
 		]);
 	},
@@ -210,22 +210,22 @@ describe("getAllIssues", () => {
 		const issues = getAllIssues("Te,;<>=st");
 		expect(issues).toEqual([
 			{
-				code: InvalidWord,
+				code: InvalidWord.INVALID_WORD.message,
 				message: "Te",
 				position: {
 					fromIndex: 0,
 					toIndex: 2,
 				},
-				severity: 3,
+				severity: InvalidWord.INVALID_WORD.severity,
 			},
 			{
-				code: InvalidWord,
+				code: InvalidWord.INVALID_WORD.message,
 				message: "st",
 				position: {
 					fromIndex: 7,
 					toIndex: 9,
 				},
-				severity: 3,
+				severity: InvalidWord.INVALID_WORD.severity,
 			},
 		]);
 	});
