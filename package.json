@@ -4,7 +4,6 @@
 	"private": true,
 	"dependencies": {
 		"@types/lodash": "^4.14.123",
-		"diproche": "file:../diproche",
 		"lodash": "^4.17.11",
 		"node-sass": "^4.11.0",
 		"react": "^16.8.6",
@@ -14,11 +13,15 @@
 		"typescript": "3.4.2"
 	},
 	"scripts": {
-		"start": "react-scripts start",
+		"start": "import-diproche && react-scripts start",
 		"lint": "tslint --project .",
-		"build": "react-scripts build",
-		"test": "react-scripts test",
-		"eject": "react-scripts eject"
+		"build": "import-diproche && react-scripts build",
+		"test": "import-diproche && react-scripts test",
+		"eject": "react-scripts eject",
+
+		"import-diproche": "npm run copy-diproche && npm run clean-diproche-import",
+		"copy-diproche": "copy .\\node_modules\\diproche .\\src\\diproche\\diprocheProgram",
+		"clean-diproche-import": "del .\\src\\diproche\\diprocheProgram\\package.json"
 	},
 	"eslintConfig": {
 		"extends": "react-app"
