@@ -3,7 +3,11 @@ export interface Edge {
 	target: string;
 }
 
-// Uses the Khan Algorithm loosely
+/**
+	* Uses the Khan Algorithm
+	* @param {Set<Edge>} graph - A graph represented as set of edges
+	* @return {Array<string>} The topologial oder of the graph
+	*/
 export default function getTopologicalOrder(inputGraph: ReadonlySet<Edge>): string[] {
 	const graph: Set<Edge> = new Set(inputGraph);
 
@@ -39,6 +43,11 @@ export default function getTopologicalOrder(inputGraph: ReadonlySet<Edge>): stri
 	return order;
 }
 
+/**
+	*  Gets all vertexes which are mentioned in Edge.origin but not in Edge.target
+	* @param {Set<Edge>} graph - A graph represented as set of edges
+	* @return {Set<string>} Vertexes with no in edges assuming no isolated vertexes
+	*/
 function getVertexesWithNoInEdge(graph: Set<Edge>): Set<string> {
 	const outgoing: Set<string> = new Set();
 	const incoming: Set<string> = new Set();
