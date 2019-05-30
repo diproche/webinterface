@@ -18,9 +18,54 @@ export function addPredicate(userInput: string, mode: string): string {
 	return "No predicate was selected";
 }
 
-// Please specify and describe the return type for this function.
-// Input should be a string I can just run in diproche
-// (also the corresponding predicate like diproche_fo(...).)
+// Assuming "wrongWord" is not an allowed word, then a
+// vocaberror is an error like the word "wrongWord"
+// in the text "This text contains a wrongWord".
+export function getVocabErrors(userInput: string) {
+	// Dummy input
+}
+
+// A misplacedSymbolError is something like "2 += 2 4" or
+// "(2+2)) = 4" instead of "2 + 2 = 4" or "(2+2) = 4" respectively
+export function getMisplacedSymbolsErrors(userInput: string) {
+	// Dummy input
+}
+
+// A semantic error is something like
+// "2 + 2 = 4 minus 1 that's 3 quick maffs",
+// i.e. some expression does not make sense with respect
+// to the mathematical objects used.
+export function getSemanticErrors(userInput: string) {
+	// Dummy input
+}
+
+/**
+ * SyntacticErrors are all the errors that are vocabErrors or
+ * misplacedSymbolsErrors.
+ */
+export function getSyntacticErrors(userInput: string) {
+	getVocabErrors(userInput);
+	getMisplacedSymbolsErrors(userInput);
+}
+
+/**
+ * Before executing diproche syntactical and semantical errors
+ * are everything that is considered.
+ */
+export function getErrorsBeforeDiproche(userInput: string) {
+	getSyntacticErrors(userInput);
+	getSemanticErrors(userInput);
+}
+
+/**
+ * Diproche itself returns errors, for example when the
+ * proof is wrong. This function should display it to the user.
+ */
+export function getErrorsAfterDiproche(userInput: string) {
+	// Dummy input
+}
+
+// this function collects all Errors.
 export default function getErrors(diprocheInput: string) {
 	// Dummy Functionality
 }
