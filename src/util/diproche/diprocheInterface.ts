@@ -1,5 +1,5 @@
+import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
 import modes from "./predicateList.json";
-
 /**
  * Since the user input most likely lacks the correct predicate,
  * it needs to be added. For easier maintainability in case
@@ -22,7 +22,7 @@ export function addPredicate(userInput: string, mode: string): string {
 // vocaberror is an error like the word "wrongWord"
 // in the text "This text contains a wrongWord".
 export function getVocabErrors(userInput: string) {
-	// Dummy input
+	expect(() => getAllIssues(userInput)).toThrow();
 }
 
 // A misplacedSymbolError is something like "2 += 2 4" or
