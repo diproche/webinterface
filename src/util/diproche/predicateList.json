@@ -1,0 +1,10 @@
+{
+    "propositionalLogic": "diproche",
+    "firstOrderPredicateLogic": "diproche_fo",
+    "test": "teste",
+
+    "predicates": 
+    ["propositionalLogic",
+    "firstOrderPredicateLogic",
+    "test"]
+}
