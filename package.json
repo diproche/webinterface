@@ -10,15 +10,15 @@
 		"react-dom": "^16.8.6",
 		"react-scripts": "2.1.8",
 		"tau-prolog": "^0.2.65",
-		"typescript": "3.4.2"
+		"typescript": "3.4.2",
+		"diproche": "git+ssh://git@github.com:TimothyGillespie/Diproche-Prolog.git"
 	},
 	"scripts": {
-		"start": "import-diproche && react-scripts start",
+		"start": "react-scripts start",
 		"lint": "tslint --project .",
-		"build": "import-diproche && react-scripts build",
-		"test": "import-diproche && react-scripts test",
+		"build": "react-scripts build",
+		"test": "react-scripts test",
 		"eject": "react-scripts eject",
-
 		"import-diproche": "npm run copy-diproche && npm run clean-diproche-import",
 		"copy-diproche": "copy .\\node_modules\\diproche .\\src\\diproche\\diprocheProgram",
 		"clean-diproche-import": "del .\\src\\diproche\\diprocheProgram\\package.json"
