@@ -14,13 +14,13 @@
 		"diproche": "git+ssh://git@github.com:TimothyGillespie/Diproche-Prolog.git"
 	},
 	"scripts": {
-		"start": "react-scripts start",
+		"start": "npm run import-diproche && react-scripts start",
 		"lint": "tslint --project .",
-		"build": "react-scripts build",
-		"test": "react-scripts test",
+		"build": "npm run import-diproche && react-scripts build",
+		"test": "npm run import-diproche && react-scripts test",
 		"eject": "react-scripts eject",
 		"import-diproche": "npm run copy-diproche && npm run clean-diproche-import",
-		"copy-diproche": "copy .\\node_modules\\diproche .\\src\\diproche\\diprocheProgram",
+		"copy-diproche": "(if not exist .\\src\\diproche\\diprocheProgram (mkdir .\\src\\diproche\\diprocheProgram)) && copy .\\node_modules\\diproche .\\src\\diproche\\diprocheProgram",
 		"clean-diproche-import": "del .\\src\\diproche\\diprocheProgram\\package.json"
 	},
 	"eslintConfig": {
