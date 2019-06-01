@@ -20,8 +20,8 @@
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
 		"import-diproche": "npm run copy-diproche && npm run clean-diproche-import",
-		"copy-diproche": "shx mkdir -p ./src/diproche/diprocheProgram && shx cp ./node_modules/diproche/* ./src/diproche/diprocheProgram",
-		"clean-diproche-import": "shx rm ./src/diproche/diprocheProgram/package.json"
+		"copy-diproche": "shx mkdir -p ./src/util/diproche/diprocheProgram && shx cp ./node_modules/diproche/* ./src/util/diproche/diprocheProgram",
+		"clean-diproche-import": "shx rm ./src/util/diproche/diprocheProgram/package.json"
 	},
 	"eslintConfig": {
 		"extends": "react-app"
@@ -38,6 +38,7 @@
 		"@types/node-sass": "^4.11.0",
 		"@types/react": "16.8.13",
 		"@types/react-dom": "16.8.3",
+		"shx": "^0.3.2",
 		"tslint": "^5.17.0"
 	}
 }
