@@ -9,13 +9,25 @@ import modes from "./predicateList.json";
  * be able to just stay inside a mode and not have to add this mode
  * himself. Hence, the mode needs to be read out from the browser.
  */
-export function addPredicate(userInput: string, mode: string): string {
-	modes.predicates.forEach(predicate => {
-		if (mode === predicate) {
-			return predicate.concat("(").concat(userInput).concat(").");
+export function addPredicate(userInput: string, mode: string) {
+	for (const predicate of modes.predicates) {
+		if (predicate.valueOf() === mode.valueOf()) {
+			return replaceModeWithPredicate(mode).concat("(").concat(userInput).concat(").");
 		}
-	});
-	return "No predicate was selected";
+	}
+}
+
+export function replaceModeWithPredicate(mode: string) {
+	if (mode === "propositionalLogic") {
+		return "diproche";
+	}
+	if (mode === "firstOrderPredicateLogic") {
+		return "diproche_fo";
+	}
+	if (mode === "test") {
+		return "teste";
+	}
+	return "";
 }
 
 // Assuming "wrongWord" is not an allowed word, then a
