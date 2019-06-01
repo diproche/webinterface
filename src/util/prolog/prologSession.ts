@@ -78,7 +78,7 @@ export class PrologSession {
 				return new PrologResult(rawResults);
 		}
 
-		private getNextAnswer() {
+		private getNextAnswer(): Promise<string> {
 				return new Promise<string>((resolve) => {
 						this.session.answers((x: any) => {
 								resolve(format_answer(x));

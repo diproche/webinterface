@@ -1,16 +1,15 @@
-import {PrologResult} from "../prolog/prologResult";
 import {importFile, PrologSession} from "../prolog/prologSession";
 
 export class Diproche {
-	private readonly session: PrologSession;
+private readonly session: PrologSession;
 
 	constructor() {
-		this.session = importFile("./diprocheProgram/diproche.pl");
+		this.session = importFile("../diproche/diprocheProgram/diproche.pl");
 	}
 
-	public async getFeedBack(input: string): PrologResult {
-		const results: PrologResult | Promise<PrologResult> =  this.session.executeQuery(input);
-		return results;
+	public async getFeedback(input: string): Promise<ReadonlyMap<string, Array<string | boolean>>> {
+		const resultObject =  await this.session.executeQuery(input);
+		return new Promise(resolve => resolve(resultObject.getResults()));
 	}
 
 }
