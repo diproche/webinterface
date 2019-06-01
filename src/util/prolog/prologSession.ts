@@ -8,6 +8,7 @@ import { removeFileExtension, removeModuleDeclarations, removeNonFunctionalities
 
 // RegExp group one will be the file to be imported.
 const fetchPrologImportsRegExp = /:-(?: |)use_module\(([a-zA-Z1-9]*)\) *\./g;
+const fetchImportedFunctionsRegExp = /:-[\r\t\f\v ]*module\([^,)]*,\[([^)]*)\][\r\t\f\v ]*\)[\r\t\f\v ]*/;
 
 // relativePath is relative to this very file (prologSession.ts)
 export function importFile(relativePath: string): PrologSession {
@@ -23,10 +24,19 @@ function resolveImports(program: string, defaultPath: string, currentFileName: s
 		let importedPrograms: string = "";
 		importList.forEach((importFileName: string) => {
 			const currentImport = fs.readFileSync(path.resolve(defaultPath, importFileName + ".pl"), "utf-8");
-			importedPrograms = importedPrograms + currentImport;
+			importedPrograms = importedPrograms + fixVariableShadowingInImport(importedPrograms + program, currentImport);
 		});
 
 		return importedPrograms + program;
+}
+
+function fixVariableShadowingInImport(program: string, importedProgram: string): string {
+	const importedFunctions: string[] | null = fetchImportedFunctionsRegExp.exec(importedProgram);
+	if (typeof importedFunctions == null) {
+		return identifyPredicatesUniquely(program, importedProgram);
+	}
+	const exceptions: string[] = fetchAllMatchesForAGroup(fetchFunctionsRegExp);
+	return identifyPredicatesUniquely(program, importedProgram, exceptions);
 }
 
 function getDependencyGraph(
