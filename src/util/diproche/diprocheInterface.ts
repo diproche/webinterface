@@ -1,3 +1,4 @@
+import IssueCode from "../../checking/issueCodes";
 import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
 import modes from "./predicateList.json";
 /**
@@ -27,14 +28,16 @@ export function replaceModeWithPredicate(mode: string) {
 	if (mode === "test") {
 		return "teste";
 	}
-	return "";
+	return "InvalidPredicate";
 }
 
 // Assuming "wrongWord" is not an allowed word, then a
 // vocaberror is an error like the word "wrongWord"
 // in the text "This text contains a wrongWord".
 export function getVocabErrors(userInput: string) {
-	expect(() => getAllIssues(userInput)).toThrow();
+	if (getAllIssues(userInput).length > 0) {
+		throw Error("Error");
+	}
 }
 
 // A misplacedSymbolError is something like "2 += 2 4" or
@@ -79,5 +82,6 @@ export function getErrorsAfterDiproche(userInput: string) {
 
 // this function collects all Errors.
 export default function getErrors(diprocheInput: string) {
-	// Dummy Functionality
+	getErrorsBeforeDiproche(diprocheInput);
+	getErrorsAfterDiproche(diprocheInput);
 }

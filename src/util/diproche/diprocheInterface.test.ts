@@ -1,3 +1,4 @@
+import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
 import getErrors from "./diprocheInterface";
 import {addPredicate, getVocabErrors} from "./diprocheInterface";
 
@@ -6,7 +7,9 @@ describe("getErrors", () => {
 	 const userInput = "Angenommen A ist falshc. Dann ist A => B wahr.";
 	 const vocabErrorsOfInput = getVocabErrors(userInput);
 	 const allErrorsOfInput = getErrors(userInput);
-	 expect(vocabErrorsOfInput).toEqual(allErrorsOfInput);
+	 // expect(vocabErrorsOfInput).toEqual(allErrorsOfInput);
+	 // expect(() => getVocabErrors(userInput)).toThrow(Error("Error"));
+	 expect(getVocabErrors(userInput)).toThrow(Error("Error"));
 	});
 });
 
