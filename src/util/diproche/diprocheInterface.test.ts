@@ -5,11 +5,8 @@ import {addPredicate, getVocabErrors} from "./diprocheInterface";
 describe("getErrors", () => {
 	it("Returns all errors present", () => {
 	 const userInput = "Angenommen A ist falshc. Dann ist A => B wahr.";
-	 const vocabErrorsOfInput = getVocabErrors(userInput);
-	 const allErrorsOfInput = getErrors(userInput);
-	 // expect(vocabErrorsOfInput).toEqual(allErrorsOfInput);
-	 // expect(() => getVocabErrors(userInput)).toThrow(Error("Error"));
-	 expect(getVocabErrors(userInput)).toThrow(Error("Error"));
+	 const expected = () => getVocabErrors(userInput);
+	 expect(expected).toThrow(Error);
 	});
 });
 
