@@ -4,17 +4,17 @@ import { format_answer, type } from "tau-prolog/modules/core";
 import getTopologicalOrder, {Edge} from "../getTopologicalOrder";
 import {fetchAllMatchesForAGroup} from "../regExpUtils";
 import { PrologResult } from "./prologResult";
-import { removeFileExtension, removeModuleDeclarations, removeNonFunctionalities } from "./prologStringManipulation";
+// PSM ~ prologStringManipulation
+import * as PSM from "./prologStringManipulation";
 
 // RegExp group one will be the file to be imported.
 const fetchPrologImportsRegExp = /:-(?: |)use_module\(([a-zA-Z1-9]*)\) *\./g;
-const fetchImportedFunctionsRegExp = /:-[\r\t\f\v ]*module\([^,)]*,\[([^)]*)\][\r\t\f\v ]*\)[\r\t\f\v ]*/;
 
 // relativePath is relative to this very file (prologSession.ts)
 export function importFile(relativePath: string): PrologSession {
 	const absolutePath = path.resolve(__dirname, relativePath);
 	const program = fs.readFileSync(absolutePath, "utf-8");
-	const fileName = removeFileExtension(path.basename(absolutePath));
+	const fileName = PSM.removeFileExtension(path.basename(absolutePath));
 	return new PrologSession(program, path.dirname(absolutePath), fileName);
 }
 
@@ -24,19 +24,10 @@ function resolveImports(program: string, defaultPath: string, currentFileName: s
 		let importedPrograms: string = "";
 		importList.forEach((importFileName: string) => {
 			const currentImport = fs.readFileSync(path.resolve(defaultPath, importFileName + ".pl"), "utf-8");
-			importedPrograms = importedPrograms + fixVariableShadowingInImport(importedPrograms + program, currentImport);
+			importedPrograms = importedPrograms + PSM.fixVariableShadowingInImport(importedPrograms + program, currentImport);
 		});
 
 		return importedPrograms + program;
-}
-
-function fixVariableShadowingInImport(program: string, importedProgram: string): string {
-	const importedFunctions: string[] | null = fetchImportedFunctionsRegExp.exec(importedProgram);
-	if (typeof importedFunctions == null) {
-		return identifyPredicatesUniquely(program, importedProgram);
-	}
-	const exceptions: string[] = fetchAllMatchesForAGroup(fetchFunctionsRegExp);
-	return identifyPredicatesUniquely(program, importedProgram, exceptions);
 }
 
 function getDependencyGraph(
@@ -67,11 +58,11 @@ export class PrologSession {
 		public readonly session: any;
 
 		constructor(program: string, defaultPath: string = __dirname, fileName?: string, limit?: number) {
-				program = removeNonFunctionalities(program);
+				program = PSM.removeNonFunctionalities(program);
 				program = resolveImports(program, defaultPath, fileName);
 
 				this.session = new type.Session(limit);
-				this.session.consult((removeModuleDeclarations(program)));
+				this.session.consult((PSM.removeModuleDeclarations(program)));
 		}
 
 		public async executeQuery(query: string): Promise<PrologResult> {
