@@ -36,7 +36,7 @@ export function getPrologPredicateForMode(mode: string) {
 // in the text "This text contains a wrongWord".
 export function getVocabErrors(userInput: string) {
 	if (getAllIssues(userInput).length > 0) {
-		throw Error("Error");
+		throw new Error("Error");
 	}
 }
 
