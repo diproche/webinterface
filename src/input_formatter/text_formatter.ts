@@ -17,7 +17,9 @@ export function textFormatter(input: string) {
 			formattedText.push(formattedExpression);
 		} else if (element.match(/\n/)) {
 			formattedText.push([]);
-		} else if (element.match(/([A-Za-zäöü]+)/g)) {
+		} else if (element.match(/([A-Za-zäöüß]+)/g)) {
+			//} else if (element.match(/\b\w+\b/g)) {
+
 			const ListOfWords = sentenceIntoWordList(element.trim());
 			formattedText.push(ListOfWords);
 		}
