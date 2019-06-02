@@ -74,11 +74,11 @@ describe("logSingleWord", () => {
 		});
 	});
 
-/**
- * The next two testcases should never actually appear in practice. Since an empty word and a single whitespace
- * are not classified as "words" for our purposes. For the sake of completeness those cases are
- * tested nonetheless
- */
+//
+// The next two testcases should never actually appear in practice. Since an empty word and a single whitespace
+// are not classified as "words" for our purposes. For the sake of completeness those cases are
+// tested nonetheless
+//
 
 	it("Logs a empty word correctly", () => {
 		const position: Position = {fromIndex: 0, toIndex: 0};
@@ -151,7 +151,7 @@ describe("getAllIssues", () => {
 				position: {
 					fromIndex: 0,
 					toIndex: 9,
-					},
+				},
 				severity: Severity.FatalError,
 			},
 		]);
