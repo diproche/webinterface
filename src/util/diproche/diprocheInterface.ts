@@ -12,13 +12,13 @@ import modes from "./predicateList.json";
  */
 export function addPredicate(userInput: string, mode: string) {
 	for (const predicate of modes.predicates) {
-		if (predicate.valueOf() === mode.valueOf()) {
-			return replaceModeWithPredicate(mode).concat("(").concat(userInput).concat(").");
+		if (predicate === mode) {
+			return getPrologPredicateForMode(mode).concat("(").concat(userInput).concat(").");
 		}
 	}
 }
 
-export function replaceModeWithPredicate(mode: string) {
+export function getPrologPredicateForMode(mode: string) {
 	if (mode === "propositionalLogic") {
 		return "diproche";
 	}
