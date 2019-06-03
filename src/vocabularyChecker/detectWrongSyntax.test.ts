@@ -1,8 +1,6 @@
-import React from "react";
-import ReactDOM from "react-dom";
 import issueJson from "../issueHandling/knownIssues.json";
-import { collectAllInvalidWords, collectInvalidWordsInIssues, getAllIssues } from "./detectWrongSyntax";
-import { getInvalidWords, logMultipleOccurences, logMultipleWords, logSingleWord } from "./detectWrongSyntax";
+import { collectInvalidWordsInIssues, getAllIssues } from "./detectWrongSyntax";
+import { getInvalidWords, logSingleWord } from "./detectWrongSyntax";
 import { Position } from "./detectWrongSyntax";
 
 describe("getInvalidWords", () => {
