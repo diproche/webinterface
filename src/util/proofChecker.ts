@@ -1,5 +1,4 @@
-export function checkProof(text: string): string[] {
-	return [
-		"Der Checker ist nicht verfügbar!",
-	];
+import Issue from "../issueHandling/issue";
+export function checkProof(text: string): Issue[] {
+	return [];
 }

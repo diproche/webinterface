@@ -1,4 +1,5 @@
 import React from "react";
+import Issue from "../../issueHandling/issue";
 import { checkProof } from "../../util/proofChecker";
 import styles from "./proofEditor.module.scss";
 
@@ -24,16 +25,16 @@ export class ProofEditor extends React.Component<Props, State> {
 			<div className={styles.buttons}>
 				<button onClick={this.checkInput}>
 					Prüfen
-								</button>
+				</button>
 				<button onClick={() => { alert("Toller Hinweis"); }}>
 					Hinweis
-								</button>
+				</button>
 			</div>
 		</div>;
 	}
 
-	private readonly checkInput = () => {
-		const errors = checkProof(this.state.text);
+	private readonly checkInput = (): void => {
+		const errors: Issue[] = checkProof(this.state.text);
 		alert(errors);
 	}
 }
