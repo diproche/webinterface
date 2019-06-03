@@ -1,6 +1,15 @@
 import IssueCode from "../../checking/issueCodes";
 import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
 import modes from "./predicateList.json";
+
+type Mode = "propositionalLogic" | "firstOrderPredicateLogic" | "test";
+
+export class UnexpectedError {
+	constructor(unexpected: never) {
+		super(`Unexpected value '${unexpected}'!`);
+	}
+}
+
 /**
  * Since the user input most likely lacks the correct predicate,
  * it needs to be added. For easier maintainability in case
@@ -10,7 +19,7 @@ import modes from "./predicateList.json";
  * be able to just stay inside a mode and not have to add this mode
  * himself. Hence, the mode needs to be read out from the browser.
  */
-export function addPredicate(userInput: string, mode: string) {
+export function addPredicate(userInput: string, mode: Mode) {
 	for (const predicate of modes.predicates) {
 		if (predicate === mode) {
 			return getPrologPredicateForMode(mode).concat("(").concat(userInput).concat(").");
@@ -18,7 +27,7 @@ export function addPredicate(userInput: string, mode: string) {
 	}
 }
 
-export function getPrologPredicateForMode(mode: string) {
+export function getPrologPredicateForMode(mode: Mode) {
 	if (mode === "propositionalLogic") {
 		return "diproche";
 	}
@@ -28,7 +37,7 @@ export function getPrologPredicateForMode(mode: string) {
 	if (mode === "test") {
 		return "teste";
 	}
-	return "InvalidPredicate";
+	throw(UnexpectedError);
 }
 
 // Assuming "wrongWord" is not an allowed word, then a
