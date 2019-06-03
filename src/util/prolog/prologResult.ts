@@ -54,7 +54,7 @@ export class PrologResult {
 
 	/**
 		* Alternative way to access the results via an array.
-		* @return {Array<Array<string>>} First Level: i-1-th answer Second Level: Variable in query's order
+		* @return {Array<Array<string>>} First Level: i-th answer set Second Level: Variable in query's order
 		*/
 	public getResultArray(): string[][] {
 		const results: string[][] = [];
@@ -66,7 +66,7 @@ export class PrologResult {
 	}
 
 	/**
-		* Receives the filled in values for a single variable
+		* Receives the filled-in values for a single variable
 		* @param {string} variable - The variable to fill in
 		* @return {Array<string>} Fill in values in order of their return
 		*/

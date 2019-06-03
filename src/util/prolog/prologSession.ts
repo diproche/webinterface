@@ -80,13 +80,13 @@ export class PrologSession {
 		* @param {string} program - The program code to run
 		* @param {string} defaultPath - Only needed for forwarding methode internally
 		* @param {string} fileName - Only needed for forwarding methode internally
-		* @param {number} limit - The maximum amount of resolving steps to do before aborting a query
+		* @param {number} maxSteps - The maximum amount of resolving steps to do before aborting a query
 		*/
-	constructor(program: string, defaultPath: string = __dirname, fileName?: string, limit?: number) {
+	constructor(program: string, defaultPath: string = __dirname, fileName?: string, maxSteps?: number) {
 			program = removeNonFunctionalities(program);
 			program = resolveImports(program, defaultPath, fileName);
 
-			this.session = new type.Session(limit);
+			this.session = new type.Session(maxSteps);
 			this.session.consult((removeModuleDeclarations(program)));
 	}
 
