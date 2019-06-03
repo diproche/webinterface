@@ -4,7 +4,7 @@ import modes from "./predicateList.json";
 
 type Mode = "propositionalLogic" | "firstOrderPredicateLogic" | "test";
 
-export class UnexpectedError {
+export class UnexpectedError extends Error{
 	constructor(unexpected: never) {
 		super(`Unexpected value '${unexpected}'!`);
 	}
