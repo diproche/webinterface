@@ -1,7 +1,11 @@
 import issueJson from "../issueHandling/knownIssues.json";
-import { collectInvalidWordsInIssues, getAllIssues } from "./detectWrongSyntax";
-import { getInvalidWords, logSingleWord } from "./detectWrongSyntax";
-import { Position } from "./detectWrongSyntax";
+import {
+	collectInvalidWordsInIssues,
+	getAllIssues,
+	getInvalidWords,
+	logSingleWord,
+	Position,
+} from "./detectWrongSyntax";
 
 describe("getInvalidWords", () => {
 	it("Returns the correct word for a normal text", () => {
