@@ -1,14 +1,9 @@
 import IssueCode from "../../checking/issueCodes";
 import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
+import {UnexpectedError} from "./Errors";
 import modes from "./predicateList.json";
 
 type Mode = "propositionalLogic" | "firstOrderPredicateLogic" | "test";
-
-export class UnexpectedError extends Error{
-	constructor(unexpected: never) {
-		super(`Unexpected value '${unexpected}'!`);
-	}
-}
 
 /**
  * Since the user input most likely lacks the correct predicate,
