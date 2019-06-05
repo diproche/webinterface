@@ -1,6 +1,6 @@
 import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
 import getErrors from "./diprocheInterface";
-import {addPredicate, getVocabErrors} from "./diprocheInterface";
+import {addPredicate, getVocabErrors, Mode} from "./diprocheInterface";
 
 describe("getErrors", () => {
 	it("Returns all errors present", () => {
@@ -46,7 +46,7 @@ describe("addPredicate", () => {
 	describe("Error cases", () => {
 		describe("Predicate is invalid", () => {
 			it("Adds none of the regular predicates", () => {
-				const pred = "Just a random text";
+				const pred = "Just a random text" as Mode;
 				expect(addPredicate("hallo", pred)).toEqual(undefined);
 			});
 		});

@@ -3,7 +3,7 @@ import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
 import {UnexpectedError} from "./Errors";
 import modes from "./predicateList.json";
 
-type Mode = "propositionalLogic" | "firstOrderPredicateLogic" | "test";
+export type Mode = "propositionalLogic" | "firstOrderPredicateLogic" | "test";
 
 /**
  * Since the user input most likely lacks the correct predicate,
