@@ -28,16 +28,20 @@ export function addPredicate(userInput: string, mode: Mode) {
 }
 
 export function getPrologPredicateForMode(mode: Mode) {
-	if (mode === "propositionalLogic") {
-		return "diproche";
+	switch (mode) {
+		case "propositionalLogic": {
+			return "diproche";
+		}
+		case "firstOrderPredicateLogic": {
+			return "diproche_fo";
+		}
+		case "test": {
+			return "teste";
+		}
+		default: {
+			throw(UnexpectedError);
+		}
 	}
-	if (mode === "firstOrderPredicateLogic") {
-		return "diproche_fo";
-	}
-	if (mode === "test") {
-		return "teste";
-	}
-	throw(UnexpectedError);
 }
 
 // Assuming "wrongWord" is not an allowed word, then a
