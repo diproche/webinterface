@@ -1,3 +1,5 @@
+import { Severity } from "../../checking/issue";
+import { IssueCode } from "../../checking/issueCodes";
 import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
 import getErrors from "./diprocheInterface";
 import {addPredicate, getVocabErrors, Mode} from "./diprocheInterface";
@@ -50,5 +52,36 @@ describe("addPredicate", () => {
 				expect(addPredicate("hallo", pred)).toEqual(undefined);
 			});
 		});
+	});
+});
+
+// The following description is based on the one in detectWrongSyntax.ts
+// Only difference is, here it is expected to throw Errors.
+describe("getVocabErrors", () => {
+	it("Throws an error for one wrong word in a two-word-input", () => {
+		const userInput = "WrongWord RightWord";
+		const expected = () => getVocabErrors(userInput);
+		expect(expected).toThrow(Error);
+	},
+);
+
+	it("Creates a correct Issue-array for two words seperated by a Whitespace", () => {
+		const userInput = "Te st";
+		const expected = () => getVocabErrors(userInput);
+		expect(expected).toThrow(Error);
+	},
+);
+
+	it("Detects a String of word1.word2 as two words and throws an Error, if they are invalid", () => {
+		const userInput = "word1 word2";
+		const expected = () => getVocabErrors(userInput);
+		expect(expected).toThrow(Error);
+	},
+);
+
+	it("Detects a String of word1,;:<>=word2 as two words and throws an Error, if they are invalid", () => {
+		const userInput = "Te,;<>=st";
+		const expected = () => getVocabErrors(userInput);
+		expect(expected).toThrow(Error);
 	});
 });

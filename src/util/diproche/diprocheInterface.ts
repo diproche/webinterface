@@ -40,12 +40,13 @@ export function getPrologPredicateForMode(mode: Mode) {
 }
 
 // Assuming "wrongWord" is not an allowed word, then a
-// vocaberror is an error like the word "wrongWord"
+// vocaberror is an error like "the word "wrongWord"
 // in the text "This text contains a wrongWord".
 export function getVocabErrors(userInput: string) {
 	if (getAllIssues(userInput).length > 0) {
-		throw new Error("Error");
+	throw new Error("Error");
 	}
+	return getAllIssues(userInput);
 }
 
 // A misplacedSymbolError is something like "2 += 2 4" or
