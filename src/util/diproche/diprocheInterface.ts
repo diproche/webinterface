@@ -1,7 +1,7 @@
 import IssueCode from "../../checking/issueCodes";
 import {ProofEditor} from "../../components/proofEditor/proofEditor";
 import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
-import {UnexpectedError} from "./Errors";
+import { UnexpectedError } from "./Errors";
 import modes from "./predicateList.json";
 
 export type Mode = "propositionalLogic" | "firstOrderPredicateLogic" | "test";
@@ -21,7 +21,7 @@ export function addPredicate(userInput: string, mode: Mode) {
 			return getPrologPredicateForMode(mode).concat("(").concat(userInput).concat(").");
 		}
 	}
-	throw(UnexpectedError);
+	return "Es gibt kein passendes Prädikat.";
 }
 
 export function getPrologPredicateForMode(mode: Mode) {

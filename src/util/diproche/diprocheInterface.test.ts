@@ -3,6 +3,7 @@ import { IssueCode } from "../../checking/issueCodes";
 import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
 import getErrors from "./diprocheInterface";
 import {addPredicate, getVocabErrors, Mode} from "./diprocheInterface";
+import {UnexpectedError} from "./Errors";
 
 describe("getErrors", () => {
 	it("Returns all errors present", () => {
@@ -48,8 +49,8 @@ describe("addPredicate", () => {
 	describe("Error cases", () => {
 		describe("Predicate is invalid", () => {
 			it("Adds none of the regular predicates", () => {
-				const pred = "Just a random text" as Mode;
-				expect(addPredicate("hallo", pred)).toEqual(undefined);
+				const mode = "Just a random text" as Mode;
+				expect(addPredicate("", mode)).toEqual("Es gibt kein passendes Prädikat.");
 			});
 		});
 	});
