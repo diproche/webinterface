@@ -1,27 +1,26 @@
 import { addIssue } from "../issueHandling/issueMapping";
 const allowedExpressionToken = /(bracketLeft|bracketRight|equivalence|implicationRight|implicationLeft|negation|conjunction|disjunction|equal|addition|subtraction|division|multiplication)+/;
 const logicConnector = /(conjunction|disjunction|equivalence|implicationRight|implicationLeft)+/;
-const nonLogicToken = /(bracketLeft|bracketRight|negation)+/;
+const bracket = /(bracketLeft|bracketRight)+/;
+const negation = /(negation)+/;
 
 /**
-	* ---------CurrentExpressionFormatter------------
-	* @param expression written by a user
-	* @return a formatted expression as String
-	*/
+* main method to format expressions
+* @param expression written by user
+* @return a formatted expression
+*/
 export function expressionFormatter(expression: string) {
 	const preFormattedExpression: string[] = preFormatExpressionFromImput(expression);
-	errorDetector(preFormattedExpression);
-	// TO DO SOME STUFF WITH THE TOKENS AND THE ARRAY; FORMAT THE ARRAY AND CATCH ERRORS
-	const finalFormattedExpression: string[] =
-		replaceExpressionElementsIntoPrologCode(preFormattedExpression);
+	expressionIssueDetector(preFormattedExpression);
+	const finalFormattedExpression: string[] = replaceExpressionElementsIntoPrologCode(preFormattedExpression);
 	return finalFormattedExpression;
 }
 
 /**
- * 
- * @param expression as a input string typed by user
- * @return a preformatted expression where some different input styles for logical vocabulary gets formatted into one single style
- */
+* 
+* @param expression written by user
+* @return a preformatted expression where some different input styles for logical vocabulary gets formatted into one single style
+*/
 export function preFormatExpressionFromImput(expression: string) {
 	const formattedInputExpression: string = expression
 		.replace(/(\$)/g, "")
@@ -46,18 +45,17 @@ export function preFormatExpressionFromImput(expression: string) {
 }
 
 /**
-	* @param formattedExpression
-	* @return finalExpression where exrpession elements got replaced with readable prolog code elements
-	*/
-export function replaceExpressionElementsIntoPrologCode(formattedExpression: string[]) {
+* @return finalExpression where exrpession elements got replaced with readable prolog code elements
+*/
+export function replaceExpressionElementsIntoPrologCode(preFormattedExpression: string[]) {
 	const finalFormattedExpression: string[] = [];
 	let index = 0;
-	while (index < formattedExpression.length) {
-		if (formattedExpression[index].match(allowedExpressionToken)) {
-			const element2: string = replaceASingleExpressionElementIntoPrologCode(formattedExpression[index]);
-			finalFormattedExpression.push(element2);
+	while (index < preFormattedExpression.length) {
+		if (preFormattedExpression[index].match(allowedExpressionToken)) {
+			const element: string = replaceASingleExpressionElementIntoPrologCode(preFormattedExpression[index]);
+			finalFormattedExpression.push(element);
 		} else {
-			finalFormattedExpression.push(formattedExpression[index]);
+			finalFormattedExpression.push(preFormattedExpression[index]);
 		}
 		index++;
 	}
@@ -66,12 +64,11 @@ export function replaceExpressionElementsIntoPrologCode(formattedExpression: str
 }
 
 /**
-	* helper function for replaceExpressionElementsIntoPrologCode
-	* @param formattedExpression
-	* @return finalExpression
-	*/
-export function replaceASingleExpressionElementIntoPrologCode(formattedExpression: string) {
-	const finalExpression: string = formattedExpression;
+* helper function for replaceExpressionElementsIntoPrologCode
+* @return finalExpressionElement
+*/
+export function replaceASingleExpressionElementIntoPrologCode(preformattedExpressionElement: string) {
+	const finalExpression: string = preformattedExpressionElement;
 	return finalExpression
 		.replace(/(bracketLeft)/g, "\[")
 		.replace(/(bracketRight)/g, "\]")
@@ -89,17 +86,15 @@ export function replaceASingleExpressionElementIntoPrologCode(formattedExpressio
 		;
 }
 
-export function errorDetector(preFormattedExpression: string[]) {
-	detectBracketErrors(preFormattedExpression);
+export function expressionIssueDetector(preFormattedExpression: string[]) {
+	detectBracketIssues(preFormattedExpression);
 	detectMissingStatementsOrConnector(preFormattedExpression);
 }
 
 /**
-	* check the expression if the amount of opened and closed brackets is correct; it can detect user mistakes;
-	* @param
-	* @return
-	*/
-export function detectBracketErrors(formattedExpression: string[]) {
+* Check the expression for an equal amount of opened and closed brackets.; it can detect wrong input
+*/
+export function detectBracketIssues(formattedExpression: string[]) {
 	let bracketCount = 0;
 	let index = 0;
 	while (index < formattedExpression.length && bracketCount >= 0) {
@@ -118,30 +113,41 @@ export function detectBracketErrors(formattedExpression: string[]) {
 	}
 }
 
+/**
+ * check the expression for correctness that no logic operators or statements is forgotten; it can detect wrong input
+ */
 export function detectMissingStatementsOrConnector(formattedExpression: string[]) {
 	let index = 0;
-	let connector = true;
-	let statement = false;
+	let foundConnector = true;
+	let foundStatement = false;
+	let foundNegation = false;
 	while (index < formattedExpression.length) {
-		if (formattedExpression[index].match(nonLogicToken)) {
+		if (formattedExpression[index].match(bracket)) {
+			index++;
+		} else if (formattedExpression[index].match(negation)) {
+			foundNegation = true;
 			index++;
 		} else if (formattedExpression[index].match(logicConnector)) {
-			if (connector === true) {
+			if (foundNegation === true) {
+				addIssue("MISSING_STATEMENT_AFTER_NEGATION");
+			} else if (foundConnector === true) {
 				addIssue("MISSING_STATEMENT_INSIDE");
 			}
-			connector = true;
-			statement = false;
+			foundConnector = true;
+			foundStatement = false;
+			foundNegation = false;
 			index++;
 		} else {
-			if (statement === true) {
+			if (foundStatement === true) {
 				addIssue("MISSING_CONNECTOR");
 			}
-			connector = false;
-			statement = true;
+			foundConnector = false;
+			foundStatement = true;
+			foundNegation = false;
 			index++;
 		}
 	}
-	if (statement === false || connector === true) {
+	if (foundStatement === false || foundConnector === true || foundNegation === true) {
 		addIssue("MISSING_STATEMENT_AT_THE_END");
 	}
 }

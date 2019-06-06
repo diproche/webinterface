@@ -1,9 +1,9 @@
 import { emptyIssueList, listAllIssues } from "../issueHandling/issueMapping";
 import {
-	detectBracketErrors,
-	detectMissingStatementsOrConnector,
 	preFormatExpressionFromImput,
 	replaceExpressionElementsIntoPrologCode,
+	detectBracketIssues,
+	expressionIssueDetector,
 } from "./expression_formatter";
 import { sentenceIntoWordList, textFormatter } from "./text_formatter";
 
@@ -119,7 +119,7 @@ test("splitting full text into full listFormat including expressions and paragra
 	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
 	expect(issue).toEqual({
 		code: "MISSING_STATEMENT_INSIDE",
-		message: "Es fehlt mindestens ein Argumente zwischen zwei logischen Operatoren.",
+		message: "Es fehlt mindestens ein Argument zwischen zwei logischen Operatoren.",
 		severity: "WARNING",
 	});
 
@@ -137,7 +137,7 @@ test("scan for bracket errors - test 1: [][][[]]", () => {
 		"bracketRight",
 		"bracketRight",
 	];
-	detectBracketErrors(bracketList);
+	detectBracketIssues(bracketList);
 	const issue = listAllIssues();
 	expect(issue).toEqual([]);
 });
@@ -153,7 +153,7 @@ test("scan for bracket errors - test 2: [[[[[[]]", () => {
 		"bracketRight",
 		"bracketRight",
 	];
-	detectBracketErrors(bracketList);
+	detectBracketIssues(bracketList);
 	const issue = listAllIssues().find(i => i.code === "BRACKET_UNDERCLOSING");
 	expect(issue).toEqual({
 		code: "BRACKET_UNDERCLOSING",
@@ -165,7 +165,7 @@ test("scan for bracket errors - test 2: [[[[[[]]", () => {
 test("scan for bracket errors - test 3: ][", () => {
 	emptyIssueList();
 	const bracketList = ["bracketRight", "bracketLeft"];
-	detectBracketErrors(bracketList);
+	detectBracketIssues(bracketList);
 	const issue = listAllIssues().find(i => i.code === "BRACKET_OVERCLOSING");
 	expect(issue).toEqual({
 		code: "BRACKET_OVERCLOSING",
@@ -177,12 +177,12 @@ test("scan for bracket errors - test 3: ][", () => {
 test("scan for missing Statements or missing connectors - test 1: [ <-> ]", () => {
 	emptyIssueList();
 	const testExpression = ["bracketLeft", "implicationRight", "bracketRight"];
-	detectMissingStatementsOrConnector(testExpression);
+	expressionIssueDetector(testExpression);
 	const issue1 = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
 	const issue2 = listAllIssues().find(i => i.code === "MISSING_STATEMENT_AT_THE_END");
 	expect(issue1).toEqual({
 		code: "MISSING_STATEMENT_INSIDE",
-		message: "Es fehlt mindestens ein Argumente zwischen zwei logischen Operatoren.",
+		message: "Es fehlt mindestens ein Argument zwischen zwei logischen Operatoren.",
 		severity: "WARNING",
 	});
 	expect(issue2).toEqual({
@@ -192,14 +192,20 @@ test("scan for missing Statements or missing connectors - test 1: [ <-> ]", () =
 	});
 });
 
-test("scan for missing Statements or missing connectors - test 2: [ C <-> ]", () => {
+test("scan for missing Statements or missing connectors - test 2: [ C <-> ]]", () => {
 	emptyIssueList();
-	const testExpression = ["bracketLeft", "C", "implicationRight", "bracketRight"];
-	detectMissingStatementsOrConnector(testExpression);
-	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_AT_THE_END");
-	expect(issue).toEqual({
+	const testExpression = ["bracketLeft", "C", "implicationRight", "bracketRight", "bracketRight"];
+	expressionIssueDetector(testExpression);
+	const issue1 = listAllIssues().find(i => i.code === "MISSING_STATEMENT_AT_THE_END");
+	const issue2 = listAllIssues().find(i => i.code === "BRACKET_OVERCLOSING");
+	expect(issue1).toEqual({
 		code: "MISSING_STATEMENT_AT_THE_END",
 		message: "Am Ende des Ausdrucks fehlt ein Argument. Dieser darf nicht mit einem logischen Operator enden.",
+		severity: "WARNING",
+	});
+	expect(issue2).toEqual({
+		code: "BRACKET_OVERCLOSING",
+		message: "Es wurden Klammern geschlossen, die nicht geöffnet wurden.",
 		severity: "WARNING",
 	});
 });
@@ -207,11 +213,11 @@ test("scan for missing Statements or missing connectors - test 2: [ C <-> ]", ()
 test("scan for missing Statements or missing connectors - test 3: [ and X ]", () => {
 	emptyIssueList();
 	const testExpression = ["bracketLeft", "conjunction", "X", "bracketRight"];
-	detectMissingStatementsOrConnector(testExpression);
+	expressionIssueDetector(testExpression);
 	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
 	expect(issue).toEqual({
 		code: "MISSING_STATEMENT_INSIDE",
-		message: "Es fehlt mindestens ein Argumente zwischen zwei logischen Operatoren.",
+		message: "Es fehlt mindestens ein Argument zwischen zwei logischen Operatoren.",
 		severity: "WARNING",
 	});
 });
@@ -219,7 +225,7 @@ test("scan for missing Statements or missing connectors - test 3: [ and X ]", ()
 test("scan for missing Statements or missing connectors - test 4 [ A ]", () => {
 	emptyIssueList();
 	const testExpression = ["bracketLeft", "A", "bracketRight"];
-	detectMissingStatementsOrConnector(testExpression);
+	expressionIssueDetector(testExpression);
 	const issue = listAllIssues();
 	expect(issue).toEqual([]);
 });
@@ -234,7 +240,8 @@ test("scan for missing Statements or missing connectors - test 5: [ not A [ ] A 
 		"bracketRight",
 		"A",
 		"bracketRight",
-	]; detectMissingStatementsOrConnector(testExpression);
+	];
+	expressionIssueDetector(testExpression);
 	const issue = listAllIssues().find(i => i.code === "MISSING_CONNECTOR");
 	expect(issue).toEqual({
 		code: "MISSING_CONNECTOR",
@@ -253,7 +260,57 @@ test("scan for missing Statements or missing connectors - test 6: [ A <- B ]", (
 		"B",
 		"bracketRight",
 	];
-	detectMissingStatementsOrConnector(testExpression);
+	expressionIssueDetector(testExpression);
 	const issue = listAllIssues();
 	expect(issue).toEqual([]);
 });
+
+test("scan for missing Statements or missing connectors - test 7: [ not not A ]", () => {
+	emptyIssueList();
+	const testExpression = [
+		"bracketLeft",
+		"negation",
+		"negation",
+		"negation",
+		"A",
+		"bracketRight",
+	];
+	expressionIssueDetector(testExpression);
+	const issue = listAllIssues();
+	expect(issue).toEqual([]);
+});
+test("scan for missing Statements or missing connectors - test 8: [ not not <= A]", () => {
+	emptyIssueList();
+	const testExpression = [
+		"bracketLeft",
+		"negation",
+		"negation",
+		"implicationLeft",
+		"A",
+		"bracketRight",
+	];
+	expressionIssueDetector(testExpression);
+	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_AFTER_NEGATION");
+	expect(issue).toEqual({
+		code: "MISSING_STATEMENT_AFTER_NEGATION",
+		message: "Nach einer Negation muss ein Argument folgen.",
+		severity: "WARNING",
+	});
+});
+
+test("scan for missing Statements or missing connectors - test 9: [ not not not ]", () => {
+	emptyIssueList();
+	const testExpression = [
+		"negation",
+		"negation",
+		"negation",
+	];
+	expressionIssueDetector(testExpression);
+	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_AT_THE_END");
+	expect(issue).toEqual({
+		code: "MISSING_STATEMENT_AT_THE_END",
+		message: "Am Ende des Ausdrucks fehlt ein Argument. Dieser darf nicht mit einem logischen Operator enden.",
+		severity: "WARNING",
+	});
+});
+

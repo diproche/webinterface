@@ -4,7 +4,7 @@ const inputSeparator = /([.!?]|\n|\$[^$]*\$)+/g;
 const wordSeparator = /[ ,]+/;
 
 /**
- * this functions is the main function to format the full input string into a javastring array including formatted exrpessions
+ * this functions is the main function to format the full input string into a string array including formatted exrpessions
  * @param input from user
  * @return the formatted text inculding formatted expressions
  */
