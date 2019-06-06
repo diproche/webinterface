@@ -1,10 +1,12 @@
-import {ProofEditor} from "../../components/proofEditor/proofEditor";
-import {addIssue, addIssueToIssueList, concatOneIssueList} from "../../issueHandling/issueMapping";
+import Issue from "../../issueHandling/issue";
+import { concatOneIssueList } from "../../issueHandling/issueMapping";
 import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
 import { UnexpectedError } from "./Errors";
 import modes from "./predicateList.json";
 
 export type Mode = "propositionalLogic" | "firstOrderPredicateLogic" | "test";
+
+let issuelist: Issue[] = [];
 
 /**
  * Since the user input most likely lacks the correct predicate,
@@ -44,15 +46,14 @@ export function getPrologPredicateForMode(mode: Mode) {
 // Assuming "wrongWord" is not an allowed word, then a
 // vocaberror is an error like "the word "wrongWord"
 // in the text "This text contains a wrongWord".
-export function getVocabErrors(userInput: string) {
+export function getVocabErrors(userInput: string): Issue[] | void {
 	if (getAllIssues(userInput).length > 0) {
-	throw new Error("Error");
+		concatOneIssueList(getAllIssues(userInput));
 	}
-	return getAllIssues(userInput);
 }
 
 // A misplacedSymbolError is something like "2 += 2 4" or
-// "(2+2)) = 4" instead of "2 + 2 = 4" or "(2+2) = 4" respectively
+// "(2 + 2)) = 4" instead of "2 + 2 = 4" or "(2 + 2) = 4" respectively
 export function getMisplacedSymbolsErrors(userInput: string) {
 	// Dummy input
 }
