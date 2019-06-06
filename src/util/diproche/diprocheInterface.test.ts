@@ -1,5 +1,3 @@
-import { Severity } from "../../checking/issue";
-import { IssueCode } from "../../checking/issueCodes";
 import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
 import getErrors from "./diprocheInterface";
 import {addPredicate, getVocabErrors, Mode} from "./diprocheInterface";

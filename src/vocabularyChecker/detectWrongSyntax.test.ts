@@ -5,7 +5,6 @@ import { collectAllInvalidWords, collectInvalidWordsInIssues, getAllIssues } fro
 import { getInvalidWords, logMultipleOccurences, logMultipleWords, logSingleWord } from "./detectWrongSyntax";
 import { Position } from "./detectWrongSyntax";
 
-
 describe("getInvalidWords", () => {
 	it("Returns the correct word for a normal text", () => {
 		const wrongWords = getInvalidWords("fu bar bloedsinn"); // fu and bar are indeed included in allowedVocab
