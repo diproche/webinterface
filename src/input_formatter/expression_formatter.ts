@@ -80,16 +80,8 @@ export function replaceASingleExpressionElementIntoPrologCode(formattedExpressio
 // useful; im planning to improve this into a exception detector soon and export it into a own ts file
 // TO DO: USE THE INDEX AS MARKER WHERE THE ERROR WAS DETECTED AND BUILD A ERROR HASH MAP instead of returning a boolean
 export function errorDetector(preFormattedExpression: string[]) {
-
-	const detectedErrors: boolean[] = [];
-	if (detectBracketErrors(preFormattedExpression) === true) {
-		detectedErrors.push(detectBracketErrors(preFormattedExpression));
-	}
-	if (detectMissingStatementsOrConnector(preFormattedExpression) === true) {
-		detectedErrors.push(detectMissingStatementsOrConnector(preFormattedExpression));
-	}
-
-	// maybe do something with the errorlist or not....TO DO STUFF HERE
+	detectBracketErrors(preFormattedExpression);
+	detectMissingStatementsOrConnector(preFormattedExpression);
 }
 
 /**
@@ -113,12 +105,9 @@ export function detectBracketErrors(formattedExpression: string[]) {
 	}
 	if (bracketCount > 0) {
 		addIssue("BRACKET_UNDERCLOSING");
-		return true;
 	} else if (bracketCount < 0) {
 		addIssue("BRACKET_OVERCLOSING");
-		return true;
 	}
-	return false;
 }
 
 export function detectMissingStatementsOrConnector(formattedExpression: string[]) {
@@ -131,7 +120,6 @@ export function detectMissingStatementsOrConnector(formattedExpression: string[]
 		} else if (formattedExpression[index].match(logicConnector)) {
 			if (connector === true) {
 				addIssue("MISSING_STATEMENT_INSIDE");
-				return true;
 			}
 			connector = true;
 			statement = false;
@@ -139,7 +127,6 @@ export function detectMissingStatementsOrConnector(formattedExpression: string[]
 		} else {
 			if (statement === true) {
 				addIssue("MISSING_CONNECTOR");
-				return true;
 			}
 			connector = false;
 			statement = true;
@@ -149,8 +136,5 @@ export function detectMissingStatementsOrConnector(formattedExpression: string[]
 	}
 	if (statement === false || connector === true) {
 		addIssue("MISSING_STATEMENT_AT_THE_END");
-		return true;
 	}
-
-	return false;
 }
