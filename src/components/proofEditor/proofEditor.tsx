@@ -37,7 +37,8 @@ export class ProofEditor extends React.Component<Props, State> {
 			</div>
 			<div className={styles.issuesInformation}>
 				{this.state.issues.map((issue: Issue) => {
-					return <IssueInformation message={issue.message} />;
+					return <IssueInformation
+						issue={ issue } />;
 				})}
 			</div>
 		</div>;
@@ -48,4 +49,10 @@ export class ProofEditor extends React.Component<Props, State> {
 		const issueArray: readonly Issue[] = checkProof(this.state.userInput);
 		this.setState({issues:  issueArray});
 	}
+}
+
+function isNotUndefined<T>(toCheck: T): T | boolean {
+	if (toCheck === undefined) { return false; }
+
+	return toCheck;
 }
