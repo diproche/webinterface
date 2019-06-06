@@ -1,4 +1,5 @@
 import IssueCode from "../../checking/issueCodes";
+import {ProofEditor} from "../../components/proofEditor/proofEditor";
 import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
 import {UnexpectedError} from "./Errors";
 import modes from "./predicateList.json";
