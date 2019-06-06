@@ -1,0 +1,26 @@
+{
+	"BRACKET_UNDERCLOSING": {
+		"severity": "WARNING",
+		"message": "Es wurden Klammern geöffnet, die nicht geschlossen wurden."
+	},
+	"BRACKET_OVERCLOSING": {
+		"severity": "WARNING",
+		"message": "Es wurden Klammern geschlossen, die nicht geöffnet wurden."
+	},
+	"MISSING_CONNECTOR": {
+		"severity": "WARNING",
+		"message": "Es fehlen logische Operatoren in der Formel."
+	},
+	"MISSING_STATEMENT_INSIDE": {
+		"severity": "WARNING",
+		"message": "Es fehlt mindestens ein Argumente zwischen zwei logischen Operatoren."
+	},
+	"MISSING_STATEMENT_AT_THE_END": {
+		"severity": "WARNING",
+		"message": "Am Ende des Ausdrucks fehlt ein Argument. Dieser darf nicht mit einem logischen Operator enden."
+	},
+	"INVALID_WORD": {
+		"severity": "WARNING",
+		"message": "Die Eingabe enthält ein unerlaubtes Wort."
+	}
+}

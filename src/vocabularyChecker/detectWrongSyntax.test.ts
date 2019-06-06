@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { Severity } from "../checking/issue";
-import { IssueCode } from "../checking/issueCodes";
-import {collectAllInvalidWords, collectInvalidWordsInIssues, getAllIssues} from "./detectWrongSyntax";
-import {getInvalidWords, logMultipleOccurences, logMultipleWords, logSingleWord} from "./detectWrongSyntax";
-import {Position} from "./detectWrongSyntax";
+import issueJson from "../issueHandling/knownIssues.json";
+import { collectAllInvalidWords, collectInvalidWordsInIssues, getAllIssues } from "./detectWrongSyntax";
+import { getInvalidWords, logMultipleOccurences, logMultipleWords, logSingleWord } from "./detectWrongSyntax";
+import { Position } from "./detectWrongSyntax";
+
 
 describe("getInvalidWords", () => {
 	it("Returns the correct word for a normal text", () => {
@@ -62,15 +62,14 @@ describe("logSingleWord", () => {
 	it("Logs a ordinary word correctly", () => {
 		const position: Position = {fromIndex: 0, toIndex: 4};
 		const issues = logSingleWord("Hello", position);
-		expect(issues).toEqual(
-			{
-			code: IssueCode.VocabularyIssue,
+		expect(issues).toEqual({
+			code: issueJson.INVALID_WORD.message,
 			message: `${"Hello"} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
 			position: {
 				fromIndex: position.fromIndex,
 				toIndex: position.toIndex,
 			},
-			severity: Severity.FatalError,
+			severity: issueJson.INVALID_WORD.severity,
 		});
 	});
 
@@ -83,15 +82,14 @@ describe("logSingleWord", () => {
 	it("Logs a empty word correctly", () => {
 		const position: Position = {fromIndex: 0, toIndex: 0};
 		const issues = logSingleWord("", position);
-		expect(issues).toEqual(
-			{
-			code: IssueCode.VocabularyIssue,
+		expect(issues).toEqual({
+			code: issueJson.INVALID_WORD.message,
 			message: `${""} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
 			position: {
 				fromIndex: position.fromIndex,
 				toIndex: position.toIndex,
 			},
-			severity: Severity.FatalError,
+			severity: issueJson.INVALID_WORD.severity,
 		});
 	});
 
@@ -99,13 +97,13 @@ describe("logSingleWord", () => {
 		const position: Position = {fromIndex: 0, toIndex: 1};
 		const issues = logSingleWord(" ", position);
 		expect(issues).toEqual({
-			code: IssueCode.VocabularyIssue,
+			code: issueJson.INVALID_WORD.message,
 			message: `${" "} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
 			position: {
 				fromIndex: position.fromIndex,
 				toIndex: position.toIndex,
 			},
-			severity: Severity.FatalError,
+			severity: issueJson.INVALID_WORD.severity,
 		});
 	});
 });
@@ -113,14 +111,15 @@ describe("logSingleWord", () => {
 describe("CollectAllInvalidWordsInIssues", () => {
 	it("Creates a correct Issue-array for one wrong word containing only this word", () => {
 		const issues = collectInvalidWordsInIssues("WrongWord RightWord", ["WrongWord"]);
-		expect(issues).toEqual([{
-				code: IssueCode.VocabularyIssue,
+		expect(issues).toEqual([
+			{
+				code: issueJson.INVALID_WORD.message,
 				message: "WrongWord",
 				position: {
 					fromIndex: 0,
 					toIndex: 9,
 				},
-				severity: Severity.FatalError,
+				severity: issueJson.INVALID_WORD.severity,
 			},
 		]);
 	});
@@ -129,13 +128,13 @@ describe("CollectAllInvalidWordsInIssues", () => {
 		const issues = collectInvalidWordsInIssues("Te st", [" "]);
 		expect(issues).toEqual([
 			{
-				code: IssueCode.VocabularyIssue,
+				code: issueJson.INVALID_WORD.message,
 				message: " ",
 				position: {
 					fromIndex: 2,
 					toIndex: 3,
 				},
-				severity: Severity.FatalError,
+				severity: issueJson.INVALID_WORD.severity,
 			},
 		]);
 	});
@@ -146,13 +145,13 @@ describe("getAllIssues", () => {
 		const issues = getAllIssues("WrongWord RightWord");
 		expect(issues).toEqual([
 			{
-				code: IssueCode.VocabularyIssue,
+				code: issueJson.INVALID_WORD.message,
 				message: "WrongWord",
 				position: {
 					fromIndex: 0,
 					toIndex: 9,
 				},
-				severity: Severity.FatalError,
+				severity: issueJson.INVALID_WORD.severity,
 			},
 		]);
 	},
@@ -162,22 +161,22 @@ describe("getAllIssues", () => {
 		const issues = getAllIssues("Te st");
 		expect(issues).toEqual([
 			{
-				code: IssueCode.VocabularyIssue,
+				code: issueJson.INVALID_WORD.message,
 				message: "Te",
 				position: {
 					fromIndex: 0,
 					toIndex: 2,
 				},
-				severity: Severity.FatalError,
+				severity: issueJson.INVALID_WORD.severity,
 			},
 			{
-				code: IssueCode.VocabularyIssue,
+				code: issueJson.INVALID_WORD.message,
 				message: "st",
 				position: {
 					fromIndex: 3,
 					toIndex: 5,
 				},
-				severity: Severity.FatalError,
+				severity: issueJson.INVALID_WORD.severity,
 			},
 		]);
 	},
@@ -187,22 +186,22 @@ describe("getAllIssues", () => {
 		const issues = getAllIssues("Te.st");
 		expect(issues).toEqual([
 			{
-				code: IssueCode.VocabularyIssue,
+				code: issueJson.INVALID_WORD.message,
 				message: "Te",
 				position: {
 					fromIndex: 0,
 					toIndex: 2,
 				},
-				severity: Severity.FatalError,
+				severity: issueJson.INVALID_WORD.severity,
 			},
 			{
-				code: IssueCode.VocabularyIssue,
+				code: issueJson.INVALID_WORD.message,
 				message: "st",
 				position: {
 					fromIndex: 3,
 					toIndex: 5,
 				},
-				severity: Severity.FatalError,
+				severity: issueJson.INVALID_WORD.severity,
 			},
 		]);
 	},
@@ -212,22 +211,22 @@ describe("getAllIssues", () => {
 		const issues = getAllIssues("Te,;<>=st");
 		expect(issues).toEqual([
 			{
-				code: IssueCode.VocabularyIssue,
+				code: issueJson.INVALID_WORD.message,
 				message: "Te",
 				position: {
 					fromIndex: 0,
 					toIndex: 2,
 				},
-				severity: Severity.FatalError,
+				severity: issueJson.INVALID_WORD.severity,
 			},
 			{
-				code: IssueCode.VocabularyIssue,
+				code: issueJson.INVALID_WORD.message,
 				message: "st",
 				position: {
 					fromIndex: 7,
 					toIndex: 9,
 				},
-				severity: Severity.FatalError,
+				severity: issueJson.INVALID_WORD.severity,
 			},
 		]);
 	});
