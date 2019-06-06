@@ -1,12 +1,12 @@
 import Issue from "../../issueHandling/issue";
-import { concatOneIssueList } from "../../issueHandling/issueMapping";
+import { concatOneIssueList, listAllIssues } from "../../issueHandling/issueMapping";
 import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
 import { UnexpectedError } from "./Errors";
 import modes from "./predicateList.json";
 
 export type Mode = "propositionalLogic" | "firstOrderPredicateLogic" | "test";
 
-let issuelist: Issue[] = [];
+let issuelist: Issue[] = listAllIssues();
 
 /**
  * Since the user input most likely lacks the correct predicate,
