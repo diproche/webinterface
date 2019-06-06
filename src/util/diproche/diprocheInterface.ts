@@ -1,5 +1,5 @@
-import IssueCode from "../../checking/issueCodes";
 import {ProofEditor} from "../../components/proofEditor/proofEditor";
+import {addIssue, addIssueToIssueList, concatOneIssueList} from "../../issueHandling/issueMapping";
 import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
 import { UnexpectedError } from "./Errors";
 import modes from "./predicateList.json";

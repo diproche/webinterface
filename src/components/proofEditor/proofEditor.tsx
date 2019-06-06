@@ -3,7 +3,7 @@ import { checkProof } from "../../util/proofChecker";
 import styles from "./proofEditor.module.scss";
 
 export interface Props {
-
+	errorHere: string;
 }
 
 interface State {
