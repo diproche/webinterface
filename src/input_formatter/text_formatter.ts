@@ -4,14 +4,15 @@ const inputSeparator = /([.!?]|\n|\$[^$]*\$)+/g;
 const wordSeparator = /[ ,]+/;
 
 /**
- * this functions is the main function to format the full input string into a string array including formatted exrpessions
+ * this functions is the main function to format the full input string
+ * into a string array including formatted exrpessions
  * @param input from user
  * @return the formatted text inculding formatted expressions
  */
 export function textFormatter(input: string) {
 	const splittedText = input.split(inputSeparator);
 	const formattedText = [];
-	for (let element of splittedText) {
+	for (const element of splittedText) {
 		if (element.match(/(\$)/g)) {
 			const formattedExpression = expressionFormatter(element);
 			formattedText.push(formattedExpression);

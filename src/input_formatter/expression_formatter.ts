@@ -1,14 +1,16 @@
 import { addIssue } from "../issueHandling/issueMapping";
-const allowedExpressionToken = /(bracketLeft|bracketRight|equivalence|implicationRight|implicationLeft|negation|conjunction|disjunction|equal|addition|subtraction|division|multiplication)+/;
+const allowedExpressionToken =
+	// tslint:disable-next-line: max-line-length
+	/(bracketLeft|bracketRight|equivalence|implicationRight|implicationLeft|negation|conjunction|disjunction|equal|addition|subtraction|division|multiplication)+/;
 const logicConnector = /(conjunction|disjunction|equivalence|implicationRight|implicationLeft)+/;
 const bracket = /(bracketLeft|bracketRight)+/;
 const negation = /(negation)+/;
 
 /**
-* main method to format expressions
-* @param expression written by user
-* @return a formatted expression
-*/
+ * main method to format expressions
+ * @param expression written by user
+ * @return a formatted expression
+ */
 export function expressionFormatter(expression: string) {
 	const preFormattedExpression: string[] = preFormatExpressionFromImput(expression);
 	expressionIssueDetector(preFormattedExpression);
@@ -17,10 +19,10 @@ export function expressionFormatter(expression: string) {
 }
 
 /**
-* 
-* @param expression written by user
-* @return a preformatted expression where some different input styles for logical vocabulary gets formatted into one single style
-*/
+ * @param expression written by user
+ * @return a preformatted expression where some different
+ * input styles for logical vocabulary gets formatted into one single style
+ */
 export function preFormatExpressionFromImput(expression: string) {
 	const formattedInputExpression: string = expression
 		.replace(/(\$)/g, "")
@@ -45,8 +47,8 @@ export function preFormatExpressionFromImput(expression: string) {
 }
 
 /**
-* @return finalExpression where exrpession elements got replaced with readable prolog code elements
-*/
+ * @return finalExpression where exrpession elements got replaced with readable prolog code elements
+ */
 export function replaceExpressionElementsIntoPrologCode(preFormattedExpression: string[]) {
 	const finalFormattedExpression: string[] = [];
 	let index = 0;
@@ -64,9 +66,9 @@ export function replaceExpressionElementsIntoPrologCode(preFormattedExpression: 
 }
 
 /**
-* helper function for replaceExpressionElementsIntoPrologCode
-* @return finalExpressionElement
-*/
+ * helper function for replaceExpressionElementsIntoPrologCode
+ * @return finalExpressionElement
+ */
 export function replaceASingleExpressionElementIntoPrologCode(preformattedExpressionElement: string) {
 	const finalExpression: string = preformattedExpressionElement;
 	return finalExpression
@@ -92,8 +94,8 @@ export function expressionIssueDetector(preFormattedExpression: string[]) {
 }
 
 /**
-* Check the expression for an equal amount of opened and closed brackets.; it can detect wrong input
-*/
+ * Check the expression for an equal amount of opened and closed brackets.; it can detect wrong input
+ */
 export function detectBracketIssues(formattedExpression: string[]) {
 	let bracketCount = 0;
 	let index = 0;

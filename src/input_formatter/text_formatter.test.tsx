@@ -1,9 +1,9 @@
 import { emptyIssueList, listAllIssues } from "../issueHandling/issueMapping";
 import {
-	preFormatExpressionFromImput,
-	replaceExpressionElementsIntoPrologCode,
 	detectBracketIssues,
 	expressionIssueDetector,
+	preFormatExpressionFromImput,
+	replaceExpressionElementsIntoPrologCode,
 } from "./expression_formatter";
 import { sentenceIntoWordList, textFormatter } from "./text_formatter";
 
@@ -73,7 +73,8 @@ test("splitting full text into full listFormat including expressions and paragra
 	emptyIssueList();
 	const result = textFormatter(
 		"Hello, this is a test! Is it Working? I               hope so. \n Paragraphs are marked with an " +
-		"empty List: \n \n \n Here is also an expression: $[A UND[B <==> ]-> D ODER NOT E]$ And a second one: $[5 add 12 equal 3 mal 5 plus 2]$",
+		"empty List: \n \n \n Here is also an expression: $[A UND[B <==> ]-> D ODER NOT E]$ " +
+		"And a second one: $[5 add 12 equal 3 mal 5 plus 2]$",
 	);
 	const expectedResult = [
 		["Hello", "this", "is", "a", "test"],
@@ -100,7 +101,7 @@ test("splitting full text into full listFormat including expressions and paragra
 			"E",
 			"]",
 		],
-		["And", "a", "second", "one:",],
+		["And", "a", "second", "one:"],
 		[
 			"[",
 			"5",
@@ -313,4 +314,3 @@ test("scan for missing Statements or missing connectors - test 9: [ not not not 
 		severity: "WARNING",
 	});
 });
-
