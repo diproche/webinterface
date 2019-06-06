@@ -1,9 +1,7 @@
 import { addIssue } from "../issueHandling/issueMapping";
-const allowedExpressionToken = /(bracketLeft|bracketRight|equivalence|implication|negation|conjunction|disjunction)+/;
-const logicConnector = /(conjunction|disjunction|equivalence|implication)+/;
-const negation = /(negation)+/;
-const bracket = /(bracketLeft|bracketRight)+/;
-const test = /(bracketLeft|bracketRight|negation)+/;
+const allowedExpressionToken = /(bracketLeft|bracketRight|equivalence|implicationRight|implicationLeft|negation|conjunction|disjunction|equal|addition|subtraction|division|multiplication)+/;
+const logicConnector = /(conjunction|disjunction|equivalence|implicationRight|implicationLeft)+/;
+const nonLogicToken = /(bracketLeft|bracketRight|negation)+/;
 
 /**
 	* ---------CurrentExpressionFormatter------------
@@ -12,22 +10,34 @@ const test = /(bracketLeft|bracketRight|negation)+/;
 	*/
 export function expressionFormatter(expression: string) {
 	const preFormattedExpression: string[] = preFormatExpressionFromImput(expression);
-	// errorDetector(preFormattedExpression);
+	errorDetector(preFormattedExpression);
 	// TO DO SOME STUFF WITH THE TOKENS AND THE ARRAY; FORMAT THE ARRAY AND CATCH ERRORS
 	const finalFormattedExpression: string[] =
 		replaceExpressionElementsIntoPrologCode(preFormattedExpression);
 	return finalFormattedExpression;
 }
 
+/**
+ * 
+ * @param expression as a input string typed by user
+ * @return a preformatted expression where some different input styles for logical vocabulary gets formatted into one single style
+ */
 export function preFormatExpressionFromImput(expression: string) {
 	const formattedInputExpression: string = expression
+		.replace(/(\$)/g, "")
 		.replace(/(\[|\()/g, " bracketLeft ")
 		.replace(/(\]|\))/g, " bracketRight ")
 		.replace(/(<-->|<==>|<=>|<->)/g, " equivalence ")
-		.replace(/(->|-->|=>|==>)/g, " implication ")
-		.replace(/(neq|not|nicht|¬|-)/ig, " negation ")
+		.replace(/(->|-->|=>|==>|\\rightarrow)/g, " implicationRight ")
+		.replace(/(<-|<--|<=|<==|\/leftarrow)/g, " implicationLeft ")
+		.replace(/(neq|not|nicht|¬|-|\\neg)/ig, " negation ")
 		.replace(/(and|und|&|∧|\/\\)/ig, " conjunction ")
 		.replace(/(or|oder|\||∨|\\\/)/ig, " disjunction ")
+		.replace(/(=|==|===|gleich)/g, " equal ")
+		.replace(/(\+|plus|add|sum)/g, " addition ")
+		.replace(/(-|minus)/g, " subtraction ")
+		.replace(/(:|\/|div|geteilt)/g, " division ")
+		.replace(/(\*|mal|mult)/g, " multiplication ")
 		.trim()
 		.replace(/\s{1,}/g, ",");
 	const splittedExpression: string[] = formattedInputExpression.split(/[,]+/g);
@@ -36,10 +46,8 @@ export function preFormatExpressionFromImput(expression: string) {
 }
 
 /**
-	* replace expression elements into readable prolog Code
-	* ---------------------------------------
 	* @param formattedExpression
-	* @return finalExpression
+	* @return finalExpression where exrpession elements got replaced with readable prolog code elements
 	*/
 export function replaceExpressionElementsIntoPrologCode(formattedExpression: string[]) {
 	const finalFormattedExpression: string[] = [];
@@ -58,8 +66,7 @@ export function replaceExpressionElementsIntoPrologCode(formattedExpression: str
 }
 
 /**
-	* replace expression elements into readable prolog Code
-	* ---------------------------------------
+	* helper function for replaceExpressionElementsIntoPrologCode
 	* @param formattedExpression
 	* @return finalExpression
 	*/
@@ -69,16 +76,19 @@ export function replaceASingleExpressionElementIntoPrologCode(formattedExpressio
 		.replace(/(bracketLeft)/g, "\[")
 		.replace(/(bracketRight)/g, "\]")
 		.replace(/(equivalence)/g, "<->")
-		.replace(/(implication)/g, "->")
+		.replace(/(implicationRight)/g, "->")
+		.replace(/(implicationLeft)/g, "<-")
 		.replace(/(negation)/g, "neg")
 		.replace(/(conjunction)/g, "and")
 		.replace(/(disjunction)/g, "or")
+		.replace(/(equal)/g, "=")
+		.replace(/(addition)/g, "+")
+		.replace(/(subtraction)/g, "-")
+		.replace(/(multiplication)/g, "*")
+		.replace(/(division)/g, ":")
 		;
 }
 
-// i know its not really useful to return a boolean list actually but i will work on it soon to make this function more
-// useful; im planning to improve this into a exception detector soon and export it into a own ts file
-// TO DO: USE THE INDEX AS MARKER WHERE THE ERROR WAS DETECTED AND BUILD A ERROR HASH MAP instead of returning a boolean
 export function errorDetector(preFormattedExpression: string[]) {
 	detectBracketErrors(preFormattedExpression);
 	detectMissingStatementsOrConnector(preFormattedExpression);
@@ -86,8 +96,6 @@ export function errorDetector(preFormattedExpression: string[]) {
 
 /**
 	* check the expression if the amount of opened and closed brackets is correct; it can detect user mistakes;
-	* RETURN true if the user made a mistake;
-	* ---------------------------------------
 	* @param
 	* @return
 	*/
@@ -115,7 +123,7 @@ export function detectMissingStatementsOrConnector(formattedExpression: string[]
 	let connector = true;
 	let statement = false;
 	while (index < formattedExpression.length) {
-		if (formattedExpression[index].match(test)) {
+		if (formattedExpression[index].match(nonLogicToken)) {
 			index++;
 		} else if (formattedExpression[index].match(logicConnector)) {
 			if (connector === true) {
@@ -132,7 +140,6 @@ export function detectMissingStatementsOrConnector(formattedExpression: string[]
 			statement = true;
 			index++;
 		}
-
 	}
 	if (statement === false || connector === true) {
 		addIssue("MISSING_STATEMENT_AT_THE_END");

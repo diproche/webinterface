@@ -29,7 +29,7 @@ test("Test if the elements of a expression is detected and formatted correctly:"
 		"equivalence",
 		"C",
 		"bracketRight",
-		"implication",
+		"implicationRight",
 		"D",
 		"disjunction",
 		"negation",
@@ -73,7 +73,7 @@ test("splitting full text into full listFormat including expressions and paragra
 	emptyIssueList();
 	const result = textFormatter(
 		"Hello, this is a test! Is it Working? I               hope so. \n Paragraphs are marked with an " +
-		"empty List: \n \n \n Here is also an expression: $[A UND[B <==> C]-> D ODER NOT E]$",
+		"empty List: \n \n \n Here is also an expression: $[A UND[B <==> ]-> D ODER NOT E]$ And a second one: $[5 add 12 equal 3 mal 5 plus 2]$",
 	);
 	const expectedResult = [
 		["Hello", "this", "is", "a", "test"],
@@ -92,7 +92,6 @@ test("splitting full text into full listFormat including expressions and paragra
 			"[",
 			"B",
 			"<->",
-			"C",
 			"]",
 			"->",
 			"D",
@@ -101,8 +100,29 @@ test("splitting full text into full listFormat including expressions and paragra
 			"E",
 			"]",
 		],
+		["And", "a", "second", "one:",],
+		[
+			"[",
+			"5",
+			"+",
+			"12",
+			"=",
+			"3",
+			"*",
+			"5",
+			"+",
+			"2",
+			"]",
+		],
 	];
 	expect(result).toEqual(expectedResult);
+	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
+	expect(issue).toEqual({
+		code: "MISSING_STATEMENT_INSIDE",
+		message: "Es fehlt mindestens ein Argumente zwischen zwei logischen Operatoren.",
+		severity: "WARNING",
+	});
+
 });
 
 test("scan for bracket errors - test 1: [][][[]]", () => {
@@ -156,7 +176,7 @@ test("scan for bracket errors - test 3: ][", () => {
 
 test("scan for missing Statements or missing connectors - test 1: [ <-> ]", () => {
 	emptyIssueList();
-	const testExpression = ["bracketLeft", "implication", "bracketRight"];
+	const testExpression = ["bracketLeft", "implicationRight", "bracketRight"];
 	detectMissingStatementsOrConnector(testExpression);
 	const issue1 = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
 	const issue2 = listAllIssues().find(i => i.code === "MISSING_STATEMENT_AT_THE_END");
@@ -174,7 +194,7 @@ test("scan for missing Statements or missing connectors - test 1: [ <-> ]", () =
 
 test("scan for missing Statements or missing connectors - test 2: [ C <-> ]", () => {
 	emptyIssueList();
-	const testExpression = ["bracketLeft", "C", "implication", "bracketRight"];
+	const testExpression = ["bracketLeft", "C", "implicationRight", "bracketRight"];
 	detectMissingStatementsOrConnector(testExpression);
 	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_AT_THE_END");
 	expect(issue).toEqual({
@@ -224,12 +244,12 @@ test("scan for missing Statements or missing connectors - test 5: [ not A [ ] A 
 
 });
 
-test("scan for missing Statements or missing connectors - test 6: [ A -> B ]", () => {
+test("scan for missing Statements or missing connectors - test 6: [ A <- B ]", () => {
 	emptyIssueList();
 	const testExpression = [
 		"bracketLeft",
 		"A",
-		"implication",
+		"implicationLeft",
 		"B",
 		"bracketRight",
 	];
