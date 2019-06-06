@@ -21,6 +21,7 @@ export function addPredicate(userInput: string, mode: Mode) {
 			return getPrologPredicateForMode(mode).concat("(").concat(userInput).concat(").");
 		}
 	}
+	throw(UnexpectedError);
 }
 
 export function getPrologPredicateForMode(mode: Mode) {

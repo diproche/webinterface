@@ -4,5 +4,6 @@ export function checkProof(text: string): string[] {
 	const mode: Mode = "firstOrderPredicateLogic";
 	return [
 		getPrologPredicateForMode(mode),
+		addPredicate("Hallo", mode),
 	];
 }
