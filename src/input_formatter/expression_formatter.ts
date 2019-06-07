@@ -9,7 +9,8 @@ const negation = /(negation)+/;
 /**
  * main method to format expressions
  * @param expression written by user
- * @return a formatted expression
+ * @return a formatted expression as string[];
+ * each element of the expression gets formatted into prolog readable code
  */
 export function expressionFormatter(expression: string) {
 	const preFormattedExpression: string[] = preFormatExpressionFromImput(expression);
@@ -47,22 +48,19 @@ export function preFormatExpressionFromImput(expression: string) {
 }
 
 /**
- * @return finalExpression where exrpession elements got replaced with readable prolog code elements
+ * @return finalExpression where expression elements got replaced with readable prolog code elements
  */
 export function replaceExpressionElementsIntoPrologCode(preFormattedExpression: string[]) {
 	const finalFormattedExpression: string[] = [];
-	let index = 0;
-	while (index < preFormattedExpression.length) {
-		if (preFormattedExpression[index].match(allowedExpressionToken)) {
-			const element: string = replaceASingleExpressionElementIntoPrologCode(preFormattedExpression[index]);
-			finalFormattedExpression.push(element);
+	preFormattedExpression.forEach(element => {
+		if (element.match(allowedExpressionToken)) {
+			const newElement: string = replaceASingleExpressionElementIntoPrologCode(element);
+			finalFormattedExpression.push(newElement);
 		} else {
-			finalFormattedExpression.push(preFormattedExpression[index]);
+			finalFormattedExpression.push(element);
 		}
-		index++;
-	}
+	});
 	return finalFormattedExpression;
-
 }
 
 /**
@@ -99,6 +97,7 @@ export function expressionIssueDetector(preFormattedExpression: string[]) {
 export function detectBracketIssues(formattedExpression: string[]) {
 	let bracketCount = 0;
 	let index = 0;
+
 	while (index < formattedExpression.length && bracketCount >= 0) {
 
 		if (formattedExpression[index].match(/(\[|bracketLeft)/)) {

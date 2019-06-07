@@ -7,7 +7,8 @@ const wordSeparator = /[ ,]+/;
  * this functions is the main function to format the full input string
  * into a string array including formatted exrpessions
  * @param input from user
- * @return the formatted text inculding formatted expressions
+ * @return the formatted text as string[] inculding
+ * formatted expressions, list of words and paragraph marker as empty Array
  */
 export function textFormatter(input: string) {
 	const splittedText = input.split(inputSeparator);
@@ -28,9 +29,8 @@ export function textFormatter(input: string) {
 
 /**
  * format the words from a sentence-string into a list of words
- * ---------------------------------------
  * @param a string including words
- * @return a string-array where each element is one word
+ * @return a string[] where each element is one word
  */
 export function sentenceIntoWordList(input: string) {
 	const splittedSentenceIntoListOfWords = input.split(wordSeparator);
