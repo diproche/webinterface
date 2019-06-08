@@ -39,6 +39,6 @@ export function concatOneIssueList(issues: Issue[]) {
 	}
 }
 
-export function listAllIssues(): Issue[] {
+export function listAllIssues(): ReadonlyArray<Issue> {
 	return foundIssues;
 }

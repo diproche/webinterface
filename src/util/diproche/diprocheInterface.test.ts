@@ -2,12 +2,13 @@ import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
 import getErrors from "./diprocheInterface";
 import {addPredicate, getVocabErrors, Mode} from "./diprocheInterface";
 import {UnexpectedError} from "./Errors";
+import { listAllIssues, emptyIssueList} from "../../issueHandling/issueMapping";
 
 describe("getErrors", () => {
 	it("Returns all errors present", () => {
 	 const userInput = "Angenommen A ist falshc. Dann ist A => B wahr.";
-	 const expected = () => getVocabErrors(userInput);
-	 expect(expected).toThrow(Error);
+	 getVocabErrors(userInput);
+	 expect(listAllIssues()).toEqual(getAllIssues(userInput));
 	});
 });
 
@@ -58,29 +59,33 @@ describe("addPredicate", () => {
 // Only difference is, here it is expected to throw Errors.
 describe("getVocabErrors", () => {
 	it("Throws an error for one wrong word in a two-word-input", () => {
+		emptyIssueList();
 		const userInput = "WrongWord RightWord";
-		const expected = () => getVocabErrors(userInput);
-		expect(expected).toThrow(Error);
+		getVocabErrors(userInput);
+		expect(listAllIssues()).toEqual(getAllIssues(userInput));
 	},
 );
 
 	it("Creates a correct Issue-array for two words seperated by a Whitespace", () => {
+		emptyIssueList();
 		const userInput = "Te st";
-		const expected = () => getVocabErrors(userInput);
-		expect(expected).toThrow(Error);
+		getVocabErrors(userInput);
+		expect(listAllIssues()).toEqual(getAllIssues(userInput));
 	},
 );
 
 	it("Detects a String of word1.word2 as two words and throws an Error, if they are invalid", () => {
+		emptyIssueList();
 		const userInput = "word1 word2";
-		const expected = () => getVocabErrors(userInput);
-		expect(expected).toThrow(Error);
+		getVocabErrors(userInput);
+		expect(listAllIssues()).toEqual(getAllIssues(userInput));
 	},
 );
 
 	it("Detects a String of word1,;:<>=word2 as two words and throws an Error, if they are invalid", () => {
+		emptyIssueList();
 		const userInput = "Te,;<>=st";
-		const expected = () => getVocabErrors(userInput);
-		expect(expected).toThrow(Error);
+		getVocabErrors(userInput);
+		expect(listAllIssues()).toEqual(getAllIssues(userInput));
 	});
 });

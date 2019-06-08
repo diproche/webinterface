@@ -6,8 +6,6 @@ import modes from "./predicateList.json";
 
 export type Mode = "propositionalLogic" | "firstOrderPredicateLogic" | "test";
 
-let issuelist: Issue[] = listAllIssues();
-
 /**
  * Since the user input most likely lacks the correct predicate,
  * it needs to be added. For easier maintainability in case
