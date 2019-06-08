@@ -93,5 +93,5 @@ export function getErrorsBeforeDiproche(userInput: string) {
 // this function collects all Errors.
 export default function getErrors(diprocheInput: string) {
 	getErrorsBeforeDiproche(diprocheInput);
-	// getErrorsAfterDiproche(diprocheInput);
+	// sgetErrorsAfterDiproche(diprocheInput);
 }

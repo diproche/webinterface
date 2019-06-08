@@ -1,8 +1,6 @@
+import { emptyIssueList, listAllIssues} from "../../issueHandling/issueMapping";
 import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
-import getErrors from "./diprocheInterface";
 import {addPredicate, getVocabErrors, Mode} from "./diprocheInterface";
-import {UnexpectedError} from "./Errors";
-import { listAllIssues, emptyIssueList} from "../../issueHandling/issueMapping";
 
 describe("getErrors", () => {
 	it("Returns all errors present", () => {
