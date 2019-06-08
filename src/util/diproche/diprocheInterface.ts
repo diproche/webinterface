@@ -1,5 +1,5 @@
 import Issue from "../../issueHandling/issue";
-import { concatOneIssueList, listAllIssues } from "../../issueHandling/issueMapping";
+import { concatOneIssueList } from "../../issueHandling/issueMapping";
 import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
 import { UnexpectedError } from "./Errors";
 import modes from "./predicateList.json";
@@ -52,17 +52,17 @@ export function getVocabErrors(userInput: string): Issue[] | void {
 
 // A misplacedSymbolError is something like "2 += 2 4" or
 // "(2 + 2)) = 4" instead of "2 + 2 = 4" or "(2 + 2) = 4" respectively
-export function getMisplacedSymbolsErrors(userInput: string) {
+// export function getMisplacedSymbolsErrors(userInput: string) {
 	// Dummy input
-}
+// }
 
 // A semantic error is something like
 // "2 + 2 = 4 minus 1 that's 3 quick maffs",
 // i.e. some expression does not make sense with respect
 // to the mathematical objects used.
-export function getSemanticErrors(userInput: string) {
+// export function getSemanticErrors(userInput: string) {
 	// Dummy input
-}
+// }
 
 /**
  * SyntacticErrors are all the errors that are vocabErrors or
@@ -70,7 +70,7 @@ export function getSemanticErrors(userInput: string) {
  */
 export function getSyntacticErrors(userInput: string) {
 	getVocabErrors(userInput);
-	getMisplacedSymbolsErrors(userInput);
+	// getMisplacedSymbolsErrors(userInput);
 }
 
 /**
@@ -79,19 +79,19 @@ export function getSyntacticErrors(userInput: string) {
  */
 export function getErrorsBeforeDiproche(userInput: string) {
 	getSyntacticErrors(userInput);
-	getSemanticErrors(userInput);
+	// getSemanticErrors(userInput);
 }
 
 /**
  * Diproche itself returns errors, for example when the
  * proof is wrong. This function should display it to the user.
  */
-export function getErrorsAfterDiproche(userInput: string) {
+// export function getErrorsAfterDiproche(userInput: string) {
 	// Dummy input
-}
+// }
 
 // this function collects all Errors.
 export default function getErrors(diprocheInput: string) {
 	getErrorsBeforeDiproche(diprocheInput);
-	getErrorsAfterDiproche(diprocheInput);
+	// getErrorsAfterDiproche(diprocheInput);
 }
