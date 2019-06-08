@@ -143,9 +143,10 @@ test("scan for bracket errors - test 1: [][][[]]", () => {
 	expect(issue).toEqual([]);
 });
 
-test("scan for bracket errors - test 2: [[[[[[]]", () => {
+test("scan for bracket errors - test 2: ][[[[[[]]", () => {
 	emptyIssueList();
 	const bracketList = [
+		"bracketRight",
 		"bracketLeft",
 		"bracketLeft",
 		"bracketLeft",
@@ -155,10 +156,16 @@ test("scan for bracket errors - test 2: [[[[[[]]", () => {
 		"bracketRight",
 	];
 	detectBracketIssues(bracketList);
-	const issue = listAllIssues().find(i => i.code === "BRACKET_UNDERCLOSING");
-	expect(issue).toEqual({
+	const issue1 = listAllIssues().find(i => i.code === "BRACKET_UNDERCLOSING");
+	const issue2 = listAllIssues().find(i => i.code === "BRACKET_OVERCLOSING");
+	expect(issue1).toEqual({
 		code: "BRACKET_UNDERCLOSING",
 		message: "Es wurden Klammern geöffnet, die nicht geschlossen wurden.",
+		severity: "WARNING",
+	});
+	expect(issue2).toEqual({
+		code: "BRACKET_OVERCLOSING",
+		message: "Es wurden Klammern geschlossen, die nicht geöffnet wurden.",
 		severity: "WARNING",
 	});
 });

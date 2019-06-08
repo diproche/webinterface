@@ -96,17 +96,18 @@ export function expressionIssueDetector(preFormattedExpression: string[]) {
  */
 export function detectBracketIssues(formattedExpression: string[]) {
 	let bracketCount = 0;
-	let index = 0;
 
-	while (index < formattedExpression.length && bracketCount >= 0) {
-
-		if (formattedExpression[index].match(/(\[|bracketLeft)/)) {
+	formattedExpression.forEach(element => {
+		if (element.match(/(\[|bracketLeft)/)) {
 			bracketCount++;
-		} else if (formattedExpression[index].match(/(\]|bracketRight)/)) {
+		} else if (element.match(/(\]|bracketRight)/)) {
 			bracketCount--;
 		}
-		index++;
-	}
+		if (bracketCount < 0) {
+			addIssue("BRACKET_OVERCLOSING");
+			bracketCount = 0;
+		}
+	});
 	if (bracketCount > 0) {
 		addIssue("BRACKET_UNDERCLOSING");
 	} else if (bracketCount < 0) {
