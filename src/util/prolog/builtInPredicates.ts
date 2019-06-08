@@ -84,6 +84,8 @@ const tauPrologBuiltInPredicates: Set<string> = new Set(
 	"write",
 	"writeq",
 	"write_canonical",
-	"write_term"]);
+	"write_term",
+	"use_module",
+	"module"]);
 
 export default tauPrologBuiltInPredicates;
