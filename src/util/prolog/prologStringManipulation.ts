@@ -1,4 +1,5 @@
 import {fetchAllMatchesForAGroup} from "../regExpUtils";
+import builtInPredicates from "./builtInPredicates";
 
 export function removeFileExtension(path: string) {
 	const fetchFileExtension = /(.*)\.[^\.]*/;
@@ -52,23 +53,70 @@ export function fixVariableShadowingInImport(program: string, importedProgram: s
 	const fetchImportedPredicatesRegExp = /:-[\r\t\f\v ]*module\([^,)]*,\[([^)]*)\][\r\t\f\v ]*\)[\r\t\f\v ]*/;
 
 	const useModuleSecondParam: string[] | null = fetchImportedPredicatesRegExp.exec(importedProgram);
-	if (typeof useModuleSecondParam == null) {
+	if (useModuleSecondParam == null) {
 		return identifyPredicatesUniquely(program, importedProgram);
 	}
 	// The following regex will return in group one the name of the functions
-	const importedFunctions: string[] = fetchAllMatchesForAGroup(useModuleSecondParam![1], /[\r\t\f\v ]*(\w*)\/\d,?/g, 1);
-	return identifyPredicatesUniquely(program, importedProgram, importedFunctions);
+	const importedPredicates: string[] = fetchAllMatchesForAGroup(useModuleSecondParam![1], /[\r\t\f\v ]*(\w*)\/\d,?/g, 1);
+	return identifyPredicatesUniquely(program, importedProgram, importedPredicates);
 }
 
-function identifyPredicatesUniquely(program: string, importedProgram: string, importedFuntions?: string[]): string {
+function identifyPredicatesUniquely(program: string, importedProgram: string, importedPredicates?: string[]): string {
 
-	return "stopp bugging me debugger";
+	// imports shouldn't be renamed
+	let predicatesToNotRename: string[];
+	// Checking for undefined based on this recommendation:
+	// https://basarat.gitbooks.io/typescript/docs/javascript/null-undefined.html
+	if (importedPredicates == null) {
+		predicatesToNotRename = [];
+	} else {
+		predicatesToNotRename = importedPredicates;
+	}
+
+	// predicates which have to be renamed are the ones which occure in both the main and the imported program
+	const mainProgramPredicates: Set<string> = getNonBuiltInPredicates(program);
+	const predicatesToRename: Set<string> = getNonBuiltInPredicates(importedProgram);
+	const toRemove: Set<string> = new Set(); // Externalize deletions
+	predicatesToRename.forEach((predicate: string) => {
+		if (!mainProgramPredicates.has(predicate)) {
+			toRemove.add(predicate);
+		}
+	});
+	// Externalized Deletion
+	toRemove.forEach((predicate: string) => predicatesToRename.delete(predicate));
+	predicatesToNotRename.forEach((predicate: string) => predicatesToRename.delete(predicate));
+
+	// Renaming Process
+	predicatesToRename.forEach((toRename: string) => {
+		const getToRenameRegExp = new RegExp(toRename + "(\(.*?\))", "g");
+		importedProgram = importedProgram.replace(getToRenameRegExp, (_, parameters: string) => {
+
+			let identifier = 1;
+			while (mainProgramPredicates.has(toRename + "_" + identifier)) {
+				identifier++;
+			}
+
+			return toRename + "_" + identifier + parameters;
+
+		});
+	});
+
+	return importedProgram;
 }
 
-function getNonBuiltInPredicates(program: string): string[] {
-	// This doesn't take comments into account so %predicate():- true. would find predicate()
-	const fetchPredicatesRegExp = /nothing/g;
+function getNonBuiltInPredicates(program: string): Set<string> {
+	// This doesn't take comments into account so in "%predicate()" would find predicate()
+	// Finds all words before closing opening and closing brackets
+	// Predicates which brackets open or close in the next line won't be recognized
+	const fetchPredicatesRegExp = /(\w+)\(.*?\)/g;
 
+	// Since the predicate doesn't filter out comments this will also remove comments
 	program = removeNonFunctionalities(program);
-	return fetchAllMatchesForAGroup(program, fetchPredicatesRegExp, 1);
+
+	const predicates: Set<string> = new Set(fetchAllMatchesForAGroup(program, fetchPredicatesRegExp, 1));
+
+	// Delete built in predicates from the Set
+	builtInPredicates.forEach((predicate: string) => predicates.delete(predicate));
+
+	return predicates;
 }
