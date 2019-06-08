@@ -13,7 +13,7 @@
 	},
 	"MISSING_STATEMENT_INSIDE": {
 		"severity": "WARNING",
-		"message": "Es fehlt mindestens ein Argument zwischen zwei logischen Operatoren."
+		"message": "Es fehlt mindestens ein Argument."
 	},
 	"MISSING_STATEMENT_AT_THE_END": {
 		"severity": "WARNING",

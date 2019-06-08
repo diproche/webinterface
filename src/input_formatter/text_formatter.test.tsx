@@ -120,7 +120,7 @@ test("splitting full text into full listFormat including expressions and paragra
 	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
 	expect(issue).toEqual({
 		code: "MISSING_STATEMENT_INSIDE",
-		message: "Es fehlt mindestens ein Argument zwischen zwei logischen Operatoren.",
+		message: "Es fehlt mindestens ein Argument.",
 		severity: "WARNING",
 	});
 
@@ -190,7 +190,7 @@ test("scan for missing Statements or missing connectors - test 1: [ <-> ]", () =
 	const issue2 = listAllIssues().find(i => i.code === "MISSING_STATEMENT_AT_THE_END");
 	expect(issue1).toEqual({
 		code: "MISSING_STATEMENT_INSIDE",
-		message: "Es fehlt mindestens ein Argument zwischen zwei logischen Operatoren.",
+		message: "Es fehlt mindestens ein Argument.",
 		severity: "WARNING",
 	});
 	expect(issue2).toEqual({
@@ -225,7 +225,7 @@ test("scan for missing Statements or missing connectors - test 3: [ and X ]", ()
 	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
 	expect(issue).toEqual({
 		code: "MISSING_STATEMENT_INSIDE",
-		message: "Es fehlt mindestens ein Argument zwischen zwei logischen Operatoren.",
+		message: "Es fehlt mindestens ein Argument.",
 		severity: "WARNING",
 	});
 });
