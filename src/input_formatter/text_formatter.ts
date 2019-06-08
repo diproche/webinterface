@@ -5,10 +5,10 @@ const wordSeparator = /[ ,]+/;
 
 /**
  * this functions is the main function to format the full input string
- * into a string array including formatted exrpessions
+ * into a Array of string[]
  * @param input from user
  * @return the formatted text as a Array of string[] inculding
- * formatted expressions, list of words and paragraph marker as empty Array
+ * formatted expressions, list of words (setences) and paragraph marker (empty Array)
  */
 export function textFormatter(input: string): string[][] {
 	const splittedText = input.split(inputSeparator);
