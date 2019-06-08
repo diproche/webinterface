@@ -12,7 +12,7 @@ const negation = /(negation)+/;
  * @return a formatted expression as string[];
  * each element of the expression gets formatted into prolog readable code
  */
-export function expressionFormatter(expression: string) {
+export function expressionFormatter(expression: string): string[] {
 	const preFormattedExpression: string[] = preFormatExpressionFromImput(expression);
 	expressionIssueDetector(preFormattedExpression);
 	const finalFormattedExpression: string[] = replaceExpressionElementsIntoPrologCode(preFormattedExpression);
@@ -24,7 +24,7 @@ export function expressionFormatter(expression: string) {
  * @return a preformatted expression where some different
  * input styles for logical vocabulary gets formatted into one single style
  */
-export function preFormatExpressionFromImput(expression: string) {
+export function preFormatExpressionFromImput(expression: string): string[] {
 	const formattedInputExpression: string = expression
 		.replace(/(\$)/g, "")
 		.replace(/(\[|\()/g, " bracketLeft ")
@@ -50,7 +50,7 @@ export function preFormatExpressionFromImput(expression: string) {
 /**
  * @return finalExpression where expression elements got replaced with readable prolog code elements
  */
-export function replaceExpressionElementsIntoPrologCode(preFormattedExpression: string[]) {
+export function replaceExpressionElementsIntoPrologCode(preFormattedExpression: string[]): string[] {
 	const finalFormattedExpression: string[] = [];
 	preFormattedExpression.forEach(element => {
 		if (element.match(allowedExpressionToken)) {
@@ -67,7 +67,7 @@ export function replaceExpressionElementsIntoPrologCode(preFormattedExpression: 
  * helper function for replaceExpressionElementsIntoPrologCode
  * @return finalExpressionElement
  */
-export function replaceASingleExpressionElementIntoPrologCode(preformattedExpressionElement: string) {
+export function replaceASingleExpressionElementIntoPrologCode(preformattedExpressionElement: string): string {
 	const finalExpression: string = preformattedExpressionElement;
 	return finalExpression
 		.replace(/(bracketLeft)/g, "\[")
