@@ -4,7 +4,7 @@
 /node_modules
 /.pnp
 .pnp.js
-/src/util/diproche/diprocheProgram
+/readable_node_module_copies
 
 # testing
 /coverage

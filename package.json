@@ -16,12 +16,12 @@
 	"scripts": {
 		"start": "npm run import-diproche && react-scripts start",
 		"lint": "tslint --project .",
-		"build": "react-scripts build",
-		"test": "react-scripts test",
+		"build": "npm run import-diproche && react-scripts build",
+		"test": "npm run import-diproche && react-scripts test",
 		"eject": "react-scripts eject",
 		"import-diproche": "npm run copy-diproche && npm run clean-diproche-import",
-		"copy-diproche": "shx mkdir -p ./src/util/diproche/diprocheProgram && shx cp ./node_modules/diproche/* ./src/util/diproche/diprocheProgram",
-		"clean-diproche-import": "shx rm ./src/util/diproche/diprocheProgram/package.json"
+		"copy-diproche": "shx mkdir -p ./readable_node_module_copies/diproche && shx cp ./node_modules/diproche/* ./readable_node_module_copies/diproche/",
+		"clean-diproche-import": "shx rm ./readable_node_module_copies/diproche/package.json"
 	},
 	"eslintConfig": {
 		"extends": "react-app"

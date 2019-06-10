@@ -86,6 +86,13 @@ const tauPrologBuiltInPredicates: Set<string> = new Set(
 	"write_canonical",
 	"write_term",
 	"use_module",
-	"module"]);
+	"module",
+	// The following were added when they were declared as undefined in SWI Prolog
+	"member",
+	"memberchk",
+	"length",
+	"append",
+	"union",
+	"subset"]);
 
 export default tauPrologBuiltInPredicates;
