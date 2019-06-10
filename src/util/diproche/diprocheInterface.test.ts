@@ -14,15 +14,15 @@ describe("addPredicate", () => {
 	describe("Normal cases", () => {
 		describe("Adding the predicates works for a normal string", () => {
 			it("Adds the prop-logic predicate correctly", () => {
-				const pred = "propositionalLogic";
+				const pred = Mode.propositionalLogic;
 				expect(addPredicate("hallo", pred)).toEqual("diproche(hallo).");
 			});
 			it("Adds FO-logic predicate correctly", () => {
-				const pred = "firstOrderPredicateLogic";
+				const pred = Mode.firstOrderPredicateLogic;
 				expect(addPredicate("hallo", pred)).toEqual("diproche_fo(hallo).");
 			});
 			it("Adds test-predicate correctly", () => {
-				const pred = "test";
+				const pred = Mode.test;
 				expect(addPredicate("hallo", pred)).toEqual("teste(hallo).");
 			});
 		});
@@ -30,24 +30,16 @@ describe("addPredicate", () => {
 	describe("Edge cases", () => {
 		describe("Empty string as an input", () => {
 			it("Adds the prop-logic predicate to an empty string", () => {
-				const pred = "propositionalLogic";
+				const pred = Mode.propositionalLogic;
 				expect(addPredicate("", pred)).toEqual("diproche().");
 			});
 			it("Adds FO-logic predicate to an empty string", () => {
-				const pred = "firstOrderPredicateLogic";
+				const pred = Mode.firstOrderPredicateLogic;
 				expect(addPredicate("", pred)).toEqual("diproche_fo().");
 			});
 			it("Adds test-predicate to an empty string", () => {
-				const pred = "test";
+				const pred = Mode.test;
 				expect(addPredicate("", pred)).toEqual("teste().");
-			});
-		});
-	});
-	describe("Error cases", () => {
-		describe("Predicate is invalid", () => {
-			it("Adds none of the regular predicates", () => {
-				const mode = "Just a random text" as Mode;
-				expect(addPredicate("", mode)).toEqual("Es gibt kein passendes Prädikat.");
 			});
 		});
 	});
