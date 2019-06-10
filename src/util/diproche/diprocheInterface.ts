@@ -24,10 +24,8 @@ export function addPredicate(userInput: string, mode: Mode) {
 // Assuming "wrongWord" is not an allowed word, then a
 // vocaberror is an error like "the word "wrongWord"
 // in the text "This text contains a wrongWord".
-export function getVocabErrors(userInput: string): Issue[] | void {
-	if (getAllIssues(userInput).length > 0) {
-		concatOneIssueList(getAllIssues(userInput));
-	}
+export function getVocabErrors(userInput: string): void {
+	concatOneIssueList(getAllIssues(userInput));
 }
 
 // A misplacedSymbolError is something like "2 += 2 4" or
