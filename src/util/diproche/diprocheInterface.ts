@@ -1,4 +1,3 @@
-import Issue from "../../issueHandling/issue";
 import { concatOneIssueList } from "../../issueHandling/issueMapping";
 import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
 
