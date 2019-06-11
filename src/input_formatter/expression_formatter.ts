@@ -119,16 +119,15 @@ export function detectBracketIssues(formattedExpression: string[]) {
  * check the expression for correctness that no logic operators or statements is forgotten; it can detect wrong input
  */
 export function detectMissingStatementsOrConnector(formattedExpression: string[]) {
-	let index = 0;
+	let index;
 	let foundConnector = true;
 	let foundStatement = false;
 	let foundNegation = false;
-	while (index < formattedExpression.length) {
+	for (index = 0; index < formattedExpression.length; index++) {
 		if (formattedExpression[index].match(bracket)) {
-			index++;
+			continue;
 		} else if (formattedExpression[index].match(negation)) {
 			foundNegation = true;
-			index++;
 		} else if (formattedExpression[index].match(logicConnector)) {
 			if (foundNegation === true) {
 				addIssue("MISSING_STATEMENT_AFTER_NEGATION");
@@ -138,7 +137,6 @@ export function detectMissingStatementsOrConnector(formattedExpression: string[]
 			foundConnector = true;
 			foundStatement = false;
 			foundNegation = false;
-			index++;
 		} else {
 			if (foundStatement === true) {
 				addIssue("MISSING_CONNECTOR");
@@ -146,10 +144,10 @@ export function detectMissingStatementsOrConnector(formattedExpression: string[]
 			foundConnector = false;
 			foundStatement = true;
 			foundNegation = false;
-			index++;
 		}
 	}
 	if (foundStatement === false || foundConnector === true || foundNegation === true) {
 		addIssue("MISSING_STATEMENT_AT_THE_END");
 	}
+
 }
