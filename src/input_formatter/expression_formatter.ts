@@ -119,16 +119,15 @@ export function detectBracketIssues(formattedExpression: string[]) {
  * check the expression for correctness that no logic operators or statements is forgotten; it can detect wrong input
  */
 export function detectMissingStatementsOrConnector(formattedExpression: string[]) {
-	let index;
 	let foundConnector = true;
 	let foundStatement = false;
 	let foundNegation = false;
-	for (index = 0; index < formattedExpression.length; index++) {
-		if (formattedExpression[index].match(bracket)) {
+	for (const expr of formattedExpression) {
+		if (expr.match(bracket)) {
 			continue;
-		} else if (formattedExpression[index].match(negation)) {
+		} else if (expr.match(negation)) {
 			foundNegation = true;
-		} else if (formattedExpression[index].match(logicConnector)) {
+		} else if (expr.match(logicConnector)) {
 			if (foundNegation === true) {
 				addIssue("MISSING_STATEMENT_AFTER_NEGATION");
 			} else if (foundConnector === true) {
