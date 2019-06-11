@@ -1,4 +1,5 @@
-import { concatOneIssueList } from "../../issueHandling/issueMapping";
+import Issue from "../../issueHandling/issue";
+import {addIssueToIssueList } from "../../issueHandling/issueMapping";
 import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
 
 export enum Mode {
@@ -17,7 +18,13 @@ export enum Mode {
  * himself. Hence, the mode needs to be read out from the browser.
  */
 export function addPredicate(userInput: string, mode: Mode) {
-	return mode.concat("(").concat(userInput).concat(").");
+	return mode + "(" + userInput + ").";
+}
+
+export function concatOneIssueList(issues: Issue[]) {
+	for (const issue of issues) {
+		addIssueToIssueList(issue);
+	}
 }
 
 // Assuming "wrongWord" is not an allowed word, then a

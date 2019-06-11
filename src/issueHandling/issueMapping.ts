@@ -33,12 +33,6 @@ export function addIssueToIssueList(issue: Issue) {
 	foundIssues.push(issue);
 }
 
-export function concatOneIssueList(issues: Issue[]) {
-	for (const issue of issues) {
-		addIssueToIssueList(issue);
-	}
-}
-
 export function listAllIssues(): ReadonlyArray<Issue> {
 	return foundIssues;
 }
