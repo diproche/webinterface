@@ -1,4 +1,4 @@
-import {importFile} from "./prologSession";
+import {importFile, PrologSession} from "./prologSession";
 import * as PSM from "./prologStringManipulation";
 import * as assets from "./testAssets";
 
