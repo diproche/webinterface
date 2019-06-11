@@ -29,3 +29,14 @@ test("check if the issuelist contains a searched issue", () => {
 		severity: "WARNING",
 	});
 });
+
+test("check if the placeholders in the issue-message got replaced correctly", () => {
+	emptyIssueList();
+	addIssue("INVALID_WORD", undefined, { word: "Schuh" });
+	const issue = listAllIssues().find(i => i.code === "INVALID_WORD");
+	expect(issue).toEqual({
+		severity: "WARNING",
+		code: "INVALID_WORD",
+		message: "Das Wort 'Schuh' in der Eingabe ist nicht erlaubt.",
+	});
+});
