@@ -27,9 +27,6 @@ export function concatOneIssueList(issues: Issue[]) {
 	}
 }
 
-// Assuming "wrongWord" is not an allowed word, then a
-// vocaberror is an error like "the word "wrongWord"
-// in the text "This text contains a wrongWord".
 export function getVocabErrors(userInput: string): void {
 	concatOneIssueList(getAllIssues(userInput));
 }
