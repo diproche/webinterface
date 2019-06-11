@@ -1,10 +1,33 @@
 import { addIssue } from "../issueHandling/issueMapping";
-const allowedExpressionToken =
-	// tslint:disable-next-line: max-line-length
-	/(bracketLeft|bracketRight|equivalence|implicationRight|implicationLeft|negation|conjunction|disjunction|equal|addition|subtraction|division|multiplication)+/;
-const logicConnector = /(conjunction|disjunction|equivalence|implicationRight|implicationLeft)+/;
-const bracket = /(bracketLeft|bracketRight)+/;
-const negation = /(negation)+/;
+//const allowedExpressionToken =
+// tslint:disable-next-line: max-line-length
+//	/(bracketLeft|bracketRight|equivalence|implicationRight|implicationLeft|negation|conjunction|disjunction|equal|addition|subtraction|division|multiplication)+/;
+//const logicConnector = /(conjunction|disjunction|equivalence|implicationRight|implicationLeft)+/;
+// const bracket = /(bracketLeft|bracketRight)+/;
+const expressionmarker = /(\$)/g;
+const negation = /(neq|not|nicht|¬|\\neg)/ig;
+const bracketLeft = /(\[|\(|bracketLeft)/g;
+const bracketRight = /(\]|\)|bracketRight)/g;
+const bracket = new RegExp(bracketLeft.source + "|" + bracketRight.source);
+const equivalence = /(<-->|<==>|<=>|<->|equivalence)/g;
+const implicationRight = /(->|-->|=>|==>|\\rightarrow|implicationRight)/g;
+const implicationLeft = /(<-|<--|<=|<==|\/leftarrow|implicationLeft)/g;
+const implication = new RegExp(implicationRight.source + "|" + implicationLeft);
+const conjunction = /(and|und|&|\/\\|conjunction)/ig;
+const disjunction = /(or|oder|\||\\\/|disjunction)/ig;
+const logicConnector = new RegExp(conjunction.source + "|" + disjunction.source + "|"
+	+ equivalence.source + "|" + implication.source);
+const splitter = (bracket.source + "|" + equivalence.source + "|" + implicationRight + "|"
+	+ implicationLeft + "|" + conjunction + "|" + disjunction);
+
+
+const comma = /[,]+/g;
+
+const allowedExpressionToken = new RegExp(equivalence.source + "|" + implication.source + "|" + implicationLeft);
+//const bracket = new RegExp("(" + bracketLeft.source + ")|(" + bracketRight.source + ")");
+//const splitter = new RegExp("[" + bracket.source + comma.source + "]");
+
+//const splitter = new RegExp(bracket.source + "|" + logicConnector.source);
 
 /**
  * main method to format expressions
@@ -25,25 +48,26 @@ export function expressionFormatter(expression: string): string[] {
  * input styles for logical vocabulary gets formatted into one single style
  */
 export function preFormatExpressionFromImput(expression: string): string[] {
-	const formattedInputExpression: string = expression
-		.replace(/(\$)/g, "")
-		.replace(/(\[|\()/g, " bracketLeft ")
-		.replace(/(\]|\))/g, " bracketRight ")
-		.replace(/(<-->|<==>|<=>|<->)/g, " equivalence ")
-		.replace(/(->|-->|=>|==>|\\rightarrow)/g, " implicationRight ")
-		.replace(/(<-|<--|<=|<==|\/leftarrow)/g, " implicationLeft ")
-		.replace(/(neq|not|nicht|¬|-|\\neg)/ig, " negation ")
-		.replace(/(and|und|&|∧|\/\\)/ig, " conjunction ")
-		.replace(/(or|oder|\||∨|\\\/)/ig, " disjunction ")
-		.replace(/(=|==|===|gleich)/g, " equal ")
-		.replace(/(\+|plus|add|sum)/g, " addition ")
-		.replace(/(-|minus)/g, " subtraction ")
-		.replace(/(:|\/|div|geteilt)/g, " division ")
-		.replace(/(\*|mal|mult)/g, " multiplication ")
-		.trim()
-		.replace(/\s{1,}/g, ",");
-	const splittedExpression: string[] = formattedInputExpression.split(/[,]+/g);
+	const formattedInputExpression: string = expression;
+	//.replace(/(\$)/g, "")
+	//.replace(bracketLeft, " bracketLeft ")
+	//.replace(bracketRight, " bracketRight ")
+	//.replace(/(<-->|<==>|<=>|<->)/g, "equivalence ")
+	//.replace(/(->|-->|=>|==>|\\rightarrow)/g, "implicationRight ")
+	//.replace(/(<-|<--|<=|<==|\/leftarrow)/g, "implicationLeft ")
+	//.replace(/(neq|not|nicht|¬|\\neg)/ig, " negation ")
+	//.replace(/(and|und|&|?|\/\\)/ig, " conjunction ")
+	//.replace(/(or|oder|\||?|\\\/)/ig, " disjunction ")
+	//.replace(/(=|==|===|gleich)/g, " equal ")
+	//.replace(/(\+|plus|add|sum)/g, " addition ")
+	//.replace(/(-|minus)/g, " subtraction ")
+	//.replace(/(:|\/|div|geteilt)/g, " division ")
+	//.replace(/(\*|mal|mult)/g, " multiplication ")
+	//.trim()
+	//.replace(/\s{1,}/g, ",");
+	const splittedExpression: string[] = formattedInputExpression.split(bracketLeft);
 	return splittedExpression;
+
 
 }
 
