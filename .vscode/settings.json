@@ -1,8 +1,10 @@
 {
-	"editor.formatOnSave": true,
-	"tslint.autoFixOnSave": true,
-	"typescript.tsdk": "node_modules\\typescript\\lib",
-	"editor.useTabStops": true,
-	"editor.detectIndentation": false,
-	"editor.insertSpaces": false,
+  "editor.formatOnSave": true,
+  "tslint.autoFixOnSave": true,
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "editor.useTabStops": true,
+  "editor.detectIndentation": false,
+  "editor.insertSpaces": false,
+  "prettier.tslintIntegration": true,
+  "typescript.suggest.completeJSDocs": true
 }
