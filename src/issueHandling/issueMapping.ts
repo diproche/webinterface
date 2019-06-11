@@ -9,8 +9,12 @@ export type IssueCode = keyof typeof issueJson;
  * This function needs to be called when someone wants to store a known issue;
  * @param issueJson the issueobject that should be stored in the issuelist.
  * @param addPosition optional position where issue is located;
+ * @param replacements optional replacements for the placeholders in the issue message.
  */
-export function addIssue(issueCode: IssueCode, position?: Position) {
+export function addIssue(
+	issueCode: IssueCode,
+	position?: Position,
+	replacements?: { [placeholder: string]: string | number }) {
 	const issue: Issue = {
 		...issueJson[issueCode],
 		code: issueCode,
