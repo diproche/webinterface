@@ -20,22 +20,22 @@ test("Test if the elements of a expression is detected and formatted correctly:"
 		"[AUNDTest[B<==>C]->DODERNOTNOTE]",
 	);
 	const expectedResult = [
-		"bracketLeft",
+		"[",
 		"A",
-		"conjunction",
+		"UND",
 		"Test",
-		"bracketLeft",
+		"[",
 		"B",
-		"equivalence",
+		"<==>",
 		"C",
-		"bracketRight",
-		"implicationRight",
+		"]",
+		"->",
 		"D",
-		"disjunction",
-		"negation",
-		"negation",
+		"ODER",
+		"NOT",
+		"NOT",
 		"E",
-		"bracketRight",
+		"]",
 	];
 	expect(result).toEqual(expectedResult);
 });
@@ -46,7 +46,7 @@ test("replace detected expression-elements into readable prolog commands", () =>
 		"bracketLeft",
 		"A",
 		"conjunction",
-		"RANDOMTEXTHERE",
+		"TEXTHERE",
 		"bracketLeft",
 		"B",
 		"equivalence",
@@ -58,7 +58,7 @@ test("replace detected expression-elements into readable prolog commands", () =>
 		"[",
 		"A",
 		"and",
-		"RANDOMTEXTHERE",
+		"TEXTHERE",
 		"[",
 		"B",
 		"<->",
@@ -73,8 +73,8 @@ test("splitting full text into full listFormat including expressions and paragra
 	emptyIssueList();
 	const result = textFormatter(
 		"Hello, this is a test! Is it Working? I               hope so. \n Paragraphs are marked with an " +
-		"empty List: \n \n \n Here is also an expression: $[A UND[B <==> ]-> D ODER NOT E]$ " +
-		"And a second one: $[5 add 12 equal 3 mal 5 plus 2]$",
+		"empty List: \n \n \n Here is also an expression: $[A         UND       [   B <==> ]    -> D ODERNOT E]$ " +
+		"And a second one: $[5 ADD 12 equal 3 mal 5 plus 2]$",
 	);
 	const expectedResult = [
 		["Hello", "this", "is", "a", "test"],
