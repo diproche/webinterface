@@ -1,5 +1,5 @@
 import Issue from "../../issueHandling/issue";
-import { addIssue} from "../../issueHandling/issueMapping";
+import { addIssue, IssueCode } from "../../issueHandling/issueMapping";
 import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
 
 export enum Mode {
@@ -23,7 +23,7 @@ export function addPredicate(userInput: string, mode: Mode) {
 
 export function concatOneIssueList(issues: Issue[]) {
 	for (const issue of issues) {
-		addIssue(issue);
+		addIssue(issue.code);
 	}
 }
 
