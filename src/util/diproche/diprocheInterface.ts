@@ -1,6 +1,4 @@
-import Issue from "../../issueHandling/issue";
-import { addIssue, IssueCode } from "../../issueHandling/issueMapping";
-import { getAllIssues } from "../../vocabularyChecker/detectWrongSyntax";
+import { collectInvalidWordsInIssues } from "../../vocabularyChecker/detectWrongSyntax";
 
 export enum Mode {
 	propositionalLogic = "diproche",
@@ -21,14 +19,8 @@ export function addPredicate(userInput: string, mode: Mode) {
 	return mode + "(" + userInput + ").";
 }
 
-export function concatOneIssueList(issues: Issue[]) {
-	for (const issue of issues) {
-		addIssue(issue.code);
-	}
-}
-
 export function getVocabErrors(userInput: string): void {
-	concatOneIssueList(getAllIssues(userInput));
+	collectInvalidWordsInIssues(userInput);
 }
 
 // export function getMisplacedSymbolsErrors(userInput: string) {
