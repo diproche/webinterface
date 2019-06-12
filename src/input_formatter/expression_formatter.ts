@@ -1,5 +1,6 @@
 import { addIssue } from "../issueHandling/issueMapping";
 import Position from "../issueHandling/position";
+import { setPosition } from "../issueHandling/position";
 
 const Regexes = {
 	whiteSpace: /\s/,
@@ -62,11 +63,9 @@ allowedExpressionToken = new RegExp(allowedExpressionToken, "ig");
  * @return a formatted expression as string[];
  * each element of the expression gets formatted into prolog readable code
  */
-export function expressionFormatter(expression: string, position: Position): string[] {
+export function expressionFormatter(expression: string, expressionPosition: number): string[] {
 	const preFormattedExpression: string[] = preFormatExpressionFromImput(expression);
-	position.fromIndex = 0;
-	position.toIndex = 0;
-	expressionIssueDetector(preFormattedExpression, position);
+	expressionIssueDetector(preFormattedExpression, expressionPosition);
 	const finalFormattedExpression: string[] = replaceExpressionElementsIntoPrologCode(preFormattedExpression);
 	return finalFormattedExpression;
 }
@@ -77,8 +76,7 @@ export function expressionFormatter(expression: string, position: Position): str
  * input styles for logical vocabulary gets formatted into one single style
  */
 export function preFormatExpressionFromImput(expression: string): string[] {
-	const formattedInputExpression: string = expression;
-	const splittedExpression: string[] = formattedInputExpression.split(allowedExpressionToken);
+	const splittedExpression: string[] = expression.split(allowedExpressionToken);
 	const filtered = splittedExpression.filter(x => x !== undefined && x != null && x !== "");
 	return filtered;
 }
@@ -129,16 +127,20 @@ export function replaceASingleExpressionElementIntoPrologCode(preformattedExpres
 		;
 }
 
-export function expressionIssueDetector(preFormattedExpression: string[], position: Position) {
-	detectBracketIssues(preFormattedExpression, position);
-	detectMissingStatementsOrConnector(preFormattedExpression, position);
+export function expressionIssueDetector(preFormattedExpression: string[], expressionPosition: number) {
+	detectBracketIssues(preFormattedExpression, expressionPosition);
+	detectMissingStatementsOrConnector(preFormattedExpression, expressionPosition);
 }
 
 /**
  * Check the expression for an equal amount of opened and closed brackets.; it can detect wrong input
  */
-export function detectBracketIssues(expression: string[], position: Position) {
+export function detectBracketIssues(expression: string[], expressionPosition: number) {
 	let bracketCount = 0;
+	const position: Position = {
+		fromIndex: expressionPosition,
+		toIndex: expressionPosition,
+	};
 	expression.forEach(element => {
 		position.toIndex = position.fromIndex + element.length;
 		if (element.match(Regexes.bracketLeft)) {
@@ -147,54 +149,54 @@ export function detectBracketIssues(expression: string[], position: Position) {
 			bracketCount--;
 		}
 		if (bracketCount < 0) {
-			addIssue("BRACKET_OVERCLOSING", position);
+			addIssue("BRACKET_OVERCLOSING", setPosition(position.fromIndex, position.toIndex));
 			bracketCount = 0;
 		}
 		position.fromIndex = position.toIndex;
 	});
 	if (bracketCount > 0) {
-		addIssue("BRACKET_UNDERCLOSING", position);
-	} else if (bracketCount < 0) {
-		addIssue("BRACKET_OVERCLOSING", position);
+		addIssue("BRACKET_UNDERCLOSING");
 	}
 }
 
 /**
  * check the expression for correctness that no logic operators or statements is forgotten; it can detect wrong input
  */
-export function detectMissingStatementsOrConnector(expression: string[], position: Position) {
+export function detectMissingStatementsOrConnector(expression: string[], expressionPosition: number) {
 	let foundConnector = true;
 	let foundStatement = false;
 	let foundNegation = false;
+	let fromPos: number = expressionPosition;
 	for (const expr of expression) {
-		position.toIndex = position.fromIndex + expr.length;
 		if (expr.match(bracket)) {
-			continue;
+			fromPos = fromPos + expr.length;
 		} else if (expr.match(Regexes.whiteSpace)) {
-			continue;
+			fromPos = fromPos + expr.length;
 		} else if (expr.match(Regexes.negation)) {
 			foundNegation = true;
+			fromPos = fromPos + expr.length;
 		} else if (expr.match(logicConnector)) {
 			if (foundNegation === true) {
-				addIssue("MISSING_STATEMENT_AFTER_NEGATION", position);
+				addIssue("MISSING_STATEMENT_AFTER_NEGATION", setPosition(fromPos, fromPos + expr.length));
 			} else if (foundConnector === true) {
-				addIssue("MISSING_STATEMENT_INSIDE", position);
+				addIssue("MISSING_STATEMENT_INSIDE", setPosition(fromPos, fromPos + expr.length));
 			}
+			fromPos = fromPos + expr.length;
 			foundConnector = true;
 			foundStatement = false;
 			foundNegation = false;
 		} else {
 			if (foundStatement === true) {
-				addIssue("MISSING_CONNECTOR", position);
+				addIssue("MISSING_CONNECTOR", setPosition(fromPos, fromPos + expr.length));
 			}
+			fromPos = fromPos + expr.length;
 			foundConnector = false;
 			foundStatement = true;
 			foundNegation = false;
 		}
-		position.fromIndex = position.toIndex;
 	}
 	if (foundStatement === false || foundConnector === true || foundNegation === true) {
-		addIssue("MISSING_STATEMENT_AT_THE_END", position);
+		addIssue("MISSING_STATEMENT_AT_THE_END", setPosition(fromPos, fromPos));
 	}
 
 }

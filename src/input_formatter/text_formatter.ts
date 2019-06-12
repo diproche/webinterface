@@ -13,9 +13,11 @@ const wordSeparator = /[ ,]+/;
 export function textFormatter(input: string): string[][] {
 	const splittedText = input.split(inputSeparator);
 	const formattedText = [];
+	let position: number = 0;
 	for (const element of splittedText) {
+		position = position + element.length;
 		if (element.match(/(\$)/g)) {
-			const formattedExpression = expressionFormatter(element);
+			const formattedExpression = expressionFormatter(element, position);
 			formattedText.push(formattedExpression);
 		} else if (element.match(/\n/)) {
 			formattedText.push([]);
