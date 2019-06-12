@@ -1,4 +1,5 @@
 import { emptyIssueList, listAllIssues } from "../issueHandling/issueMapping";
+import { setPosition } from "../issueHandling/position";
 import {
 	detectBracketIssues,
 	expressionIssueDetector,
@@ -122,6 +123,10 @@ test("splitting full text into full listFormat including expressions and paragra
 		code: "MISSING_STATEMENT_INSIDE",
 		message: "Es fehlt mindestens ein Argument.",
 		severity: "WARNING",
+		position: {
+			fromIndex: 20,
+			toIndex: 23,
+		},
 	});
 
 });
@@ -138,7 +143,7 @@ test("scan for bracket errors - test 1: [][][[]]", () => {
 		"bracketRight",
 		"bracketRight",
 	];
-	detectBracketIssues(bracketList);
+	detectBracketIssues(bracketList, setPosition(0, 0));
 	const issue = listAllIssues();
 	expect(issue).toEqual([]);
 });
@@ -155,7 +160,7 @@ test("scan for bracket errors - test 2: ][[[[[[]]", () => {
 		"bracketRight",
 		"bracketRight",
 	];
-	detectBracketIssues(bracketList);
+	detectBracketIssues(bracketList, setPosition(0, 0));
 	const issue1 = listAllIssues().find(i => i.code === "BRACKET_UNDERCLOSING");
 	const issue2 = listAllIssues().find(i => i.code === "BRACKET_OVERCLOSING");
 	expect(issue1).toEqual({
@@ -173,7 +178,7 @@ test("scan for bracket errors - test 2: ][[[[[[]]", () => {
 test("scan for bracket errors - test 3: ][", () => {
 	emptyIssueList();
 	const bracketList = ["bracketRight", "bracketLeft"];
-	detectBracketIssues(bracketList);
+	detectBracketIssues(bracketList, setPositionMarker(0, 0));
 	const issue = listAllIssues().find(i => i.code === "BRACKET_OVERCLOSING");
 	expect(issue).toEqual({
 		code: "BRACKET_OVERCLOSING",
@@ -185,7 +190,7 @@ test("scan for bracket errors - test 3: ][", () => {
 test("scan for missing Statements or missing connectors - test 1: [ <-> ]", () => {
 	emptyIssueList();
 	const testExpression = ["bracketLeft", "implicationRight", "bracketRight"];
-	expressionIssueDetector(testExpression);
+	expressionIssueDetector(testExpression, setPosition(0, 0));
 	const issue1 = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
 	const issue2 = listAllIssues().find(i => i.code === "MISSING_STATEMENT_AT_THE_END");
 	expect(issue1).toEqual({
@@ -203,7 +208,7 @@ test("scan for missing Statements or missing connectors - test 1: [ <-> ]", () =
 test("scan for missing Statements or missing connectors - test 2: [ C <-> ]]", () => {
 	emptyIssueList();
 	const testExpression = ["bracketLeft", "C", "implicationRight", "bracketRight", "bracketRight"];
-	expressionIssueDetector(testExpression);
+	expressionIssueDetector(testExpression, setPosition(0, 0));
 	const issue1 = listAllIssues().find(i => i.code === "MISSING_STATEMENT_AT_THE_END");
 	const issue2 = listAllIssues().find(i => i.code === "BRACKET_OVERCLOSING");
 	expect(issue1).toEqual({
@@ -221,7 +226,7 @@ test("scan for missing Statements or missing connectors - test 2: [ C <-> ]]", (
 test("scan for missing Statements or missing connectors - test 3: [ and X ]", () => {
 	emptyIssueList();
 	const testExpression = ["bracketLeft", "conjunction", "X", "bracketRight"];
-	expressionIssueDetector(testExpression);
+	expressionIssueDetector(testExpression, setPosition(0, 0));
 	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
 	expect(issue).toEqual({
 		code: "MISSING_STATEMENT_INSIDE",
@@ -233,7 +238,7 @@ test("scan for missing Statements or missing connectors - test 3: [ and X ]", ()
 test("scan for missing Statements or missing connectors - test 4 [ A ]", () => {
 	emptyIssueList();
 	const testExpression = ["bracketLeft", "A", "bracketRight"];
-	expressionIssueDetector(testExpression);
+	expressionIssueDetector(testExpression, setPosition(0, 0));
 	const issue = listAllIssues();
 	expect(issue).toEqual([]);
 });
@@ -244,12 +249,12 @@ test("scan for missing Statements or missing connectors - test 5: [ not A [ ] A 
 		"bracketLeft",
 		"not",
 		"A",
-		"bracketLeft",
-		"bracketRight",
+		"[",
+		")",
 		"A",
 		"bracketRight",
 	];
-	expressionIssueDetector(testExpression);
+	expressionIssueDetector(testExpression, setPosition(0, 0));
 	const issue = listAllIssues().find(i => i.code === "MISSING_CONNECTOR");
 	expect(issue).toEqual({
 		code: "MISSING_CONNECTOR",
@@ -268,7 +273,7 @@ test("scan for missing Statements or missing connectors - test 6: [ A <- B ]", (
 		"B",
 		"bracketRight",
 	];
-	expressionIssueDetector(testExpression);
+	expressionIssueDetector(testExpression, setPosition(0, 0));
 	const issue = listAllIssues();
 	expect(issue).toEqual([]);
 });
@@ -283,7 +288,7 @@ test("scan for missing Statements or missing connectors - test 7: [ not not A ]"
 		"A",
 		"bracketRight",
 	];
-	expressionIssueDetector(testExpression);
+	expressionIssueDetector(testExpression, setPosition(0, 0));
 	const issue = listAllIssues();
 	expect(issue).toEqual([]);
 });
@@ -297,7 +302,7 @@ test("scan for missing Statements or missing connectors - test 8: [ not not <= A
 		"A",
 		"bracketRight",
 	];
-	expressionIssueDetector(testExpression);
+	expressionIssueDetector(testExpression, setPosition(0, 0));
 	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_AFTER_NEGATION");
 	expect(issue).toEqual({
 		code: "MISSING_STATEMENT_AFTER_NEGATION",
@@ -309,11 +314,13 @@ test("scan for missing Statements or missing connectors - test 8: [ not not <= A
 test("scan for missing Statements or missing connectors - test 9: [ not not not ]", () => {
 	emptyIssueList();
 	const testExpression = [
-		"negation",
-		"negation",
-		"negation",
+		"[",
+		"neg",
+		"neg",
+		"neg",
+		"]",
 	];
-	expressionIssueDetector(testExpression);
+	expressionIssueDetector(testExpression, setPosition(0, 0));
 	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_AT_THE_END");
 	expect(issue).toEqual({
 		code: "MISSING_STATEMENT_AT_THE_END",

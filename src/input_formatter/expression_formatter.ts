@@ -1,4 +1,5 @@
 import { addIssue } from "../issueHandling/issueMapping";
+import Position from "../issueHandling/position";
 
 const Regexes = {
 	whiteSpace: /\s/,
@@ -61,9 +62,11 @@ allowedExpressionToken = new RegExp(allowedExpressionToken, "ig");
  * @return a formatted expression as string[];
  * each element of the expression gets formatted into prolog readable code
  */
-export function expressionFormatter(expression: string): string[] {
+export function expressionFormatter(expression: string, position: Position): string[] {
 	const preFormattedExpression: string[] = preFormatExpressionFromImput(expression);
-	expressionIssueDetector(preFormattedExpression);
+	position.fromIndex = 0;
+	position.toIndex = 0;
+	expressionIssueDetector(preFormattedExpression, position);
 	const finalFormattedExpression: string[] = replaceExpressionElementsIntoPrologCode(preFormattedExpression);
 	return finalFormattedExpression;
 }
@@ -126,74 +129,72 @@ export function replaceASingleExpressionElementIntoPrologCode(preformattedExpres
 		;
 }
 
-export function expressionIssueDetector(preFormattedExpression: string[]) {
-	detectBracketIssues(preFormattedExpression);
-	detectMissingStatementsOrConnector(preFormattedExpression);
+export function expressionIssueDetector(preFormattedExpression: string[], position: Position) {
+	detectBracketIssues(preFormattedExpression, position);
+	detectMissingStatementsOrConnector(preFormattedExpression, position);
 }
 
 /**
  * Check the expression for an equal amount of opened and closed brackets.; it can detect wrong input
  */
-export function detectBracketIssues(formattedExpression: string[]) {
+export function detectBracketIssues(expression: string[], position: Position) {
 	let bracketCount = 0;
-
-	formattedExpression.forEach(element => {
+	expression.forEach(element => {
+		position.toIndex = position.fromIndex + element.length;
 		if (element.match(Regexes.bracketLeft)) {
 			bracketCount++;
 		} else if (element.match(Regexes.bracketRight)) {
 			bracketCount--;
 		}
 		if (bracketCount < 0) {
-			addIssue("BRACKET_OVERCLOSING");
+			addIssue("BRACKET_OVERCLOSING", position);
 			bracketCount = 0;
 		}
+		position.fromIndex = position.toIndex;
 	});
 	if (bracketCount > 0) {
-		addIssue("BRACKET_UNDERCLOSING");
+		addIssue("BRACKET_UNDERCLOSING", position);
 	} else if (bracketCount < 0) {
-		addIssue("BRACKET_OVERCLOSING");
+		addIssue("BRACKET_OVERCLOSING", position);
 	}
 }
 
 /**
  * check the expression for correctness that no logic operators or statements is forgotten; it can detect wrong input
  */
-export function detectMissingStatementsOrConnector(formattedExpression: string[]) {
+export function detectMissingStatementsOrConnector(expression: string[], position: Position) {
 	let foundConnector = true;
 	let foundStatement = false;
 	let foundNegation = false;
-	let positionmarker = 0;
-	for (const expr of formattedExpression) {
+	for (const expr of expression) {
+		position.toIndex = position.fromIndex + expr.length;
 		if (expr.match(bracket)) {
-			positionmarker = positionmarker + expr.length;
+			continue;
 		} else if (expr.match(Regexes.whiteSpace)) {
-			positionmarker = positionmarker + expr.length;
+			continue;
 		} else if (expr.match(Regexes.negation)) {
 			foundNegation = true;
-			positionmarker = positionmarker + expr.length;
 		} else if (expr.match(logicConnector)) {
 			if (foundNegation === true) {
-				addIssue("MISSING_STATEMENT_AFTER_NEGATION");
-				positionmarker = positionmarker + expr.length;
+				addIssue("MISSING_STATEMENT_AFTER_NEGATION", position);
 			} else if (foundConnector === true) {
-				addIssue("MISSING_STATEMENT_INSIDE");
-				positionmarker = positionmarker + expr.length;
+				addIssue("MISSING_STATEMENT_INSIDE", position);
 			}
 			foundConnector = true;
 			foundStatement = false;
 			foundNegation = false;
 		} else {
 			if (foundStatement === true) {
-				addIssue("MISSING_CONNECTOR");
-				positionmarker = positionmarker + expr.length;
+				addIssue("MISSING_CONNECTOR", position);
 			}
 			foundConnector = false;
 			foundStatement = true;
 			foundNegation = false;
 		}
+		position.fromIndex = position.toIndex;
 	}
 	if (foundStatement === false || foundConnector === true || foundNegation === true) {
-		addIssue("MISSING_STATEMENT_AT_THE_END");
+		addIssue("MISSING_STATEMENT_AT_THE_END", position);
 	}
 
 }
