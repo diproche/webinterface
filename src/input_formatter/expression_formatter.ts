@@ -1,51 +1,51 @@
 import { addIssue } from "../issueHandling/issueMapping";
-import Position from "../issueHandling/position";
 import { addPosition } from "../issueHandling/position";
 
 const Regexes = {
 	whiteSpace: /\s/,
 	expressionmarker: /\$/,
-	bracketLeft: /(\[|\(|bracketLeft)/,
-	bracketRight: /(\]|\)|bracketRight)/,
-	equivalence: /(<-->|<==>|<=>|<->|equivalence)/,
-	implicationRight: /(->|-->|=>|==>|\\rightarrow|implicationRight)/,
-	implicationLeft: /(<-|<--|<=|<==|\/leftarrow|implicationLeft)/,
-	negation: /(neq|not|nicht|¬|neg)/i,
-	conjunction: /(and|und|&|\/\\|conjunction)/i,
-	disjunction: /(or|oder|\||\\\/|disjunction)/i,
-	equal: /(=|==|===|gleich|equal)/,
-	addition: /(\+|plus|add|sum)/,
-	subtraction: /(-|minus)/,
-	division: /(:|\/|div|geteilt)/,
-	multiplication: /(\*|mal|mult)/,
+	bracketLeft: new RegExp(/(\[|\(|bracketLeft)/, "ig"),
+	bracketRight: new RegExp(/(\]|\)|bracketRight)/, "ig"),
+	equivalence: new RegExp(/(<-->|<==>|<=>|<->|equivalence)/, "ig"),
+	implicationRight: new RegExp(/(->|-->|=>|==>|\\rightarrow|implicationRight)/, "ig"),
+	implicationLeft: new RegExp(/(<-|<--|<=|<==|\/leftarrow|implicationLeft)/, "ig"),
+	negation: new RegExp(/(neq|not|nicht|¬|neg)/, "ig"),
+	conjunction: new RegExp(/(and|und|&|\/\\|conjunction)/, "ig"),
+	disjunction: new RegExp(/(or|oder|\||\\\/|disjunction)/, "ig"),
+	equal: new RegExp(/(=|==|===|gleich|equal)/, "ig"),
+	addition: new RegExp(/(\+|plus|add|sum)/, "ig"),
+	subtraction: new RegExp(/(-|minus)/, "ig"),
+	division: new RegExp(/(:|\/|div|geteilt)/, "ig"),
+	multiplication: new RegExp(/(\*|mal|mult)/, "ig"),
 };
 
 const orRegex = (...regexes: RegExp[]) =>
 	new RegExp(regexes.map(r => r.source).join("|"));
 
-const bracket = orRegex(
+const bracket = new RegExp(orRegex(
 	Regexes.bracketLeft,
 	Regexes.bracketRight,
-);
-const implication = orRegex(
+), "ig");
+
+const implication = new RegExp(orRegex(
 	Regexes.implicationRight,
 	Regexes.implicationLeft,
-);
-const logicConnector = orRegex(
+), "ig");
+const logicConnector = new RegExp(orRegex(
 	Regexes.conjunction,
 	Regexes.disjunction,
 	Regexes.equivalence,
 	implication,
-);
-const functionalConnector = orRegex(
+), "ig");
+const functionalConnector = new RegExp(orRegex(
 	Regexes.equal,
 	Regexes.addition,
 	Regexes.subtraction,
 	Regexes.multiplication,
 	Regexes.division,
-);
+), "ig");
 
-let allowedExpressionToken = orRegex(
+const allowedExpressionToken = new RegExp(orRegex(
 	Regexes.expressionmarker,
 	bracket,
 	Regexes.equivalence,
@@ -54,9 +54,7 @@ let allowedExpressionToken = orRegex(
 	Regexes.conjunction,
 	Regexes.disjunction,
 	functionalConnector,
-);
-allowedExpressionToken = new RegExp(allowedExpressionToken, "ig");
-
+), "ig");
 /**
  * main method to format expressions
  * @param expression written by user
@@ -111,19 +109,19 @@ export function replaceASingleExpressionElementIntoPrologCode(preformattedExpres
 	return finalExpression
 		.replace(Regexes.expressionmarker, "")
 		.replace(Regexes.whiteSpace, "")
-		.replace(new RegExp(Regexes.bracketLeft, "i"), "\[")
-		.replace(new RegExp(Regexes.bracketRight, "i"), "\]")
-		.replace(new RegExp(Regexes.equivalence, "i"), "<->")
-		.replace(new RegExp(Regexes.implicationRight, "i"), "->")
-		.replace(new RegExp(Regexes.implicationLeft, "i"), "<-")
-		.replace(new RegExp(Regexes.negation, "i"), "neg")
-		.replace(new RegExp(Regexes.conjunction, "i"), "and")
-		.replace(new RegExp(Regexes.disjunction, "i"), "or")
-		.replace(new RegExp(Regexes.equal, "i"), "=")
-		.replace(new RegExp(Regexes.addition, "i"), "+")
-		.replace(new RegExp(Regexes.subtraction, "i"), "-")
-		.replace(new RegExp(Regexes.multiplication, "i"), "*")
-		.replace(new RegExp(Regexes.division, "i"), ":")
+		.replace(Regexes.bracketLeft, "\[")
+		.replace(Regexes.bracketRight, "\]")
+		.replace(Regexes.equivalence, "<->")
+		.replace(Regexes.implicationRight, "->")
+		.replace(Regexes.implicationLeft, "<-")
+		.replace(Regexes.negation, "neg")
+		.replace(Regexes.conjunction, "and")
+		.replace(Regexes.disjunction, "or")
+		.replace(Regexes.equal, "=")
+		.replace(Regexes.addition, "+")
+		.replace(Regexes.subtraction, "-")
+		.replace(Regexes.multiplication, "*")
+		.replace(Regexes.division, ":")
 		;
 }
 
@@ -136,23 +134,22 @@ export function expressionIssueDetector(preFormattedExpression: string[], expres
  * Check the expression for an equal amount of opened and closed brackets.; it can detect wrong input
  */
 export function detectBracketIssues(expression: string[], expressionPosition: number) {
-	let bracketCount = 0;
-	const position: Position = {
-		fromIndex: expressionPosition,
-		toIndex: expressionPosition,
-	};
+	let bracketCount: number = 0;
+	let fromPos: number = expressionPosition;
+	let toPos: number = expressionPosition;
+
 	expression.forEach(element => {
-		position.toIndex = position.fromIndex + element.length;
+		toPos = fromPos + element.length;
 		if (element.match(Regexes.bracketLeft)) {
 			bracketCount++;
 		} else if (element.match(Regexes.bracketRight)) {
 			bracketCount--;
 		}
 		if (bracketCount < 0) {
-			addIssue("BRACKET_OVERCLOSING", addPosition(position.fromIndex, position.toIndex));
+			addIssue("BRACKET_OVERCLOSING", addPosition(fromPos, toPos));
 			bracketCount = 0;
 		}
-		position.fromIndex = position.toIndex;
+		fromPos = toPos;
 	});
 	if (bracketCount > 0) {
 		addIssue("BRACKET_UNDERCLOSING");
@@ -163,36 +160,36 @@ export function detectBracketIssues(expression: string[], expressionPosition: nu
  * check the expression for correctness that no logic operators or statements is forgotten; it can detect wrong input
  */
 export function detectMissingStatementsOrConnector(expression: string[], expressionPosition: number) {
-	let foundConnector = true;
-	let foundStatement = false;
-	let foundNegation = false;
+	let foundConnector: boolean = true;
+	let foundStatement: boolean = false;
+	let foundNegation: boolean = false;
 	let fromPos: number = expressionPosition;
-	for (const expr of expression) {
-		if (expr.match(bracket)) {
-			fromPos = fromPos + expr.length;
-		} else if (expr.match(Regexes.whiteSpace)) {
-			fromPos = fromPos + expr.length;
-		} else if (expr.match(Regexes.negation)) {
+	for (const element of expression) {
+		if (element.match(bracket)) {
+			fromPos = fromPos + element.length;
+		} else if (element.match(Regexes.whiteSpace)) {
+			fromPos = fromPos + element.length;
+		} else if (element.match(Regexes.negation)) {
 			foundNegation = true;
-			fromPos = fromPos + expr.length;
-		} else if (expr.match(logicConnector)) {
+			fromPos = fromPos + element.length;
+		} else if (element.match(logicConnector)) {
 			if (foundNegation === true) {
-				addIssue("MISSING_STATEMENT_AFTER_NEGATION", addPosition(fromPos, fromPos + expr.length));
+				addIssue("MISSING_STATEMENT_AFTER_NEGATION", addPosition(fromPos, fromPos + element.length));
 			} else if (foundConnector === true) {
-				addIssue("MISSING_STATEMENT_INSIDE", addPosition(fromPos, fromPos + expr.length));
+				addIssue("MISSING_STATEMENT_INSIDE", addPosition(fromPos, fromPos + element.length));
 			}
-			fromPos = fromPos + expr.length;
+			fromPos = fromPos + element.length;
 			foundConnector = true;
 			foundStatement = false;
 			foundNegation = false;
 		} else {
 			if (foundStatement === true) {
-				addIssue("MISSING_CONNECTOR", addPosition(fromPos, fromPos + expr.length));
+				addIssue("MISSING_CONNECTOR", addPosition(fromPos, fromPos + element.length));
 			}
-			fromPos = fromPos + expr.length;
 			foundConnector = false;
 			foundStatement = true;
 			foundNegation = false;
+			fromPos = fromPos + element.length;
 		}
 	}
 	if (foundStatement === false || foundConnector === true || foundNegation === true) {

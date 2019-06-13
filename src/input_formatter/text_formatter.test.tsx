@@ -14,7 +14,7 @@ test("splitting a single sentences into List of words: ", () => {
 	expect(result).toEqual(expectedResult);
 });
 
-test("Test if the elements of a expression is detected and formatted correctly:", () => {
+test("Test if the elements of a expression is detected and preformatted correctly:", () => {
 	emptyIssueList();
 	const result = preFormatExpressionFromImput(
 		"[AUNDTest[B<==>C]->DODERNOT   NOTE]",
@@ -73,8 +73,8 @@ test("replace detected expression-elements into readable prolog commands", () =>
 test("splitting full text into full listFormat including expressions and paragraph marker: ", () => {
 	emptyIssueList();
 	const result = textFormatter(
-		"Hello, this is a test! Is it Working? I                 hope so. \n Paragraphs are marked with an " +
-		"empty List: \n \n \n Here is also an expression: $[AUND[   B <==> ]    -> D ODERNOT E]$ " +
+		"Hello, this is a test! Is it Working? I   hope so. \n Paragraphs are marked with an " +
+		"empty List: \n \n \n Here is also an expression: $[AUNDbracketLEFTB<-->]-> D ODERNOT E]$ " +
 		"And a second one: $[5 ADD 12 equal 3 mal 5 plus 2]$",
 	);
 	const expectedResult = [
@@ -124,8 +124,8 @@ test("splitting full text into full listFormat including expressions and paragra
 		message: "Es fehlt mindestens ein Argument.",
 		severity: "WARNING",
 		position: {
-			fromIndex: 202,
-			toIndex: 204,
+			fromIndex: 190,
+			toIndex: 192,
 		},
 	});
 
