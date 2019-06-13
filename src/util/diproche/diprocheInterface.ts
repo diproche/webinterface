@@ -1,4 +1,5 @@
 import { expressionFormatter } from "../../input_formatter/expression_formatter";
+import { listAllIssues } from "../../issueHandling/issueMapping";
 import { collectInvalidWordsInIssues } from "../../vocabularyChecker/detectWrongSyntax";
 
 export enum Mode {
@@ -43,7 +44,16 @@ export function getErrorsBeforeDiproche(userInput: string) {
 // }
 
 // this function collects all Errors.
-export default function getErrors(diprocheInput: string) {
+export function getErrors(diprocheInput: string) {
 	getErrorsBeforeDiproche(diprocheInput);
 	// getErrorsAfterDiproche(diprocheInput);
+}
+
+export default function displayErrors(userInput: string) {
+	getErrors(userInput);
+	if (listAllIssues().length > 0) {
+		for (const issue of listAllIssues()) {
+			console.log(issue.message);
+		}
+	}
 }
