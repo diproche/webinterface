@@ -4,7 +4,7 @@ export default interface Position {
 	toIndex: number;
 }
 
-export function setPosition(from: number, to: number) {
+export function addPosition(from: number, to: number) {
 	const position: Position = {
 		fromIndex: from,
 		toIndex: to,

@@ -1,6 +1,6 @@
 import { addIssue } from "../issueHandling/issueMapping";
 import Position from "../issueHandling/position";
-import { setPosition } from "../issueHandling/position";
+import { addPosition } from "../issueHandling/position";
 
 const Regexes = {
 	whiteSpace: /\s/,
@@ -149,7 +149,7 @@ export function detectBracketIssues(expression: string[], expressionPosition: nu
 			bracketCount--;
 		}
 		if (bracketCount < 0) {
-			addIssue("BRACKET_OVERCLOSING", setPosition(position.fromIndex, position.toIndex));
+			addIssue("BRACKET_OVERCLOSING", addPosition(position.fromIndex, position.toIndex));
 			bracketCount = 0;
 		}
 		position.fromIndex = position.toIndex;
@@ -177,9 +177,9 @@ export function detectMissingStatementsOrConnector(expression: string[], express
 			fromPos = fromPos + expr.length;
 		} else if (expr.match(logicConnector)) {
 			if (foundNegation === true) {
-				addIssue("MISSING_STATEMENT_AFTER_NEGATION", setPosition(fromPos, fromPos + expr.length));
+				addIssue("MISSING_STATEMENT_AFTER_NEGATION", addPosition(fromPos, fromPos + expr.length));
 			} else if (foundConnector === true) {
-				addIssue("MISSING_STATEMENT_INSIDE", setPosition(fromPos, fromPos + expr.length));
+				addIssue("MISSING_STATEMENT_INSIDE", addPosition(fromPos, fromPos + expr.length));
 			}
 			fromPos = fromPos + expr.length;
 			foundConnector = true;
@@ -187,7 +187,7 @@ export function detectMissingStatementsOrConnector(expression: string[], express
 			foundNegation = false;
 		} else {
 			if (foundStatement === true) {
-				addIssue("MISSING_CONNECTOR", setPosition(fromPos, fromPos + expr.length));
+				addIssue("MISSING_CONNECTOR", addPosition(fromPos, fromPos + expr.length));
 			}
 			fromPos = fromPos + expr.length;
 			foundConnector = false;
@@ -196,7 +196,7 @@ export function detectMissingStatementsOrConnector(expression: string[], express
 		}
 	}
 	if (foundStatement === false || foundConnector === true || foundNegation === true) {
-		addIssue("MISSING_STATEMENT_AT_THE_END", setPosition(fromPos, fromPos));
+		addIssue("MISSING_STATEMENT_AT_THE_END", addPosition(fromPos, fromPos));
 	}
 
 }
