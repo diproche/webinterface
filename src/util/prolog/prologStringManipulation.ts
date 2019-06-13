@@ -15,6 +15,12 @@ export function removeModuleDeclarations(prologProgram: string) {
 	return prologProgram.replace(fetchModuleDeclaration, "");
 }
 
+export function removeModuleImports(prologProgram: string) {
+	const fetchModuleImports = /:-use_module\([^)]*\) *\.[\r\t\f\v ]*\n?/g;
+
+	return prologProgram.replace(fetchModuleImports, "");
+}
+
 function removeFullLineComments(prologProgram: string) {
 	const fetchFullLineCommentsRegExp = /^[\r\t\f\v ]*%[^\n]*\n/gm;
 
@@ -87,6 +93,9 @@ function identifyPredicatesUniquely(program: string, importedProgram: string, im
 	predicatesToNotRename.forEach((predicate: string) => predicatesToRename.delete(predicate));
 
 	// Renaming Process
+
+	console.log(predicatesToRename);
+
 	predicatesToRename.forEach((toRename: string) => {
 		const getToRenameRegExp = new RegExp(toRename + "(\(.*?\))", "g");
 		importedProgram = importedProgram.replace(getToRenameRegExp, (_, parameters: string) => {

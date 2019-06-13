@@ -21,9 +21,12 @@ export function importFile(relativePath: string): PrologSession {
 function resolveImports(program: string, defaultPath: string, currentFileName: string = "main"): string {
 		const dependencyGraph: Set<Edge> = getDependencyGraph(program, defaultPath, currentFileName);
 		const importList: string[] = getTopologicalOrder(dependencyGraph);
+		importList.shift();
+		console.log(importList);
 		let importedPrograms: string = "";
 		importList.forEach((importFileName: string) => {
-			const currentImport = fs.readFileSync(path.resolve(defaultPath, importFileName + ".pl"), "utf-8");
+			let currentImport = fs.readFileSync(path.resolve(defaultPath, importFileName + ".pl"), "utf-8");
+			currentImport = PSM.removeNonFunctionalities(currentImport);
 			importedPrograms = importedPrograms + PSM.fixVariableShadowingInImport(importedPrograms + program, currentImport);
 		});
 
@@ -62,7 +65,12 @@ export class PrologSession {
 				program = resolveImports(program, defaultPath, fileName);
 
 				this.session = new type.Session(limit);
-				this.session.consult((PSM.removeModuleDeclarations(program)));
+				program = PSM.removeModuleDeclarations(program);
+				program = PSM.removeModuleImports(program);
+
+				fs.writeFileSync(path.resolve(__dirname, "program.pl"), program);
+
+				this.session.consult(program);
 		}
 
 		public async executeQuery(query: string): Promise<PrologResult> {
