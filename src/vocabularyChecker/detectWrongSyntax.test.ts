@@ -1,3 +1,4 @@
+import { emptyIssueList, listAllIssues } from "../issueHandling/issueMapping";
 import issueJson from "../issueHandling/knownIssues.json";
 import {
 	collectInvalidWordsInIssues,
@@ -5,7 +6,6 @@ import {
 	logSingleWord,
 	Position,
 } from "./detectWrongSyntax";
-import { listAllIssues, emptyIssueList } from "../issueHandling/issueMapping";
 
 describe("getInvalidWords", () => {
 	it("Returns the correct word for a normal text", () => {
