@@ -1,7 +1,6 @@
 import issueJson from "../issueHandling/knownIssues.json";
 import {
 	collectInvalidWordsInIssues,
-	getAllIssues,
 	getInvalidWords,
 	logSingleWord,
 	Position,
@@ -111,7 +110,7 @@ describe("logSingleWord", () => {
 
 describe("CollectAllInvalidWordsInIssues", () => {
 	it("Creates a correct Issue-array for one wrong word containing only this word", () => {
-		const issues = collectInvalidWordsInIssues("WrongWord RightWord", ["WrongWord"]);
+		const issues = collectInvalidWordsInIssues("WrongWord RightWord");
 		expect(issues).toEqual([
 			{
 				code: issueJson.INVALID_WORD.message,
@@ -126,7 +125,7 @@ describe("CollectAllInvalidWordsInIssues", () => {
 	});
 
 	it("Creates a correct Issue-array for a word consisting only of a Whitespace", () => {
-		const issues = collectInvalidWordsInIssues("Te st", [" "]);
+		const issues = collectInvalidWordsInIssues("Te st");
 		expect(issues).toEqual([
 			{
 				code: issueJson.INVALID_WORD.message,
@@ -134,98 +133,6 @@ describe("CollectAllInvalidWordsInIssues", () => {
 				position: {
 					fromIndex: 2,
 					toIndex: 3,
-				},
-				severity: issueJson.INVALID_WORD.severity,
-			},
-		]);
-	});
-});
-
-describe("getAllIssues", () => {
-	it("Creates a correct Issue-array for one wrong word containing only this word", () => {
-		const issues = getAllIssues("WrongWord RightWord");
-		expect(issues).toEqual([
-			{
-				code: issueJson.INVALID_WORD.message,
-				message: "WrongWord",
-				position: {
-					fromIndex: 0,
-					toIndex: 9,
-				},
-				severity: issueJson.INVALID_WORD.severity,
-			},
-		]);
-	},
-);
-
-	it("Creates a correct Issue-array for two words seperated by a Whitespace", () => {
-		const issues = getAllIssues("Te st");
-		expect(issues).toEqual([
-			{
-				code: issueJson.INVALID_WORD.message,
-				message: "Te",
-				position: {
-					fromIndex: 0,
-					toIndex: 2,
-				},
-				severity: issueJson.INVALID_WORD.severity,
-			},
-			{
-				code: issueJson.INVALID_WORD.message,
-				message: "st",
-				position: {
-					fromIndex: 3,
-					toIndex: 5,
-				},
-				severity: issueJson.INVALID_WORD.severity,
-			},
-		]);
-	},
-);
-
-	it("Detects a String of word1.word2 as two words", () => {
-		const issues = getAllIssues("Te.st");
-		expect(issues).toEqual([
-			{
-				code: issueJson.INVALID_WORD.message,
-				message: "Te",
-				position: {
-					fromIndex: 0,
-					toIndex: 2,
-				},
-				severity: issueJson.INVALID_WORD.severity,
-			},
-			{
-				code: issueJson.INVALID_WORD.message,
-				message: "st",
-				position: {
-					fromIndex: 3,
-					toIndex: 5,
-				},
-				severity: issueJson.INVALID_WORD.severity,
-			},
-		]);
-	},
-);
-
-	it("Detects a String of word1,;:<>=word2 as two words", () => {
-		const issues = getAllIssues("Te,;<>=st");
-		expect(issues).toEqual([
-			{
-				code: issueJson.INVALID_WORD.message,
-				message: "Te",
-				position: {
-					fromIndex: 0,
-					toIndex: 2,
-				},
-				severity: issueJson.INVALID_WORD.severity,
-			},
-			{
-				code: issueJson.INVALID_WORD.message,
-				message: "st",
-				position: {
-					fromIndex: 7,
-					toIndex: 9,
 				},
 				severity: issueJson.INVALID_WORD.severity,
 			},
