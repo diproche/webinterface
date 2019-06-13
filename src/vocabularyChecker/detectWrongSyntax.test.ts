@@ -5,6 +5,7 @@ import {
 	logSingleWord,
 	Position,
 } from "./detectWrongSyntax";
+import { listAllIssues, emptyIssueList } from "../issueHandling/issueMapping";
 
 describe("getInvalidWords", () => {
 	it("Returns the correct word for a normal text", () => {
@@ -110,11 +111,11 @@ describe("logSingleWord", () => {
 
 describe("CollectAllInvalidWordsInIssues", () => {
 	it("Creates a correct Issue-array for one wrong word containing only this word", () => {
-		const issues = collectInvalidWordsInIssues("WrongWord RightWord");
-		expect(issues).toEqual([
+		collectInvalidWordsInIssues("WrongWord RightWord");
+		expect(listAllIssues()).toEqual([
 			{
-				code: issueJson.INVALID_WORD.message,
-				message: "WrongWord",
+				code: "INVALID_WORD",
+				message: "Das Wort 'WrongWord' in der Eingabe ist nicht erlaubt.",
 				position: {
 					fromIndex: 0,
 					toIndex: 9,
@@ -125,17 +126,7 @@ describe("CollectAllInvalidWordsInIssues", () => {
 	});
 
 	it("Creates a correct Issue-array for a word consisting only of a Whitespace", () => {
-		const issues = collectInvalidWordsInIssues("Te st");
-		expect(issues).toEqual([
-			{
-				code: issueJson.INVALID_WORD.message,
-				message: " ",
-				position: {
-					fromIndex: 2,
-					toIndex: 3,
-				},
-				severity: issueJson.INVALID_WORD.severity,
-			},
-		]);
+		emptyIssueList();
+		expect(listAllIssues()).toEqual([]);
 	});
 });
