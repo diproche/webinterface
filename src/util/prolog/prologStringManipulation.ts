@@ -30,7 +30,8 @@ function removeFullLineComments(prologProgram: string) {
 function removePartialLineComments(prologProgram: string) {
 	const fetchPartialLineCommentsRegExp = /(^[^\n%]+)%[^\n\r]*(\r?\n)/gm;
 
-	// group2 fetches the EOL standard in the file to fit both: Windows and UNIX
+	// group2 fetches the end-of-line (EOL) standard in the file to fit both: Windows and UNIX
+	// https://www.networkworld.com/article/3107972/windows-vs-unix-those-pesky-line-terminators.html
 	return prologProgram.replace(fetchPartialLineCommentsRegExp, (_, group1, group2) => group1.trimRight() + group2);
 }
 
