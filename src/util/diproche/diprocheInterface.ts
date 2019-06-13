@@ -1,3 +1,4 @@
+import { expressionFormatter } from "../../input_formatter/expression_formatter";
 import { collectInvalidWordsInIssues } from "../../vocabularyChecker/detectWrongSyntax";
 
 export enum Mode {
@@ -23,17 +24,13 @@ export function getVocabErrors(userInput: string): void {
 	collectInvalidWordsInIssues(userInput);
 }
 
-// export function getMisplacedSymbolsErrors(userInput: string) {
-	// Dummy input
-// }
-
 // export function getSemanticErrors(userInput: string) {
 	// Dummy input
 // }
 
 export function getSyntacticErrors(userInput: string) {
 	getVocabErrors(userInput);
-	// getMisplacedSymbolsErrors(userInput);
+	expressionFormatter(userInput);
 }
 
 export function getErrorsBeforeDiproche(userInput: string) {
