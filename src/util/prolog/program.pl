@@ -1,0 +1,2632 @@
+reachable(I,J,Text):-
+ I<J,
+ count_up(I,J,List),
+ member([I,_RefsI,_,ang,_,_ContentI],Text),
+ member([J,_RefsJ,_,Sts,_,_ContentJ],Text),
+ member(Sts,[ang,beh]),
+ no_annotations(List,Text).
+reachable(I,J,Text):-
+ K is I-1,
+ I<J,
+ member([K,_,_,ann,fe,_],Text),
+ find_closing_line(Text,K,K1),
+ J<K1.
+
+
+reachable(I,J,Text):-
+ I<J,
+ K is I-1,
+ member([K,_,_,ann,contr,_],Text),
+ member([I,_,_,ang,_,_],Text),
+ find_closing_line(Text,K,K1),
+ J<K1.
+reachable(I,J,Text):-
+ I<J,
+ K is I-1,
+ member([K,_,_,ann,bam,_],Text),
+ member([I,_,_,ang,_,_],Text),
+ find_closing_line(Text,K,K1),
+ J<K1.
+reachable(I,J,Text):-
+ I<J,
+ K is I-1,
+ member([K,_,_,ann,hr,_],Text),
+ member([I,_,_,ang,_,_],Text),
+ find_closing_line(Text,K,K1),
+ J<K1.
+
+
+
+reachable(I,J,Text):-
+ I<J,
+ K is I-1,
+ member([K,_,_,ann,rr,_],Text),
+ member([I,_,_,ang,_,_],Text),
+ find_closing_line(Text,K,K1),
+ J<K1.
+
+
+
+accessible(Text,Graph):-
+ !,
+ length(Text,Length),
+ !,
+ count_up(1,Length,Lines),
+ !,
+ findall([X,Y],(member(X,Lines),member(Y,Lines),reachable(X,Y,Text)),PreGraph),
+ simplify(PreGraph,Graph).
+anfangsmarker(X):-
+ member(X,[sfu,fe,hr,rr,sbh,bam]).
+endmarker(X):-
+ member(X,[bem,efu]).
+marker([],[]).
+marker([[I,_Refs,_N,ann,Fkt,_Cnt]|Textrest],[[I,bam]|Textrest1]):-
+ anfangsmarker(Fkt),
+ marker(Textrest,Textrest1).
+marker([[_I,_Refs,_N,ann,Fkt,_Cnt]|Textrest],Textrest1):-
+ member(Fkt,[goal,abs]),
+ marker(Textrest,Textrest1).
+marker([[I,_Refs,_N,_Sts,Fkt,_Cnt]|Textrest],[[I,bem]|Textrest1]):-
+ endmarker(Fkt),
+ marker(Textrest,Textrest1).
+marker([[_,_,_,Sts,_,_]|Textrest],Textrest1):-
+ member(Sts,[ang,beh]),
+ marker(Textrest,Textrest1).
+update_counting([],D,D).
+update_counting([_,bam],D,Dneu):-
+ Dneu is D+1.
+update_counting([_,bem],D,Dneu):-
+ Dneu is D-1.
+find_closing_line_aux([[J,bem]|_],J,1):-!.
+find_closing_line_aux([[_,bam]|Rest],J,1):-
+ find_closing_line_aux(Rest,J,2),!.
+find_closing_line_aux([[K,X]|Rest],J,I):-
+ I>1,
+ update_counting([K,X],I,Ineu),
+ find_closing_line_aux(Rest,J,Ineu).
+find_closing_line(Text,I,J):-
+ marker(Text,TextSkelett),
+ member([I,bam],TextSkelett),
+ delete_up_to(TextSkelett,I,EndStueck),
+ find_closing_line_aux(EndStueck,J,1).
+delete_up_to([],_,[]).
+delete_up_to([[J,X]|Rest],I,[[J,X]|Rest]):-
+ J>I.
+delete_up_to([[J,_]|Rest],I,Restneu):-
+ J=<I,
+ delete_up_to(Rest,I,Restneu).
+no_annotations([],_).
+no_annotations([I|Rest],Text):-
+ member([I,_,_,ang,_,_],Text),
+ !,
+ no_annotations(Rest,Text).
+no_annotations([I|Rest],Text):-
+ member([I,_,_,beh,_,_],Text),
+ !,
+ no_annotations(Rest,Text).
+no_annotations([I|Rest],Text):-
+ member([I,_,_,axm,_,_],Text),
+ !,
+ no_annotations(Rest,Text).
+no_qed([],_).
+no_qed([I|Rest],Text):-
+ member([I,_,_,ang,_,_],Text),
+ !,
+ no_qed(Rest,Text).
+no_qed([I|Rest],Text):-
+ member([I,_,_,beh,_,_],Text),
+ !,
+ no_qed(Rest,Text).
+no_qed([I|Rest],Text):-
+ member([I,_,_,axm,_,_],Text),
+ !,
+ no_qed(Rest,Text).
+no_qed([I|Rest],Text):-
+ member([I,_,_,ann,X,_],Text),
+ member(X,[hr,rr,abs,contr,sfu,fe,efu]),
+ !,
+ no_qed(Rest,Text).
+no_case_closing([],_).
+no_case_closing([I|Rest],Text):-
+ member([I,_,_,ang,_,_],Text),
+ !,
+ no_case_closing(Rest,Text).
+no_case_closing([I|Rest],Text):-
+ member([I,_,_,beh,_,_],Text),
+ !,
+ no_case_closing(Rest,Text).
+no_case_closing([I|Rest],Text):-
+ member([I,_,_,axm,_,_],Text),
+ !,
+ no_case_closing(Rest,Text).
+no_case_closing([I|Rest],Text):-
+ member([I,_,_,ann,X,_],Text),
+ member(X,[hr,rr,abs,contr]),
+ !,
+ no_case_closing(Rest,Text).
+no_efu([],_).
+no_efu([I|Rest],Text):-
+ member([I,_,_,_,Fkt,_],Text),
+ \+Fkt=efu,
+ no_efu(Rest,Text).
+no_rr([],_).
+no_rr([I|Rest],Text):-
+ member([I,_,_,ang,_,_],Text),
+ !,
+ no_rr(Rest,Text).
+no_rr([I|Rest],Text):-
+ member([I,_,_,beh,_,_],Text),
+ !,
+ no_rr(Rest,Text).
+no_rr([I|Rest],Text):-
+ member([I,_,_,axm,_,_],Text),
+ !,
+ no_rr(Rest,Text).
+no_rr([I|Rest],Text):-
+ member([I,_,_,ann,X,_],Text),
+ member(X,[hr,abs,contr,sfu,efu,fe]),
+ !,
+ no_rr(Rest,Text).
+no_hr([],_).
+no_hr([I|Rest],Text):-
+ member([I,_,_,ang,_,_],Text),
+ !,
+ no_hr(Rest,Text).
+no_hr([I|Rest],Text):-
+ member([I,_,_,beh,_,_],Text),
+ !,
+ no_hr(Rest,Text).
+no_hr([I|Rest],Text):-
+ member([I,_,_,axm,_,_],Text),
+ !,
+ no_hr(Rest,Text).
+no_hr([I|Rest],Text):-
+ member([I,_,_,ann,X,_],Text),
+ member(X,[rr,abs,contr,sfu,efu,fe]),
+ !,
+ no_hr(Rest,Text).
+trans_closure(Rel,Z):-
+ domain(Rel,Dom),
+ range(Rel,Ran),
+ findall([X,Y],(member(X,Dom),member(Y,Ran),reachable_in_relation(X,Y,Rel)),Z).
+reachable_in_relation(I,J,R):-
+ member([I,J],R).
+reachable_in_relation(I,J,R):-
+ member([I,K],R),
+ reachable_in_relation(K,J,R).
+split_list(_,_,[],[]).
+split_list(I,J,[[K|_]|Rest1],Res):-
+ K<I,
+ split_list(I,J,Rest1,Res).
+split_list(I,J,_,[]):-
+ J<I.
+domain([],[]).
+domain([[X,_Y]|Rest],[X|Rest1]):-
+ domain(Rest,Rest1).
+range([],[]).
+range([[_X,Y]|Rest],[Y|Rest1]):-
+ range(Rest,Rest1).
+count_up(I,I,[I]):-!.
+count_up(I,J,[I|Rest]):-
+ !,
+ K is I+1,
+ count_up(K,J,Rest).
+simplify([],[]).
+simplify([X|Rest],Rest1):-
+ member(X,Rest),
+ simplify(Rest,Rest1).
+simplify([X|Rest],[X|Rest1]):-
+ simplify(Rest,Rest1).
+delete_fillers([],[]).
+delete_fillers([X|Rest],Res):-
+ member(X,[nun, jetzt, ferner, ausserdem, weiter, aber, auch, insbesondere, andererseits,sicherlich,jedenfalls, schon, ebenfalls, endlich, schliesslich]),
+ delete_fillers(Rest,Res).
+delete_fillers([X|Rest],[X|Res]):-
+ delete_fillers(Rest,Res).
+delete_fillers_text([],[]).
+delete_fillers_text([X|Rest],[Xneu|Restneu]):-
+ delete_fillers(X,Xneu),
+ delete_fillers_text(Rest,Restneu).
+formalize_sentence([bbh|X],[bbh|X]):-!.
+formalize_sentence([X,R,Y],[R,[X,Y]]):-
+ member(R,[<,>,=,<=,>=,el]).
+formalize_sentence([A,J,B],[A1,J,B1]):-
+ member(J,[and,or,->,<->]),
+ formalize_sentence(A,A1),
+ formalize_sentence(B,B1).
+formalize_sentence([sowohl,A,als,auch,B],[A1,and,B1]):-
+ formalize_sentence(A,A1),
+ formalize_sentence(B,B1).
+formalize_sentence([A,und,B],[A1,and,B1]):-
+ formalize_sentence(A,A1),
+ formalize_sentence(B,B1).
+formalize_sentence([A,oder,B],[A1,or,B1]):-
+ formalize_sentence(A,A1),
+ formalize_sentence(B,B1).
+formalize_sentence([A,falls,B,gilt],[B1,->,A1]):-
+ formalize_sentence(A,A1),
+ formalize_sentence(B,B1).
+formalize_sentence([A,sofern,B,gilt],[B1,->,A1]):-
+ formalize_sentence(A,A1),
+ formalize_sentence(B,B1).
+formalize_sentence([sowohl,A,als,auch,B],[A1,and,B1]):-
+ formalize_sentence(A,A1),
+ formalize_sentence(B,B1).
+formalize_sentence([B,aus,A,folgt],[A1,->,B1]):-
+ formalize_sentence(A,A1),
+ formalize_sentence(B,B1).
+formalize_sentence([A,falls,B],[B1,->,A1]):-
+ formalize_sentence(A,A1),
+ formalize_sentence(B,B1).
+formalize_sentence([A,sofern,B],[B1,->,A1]):-
+ formalize_sentence(A,A1),
+ formalize_sentence(B,B1).
+formalize_sentence([ist,A,falsch],[neg,A1]):-
+ formalize_sentence(A,A1).
+formalize_sentence([A,ist,falsch],[neg,A1]):-
+ formalize_sentence(A,A1).
+formalize_sentence([A,falsch,ist],[neg,A1]):-
+ formalize_sentence(A,A1).
+formalize_sentence([A,falsch],[neg,A1]):-
+ formalize_sentence(A,A1).
+formalize_sentence([nicht,A],[neg,A1]):-
+ formalize_sentence(A,A1).
+formalize_sentence([A,oder,es,gilt,B],[A1,or,B1]):-
+ formalize_sentence(A,A1),
+ formalize_sentence(B,B1).
+formalize_sentence([aus,A,folgt,dass,B],[A1,->,B1]):-
+ formalize_sentence(A,A1),
+ formalize_sentence(B,B1).
+formalize_sentence([A,so,folgt,B],[A1,->,B1]):-
+ formalize_sentence(A,A1),
+ formalize_sentence(B,B1).
+formalize_sentence([wenn,A,gilt,dann,gilt,B],[A1,->,B1]):-
+ formalize_sentence(A,A1),
+ formalize_sentence(B,B1).
+formalize_sentence([wenn,A,dann,B],[A1,->,B1]):-
+ formalize_sentence(A,A1),
+ formalize_sentence(B,B1).
+formalize_sentence([wenn,A,dann,folgt,B],[A1,->,B1]):-
+ formalize_sentence(A,A1),
+ formalize_sentence(B,B1).
+formalize_sentence([wenn,A,so,folgt,B],[A1,->,B1]):-
+ formalize_sentence(A,A1),
+ formalize_sentence(B,B1).
+formalize_sentence([wenn,A,so,gilt,B],[A1,->,B1]):-
+ formalize_sentence(A,A1),
+ formalize_sentence(B,B1).
+formalize_sentence([A,und,B,sind,aequivalent],[A1,<->,B1]):-
+ formalize_sentence(A,A1),
+ formalize_sentence(B,B1).
+formalize_sentence([sind,A,und,B,aequivalent],[A1,<->,B1]):-
+ formalize_sentence(A,A1),
+ formalize_sentence(B,B1).
+formalize_sentence([ein,X,so,existiert,dass|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([ein,X,derart,existiert,dass|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([ein,X,existiert,derart,dass|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([existiert,ein,X,so,dass|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([existiert,ein,X,derart,dass|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([existiert,ein,X,mit|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([existiert,X,so,dass|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([existiert,X,derart,dass|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([existiert,X,mit|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([gibt,es,ein,X,so,dass|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([gibt,es,ein,X,derart,dass|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([gibt,es,ein,X,mit|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([gibt,es,X,so,dass|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([gibt,es,X,derart,dass|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([gibt,es,X,mit|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([es,existiert,ein,X,derart,dass|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([es,existiert,X,derart,dass|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([es,existiert,ein,X,so,dass|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([es,existiert,X,so,dass|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([es,existiert,ein,X,mit|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([es,existiert,X,mit|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([ein,X,so,existiert,dass|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([es,ein,X,gibt,so,dass|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([es,ein,X,gibt,derart,dass|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([es,ein,X,gibt,mit|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([es,X,so,gibt,dass|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([es,X,derart,gibt,dass|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([es,X,gibt,mit|F],[ex,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([es,existiert|Rest],[ex,[X,in,T],F]):-
+ cut_until_ex_statement(Rest,TypeAndVars,F1),
+ formalize_sentence(F1,F),
+ cut_until_vars(TypeAndVars,Type,[X]),
+ standardize_type(Type,T).
+formalize_sentence([existiert|Rest],[ex,[X,in,T],F]):-
+ cut_until_ex_statement(Rest,TypeAndVars,F1),
+ formalize_sentence(F1,F),
+ cut_until_vars(TypeAndVars,Type,[X]),
+ standardize_type(Type,T).
+formalize_sentence([es,gibt|Rest],[ex,[X,in,T],F]):-
+ cut_until_ex_statement(Rest,TypeAndVars,F1),
+ formalize_sentence(F1,F),
+ cut_until_vars(TypeAndVars,Type,[X]),
+ standardize_type(Type,T).
+formalize_sentence([gibt,es|Rest],[ex,[X,in,T],F]):-
+ cut_until_ex_statement(Rest,TypeAndVars,F1),
+ formalize_sentence(F1,F),
+ cut_until_vars(TypeAndVars,Type,[X]),
+ standardize_type(Type,T).
+formalize_sentence([es,existieren,X|Rest],F):-
+ variable(X),
+ cut_until_ex_statement(Rest,Vars,Claim),
+ reverse([X|Vars],ReVars),
+ formalize_sentence(Claim,FormalClaim),
+ create_existential_statement(ReVars,FormalClaim,F).
+formalize_sentence([existieren,X|Rest],F):-
+ variable(X),
+ cut_until_ex_statement(Rest,Vars,Claim),
+ reverse([X|Vars],ReVars),
+ formalize_sentence(Claim,FormalClaim),
+ create_existential_statement(ReVars,FormalClaim,F).
+formalize_sentence([gibt,es,X,und|Rest],F):-
+ cut_until_ex_statement([X|Rest],Vars,Claim),
+ reverse(Vars,ReVars),
+ formalize_sentence(Claim,FormalClaim),
+ create_existential_statement(ReVars,FormalClaim,F).
+formalize_sentence([gibt,es,X,Y|Rest],F):-
+ variable(X),
+ variable(Y),
+ cut_until_ex_statement([X,Y|Rest],Vars,Claim),
+ reverse(Vars,ReVars),
+ formalize_sentence(Claim,FormalClaim),
+ create_existential_statement(ReVars,FormalClaim,F).
+formalize_sentence([es,existieren|Rest],A):-
+ cut_until_ex_statement(Rest,TypeAndVars,F1),
+ formalize_sentence(F1,F),
+ cut_until_vars(TypeAndVars,Type,Vars),
+ standardize_type(Type,T),
+ create_bnd_ex_statement(F,Vars,T,A).
+formalize_sentence([existieren|Rest],A):-
+ cut_until_ex_statement(Rest,TypeAndVars,F1),
+ formalize_sentence(F1,F),
+ cut_until_vars(TypeAndVars,Type,Vars),
+ standardize_type(Type,T),
+ create_bnd_ex_statement(F,Vars,T,A).
+formalize_sentence([es,gibt|Rest],A):-
+ cut_until_ex_statement(Rest,TypeAndVars,F1),
+ formalize_sentence(F1,F),
+ cut_until_vars(TypeAndVars,Type,Vars),
+ standardize_type(Type,T),
+ create_bnd_ex_statement(F,Vars,T,A).
+formalize_sentence([gibt,es|Rest],A):-
+ cut_until_ex_statement(Rest,TypeAndVars,F1),
+ formalize_sentence(F1,F),
+ cut_until_vars(TypeAndVars,Type,Vars),
+ standardize_type(Type,T),
+ create_bnd_ex_statement(F,Vars,T,A).
+formalize_sentence([fuer,alle,X,aus|Rest],[all,[X,in,T],A]):-
+ cut_until_claim_marker(Rest,Type,A0),
+ formalize_sentence(A0,A),
+ standardize_type(Type,T).
+formalize_sentence([fuer,jedes,X,aus|Rest],[all,[X,in,T],A]):-
+ cut_until_claim_marker(Rest,Type,A0),
+ formalize_sentence(A0,A),
+ standardize_type(Type,T).
+formalize_sentence([fuer,alle,X,gilt,dass|F],[all,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([fuer,jedes,X,gilt,dass|F],[all,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([gilt,fuer,alle,X,dass|F],[all,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([gilt,fuer,alle,X,dass|F],[all,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([fuer,alle,X,gilt|F],[all,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([fuer,jedes,X,gilt|F],[all,X,F1]):-
+ formalize_sentence(F,F1).
+formalize_sentence([fuer,alle,X|Rest],F):-
+ variable(X),
+ cut_until_claim_marker([X|Rest],VarsType,A0),
+ formalize_sentence(A0,A),
+ cut_after_vars(VarsType,Vars,[aus|Type]),
+ standardize_type(Type,T),
+ delete_und(Vars,Vars1),
+ create_bnd_universal_statement(A,Vars1,T,F).
+formalize_sentence([fuer,alle|Rest],F):-
+ cut_until_all_statement(Rest,TypeVars,A0),
+ formalize_sentence(A0,A),
+ cut_until_vars(TypeVars,Type,Vars),
+ delete_und(Vars,Vars1),
+ standardize_type(Type,T),
+ create_bnd_universal_statement(A,Vars1,T,F).
+formalize_sentence([fuer,alle|Rest],F):-
+ cut_until_all_statement(Rest,Vars,Claim),
+ formalize_sentence(Claim,FormalClaim),
+ reverse(Vars,ReVars),
+ create_universal_statement(ReVars,FormalClaim,F).
+formalize_sentence(X,X).
+extract_naming_sentence([sref,Name|Rest],[Name],Rest).
+extract_naming_sentence(X,[],X).
+referent(X):-member(X,[a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z]).
+extract_referents([],[]).
+extract_referents([X|Rest],[X|Rest1]):-
+ referent(X),
+ extract_referents(Rest,Rest1).
+extract_referents([_|Rest],Y):-
+ extract_referents(Rest,Y).
+determine_status([laut,vorlesung,gilt|_],axm).
+determine_status([bekanntlich,gilt|_],axm).
+determine_status([axiom,:|_],axm).
+determine_status([wir,wissen,dass|_],axm).
+determine_status([der,professor,hat,gesagt,dass|_],axm).
+determine_status([sei|_],ang).
+determine_status([seien|_],ang).
+determine_status([es,sei|_],ang).
+determine_status([es,seien|_],ang).
+determine_status([es,gelte|_],ang).
+determine_status([gelte|_],ang).
+determine_status([sei|_],ang).
+determine_status([seien|_],ang).
+determine_status([angenommen|_],ang).
+determine_status([nehmen,wir,an,es,gilt|_],ang).
+determine_status([nehmen,wir,an,dass|_],ang).
+determine_status([gesetzt,dass|_],ang).
+determine_status([waehle|_],ang).
+determine_status([setze|_],ang).
+determine_status([X,ist|_],beh):-
+ member(X,[es,also,damit,folglich,mithin]).
+determine_status([ist|_],beh).
+determine_status([wegen|_],beh).
+determine_status([da|_],beh).
+determine_status([_,haben,wir|_],beh).
+determine_status([folglich,gilt|_],beh).
+determine_status([folglich|_],beh).
+determine_status([es,gilt|_],beh).
+determine_status([falls|_],beh).
+determine_status([wenn|_],beh).
+determine_status([dann|_],beh).
+determine_status([dann,folgt|_],beh).
+determine_status([also,folgt|_],beh).
+determine_status([damit,folgt|_],beh).
+determine_status([damit,gilt|_],beh).
+determine_status([damit|_],beh).
+determine_status([also|_],beh).
+determine_status([gilt|_],beh).
+determine_status([folgt|_],beh).
+determine_status([es,folgt|_],beh).
+determine_status([damit|_],beh).
+determine_status([widerspruch],beh).
+determine_status([bew],ann).
+determine_status([beweis],ann).
+determine_status([behauptung|_],ann).
+determine_status([abs],ann).
+determine_status([=>],ann).
+determine_status([<=],ann).
+determine_status([fallunterscheidung],ann).
+determine_status([durch,widerspruch],ann).
+determine_status([fall|_],ann).
+determine_status([in,jedem,fall,gilt|_],ann).
+determine_status([wir,zeigen|_],ann).
+determine_status([qed],ann).
+determine_function([es,sei|Rest],dklcnt):-
+ member(X,[so,mit,derart]),
+ member(X,Rest).
+determine_function([es,seien|Rest],dklcnt):-
+ member(X,[so,mit,derart]),
+ member(X,Rest).
+determine_function([sei|Rest],dklcnt):-
+ member(X,[so,mit,derart]),
+ member(X,Rest).
+determine_function([seien|Rest],dklcnt):-
+ member(X,[so,mit,derart]),
+ member(X,Rest).
+determine_function([waehle|_],chc).
+determine_function([setze|_],chc).
+determine_function([sei,_,:=|_],chc).
+determine_function([es,sei,_,:=|_],chc).
+determine_function([seien,_,:=|_],chc).
+determine_function([es,seien,_,:=|_],chc).
+determine_function([es,sei|_],dkl).
+determine_function([es,seien|_],dkl).
+determine_function([sei|_],dkl).
+determine_function([seien|_],dkl).
+determine_function([da|_],bbh).
+determine_function([wegen|_],bbh).
+determine_function([bew],bam).
+determine_function([beweis],bam).
+determine_function([behauptung|_],sbh).
+determine_function([abs],abs).
+determine_function([=>],hr).
+determine_function([<=],rr).
+determine_function([fallunterscheidung],sfu).
+determine_function([durch,widerspruch],contr).
+determine_function([fall|_],fe).
+determine_function([in,jedem,fall,gilt|_],efu).
+determine_function([wir,zeigen|_],goal).
+determine_function([qed],bem).
+determine_function(_,[]).
+determine_content([],[]).
+determine_content([setze|Rest],Choices):-
+ process_choices(Rest,Choices).
+determine_content([waehle|Rest],Choices):-
+ process_choices(Rest,Choices).
+determine_content([es,sei,X,:=|Rest],Choices):-
+ process_choices([X,:=|Rest],Choices).
+determine_content([sei,X,:=|Rest],Choices):-
+ process_choices([X,:=|Rest],Choices).
+determine_content([es,seien,X,:=|Rest],Choices):-
+ process_choices([X,:=|Rest],Choices).
+determine_content([seien,X,:=|Rest],Choices):-
+ process_choices([X,:=|Rest],Choices).
+determine_content([sei|Rest],DeclCnt):-
+ member(X,[so,mit,derart]),
+ member(X,Rest),
+ multiple_declcont_marker(Rest,DeclCnt).
+determine_content([seien|Rest],DeclCnt):-
+ member(X,[so,mit,derart]),
+ member(X,Rest),
+ multiple_declcont_marker(Rest,DeclCnt).
+determine_content([es,sei|Rest],DeclCnt):-
+ member(X,[so,mit,derart]),
+ member(X,Rest),
+ multiple_declcont_marker(Rest,DeclCnt).
+determine_content([es,seien|Rest],DeclCnt):-
+ member(X,[so,mit,derart]),
+ member(X,Rest),
+ multiple_declcont_marker(Rest,DeclCnt).
+determine_content([sei|Content],ContentDekl):-
+ multiple_declaration_marker(Content,ContentDekl).
+determine_content([seien|Content],ContentDekl):-
+ multiple_declaration_marker(Content,ContentDekl).
+determine_content([es,sei|Content],ContentDekl):-
+ multiple_declaration_marker(Content,ContentDekl).
+determine_content([es,seien|Content],ContentDekl):-
+ multiple_declaration_marker(Content,ContentDekl).
+determine_content([es,gelte,dass|Content],Content).
+determine_content([gelte,dass|Content],Content).
+determine_content([angenommen,es,gilt,dass|Content],Content).
+determine_content([es,gelte|Content],Content).
+determine_content([gelte|Content],Content).
+determine_content([angenommen,es,gilt|Content],Content).
+determine_content([angenommen,es,ist|Content],Content).
+determine_content([angenommen,dass|Content],Content).
+determine_content([angenommen|Content],Content).
+determine_content([nehmen,wir,an,dass|Content],Content).
+determine_content([nehmen,wir,an,es,gilt|Content],Content).
+determine_content([gesetzt,dass|Content],Content).
+determine_content([gesetzt,es,gilt|Content],Content).
+determine_content([laut,vorlesung,gilt|Content],Content).
+determine_content([bekanntlich,gilt|Content],Content).
+determine_content([axiom,:|Content],Content).
+determine_content([wir,wissen,dass|Content],Content).
+determine_content([der,professor,hat,gesagt,dass,Content,gilt],Content).
+determine_content([der,professor,hat,gesagt,dass|Content],Content).
+determine_content([_,haben,wir|Content],Content).
+determine_content([_,ist|Content],Content).
+determine_content([ist|Content],Content).
+determine_content([folglich,gilt|Content],Content).
+determine_content([folglich|Content],Content).
+determine_content([es,gilt|Content],Content).
+determine_content([wenn,A,dann,gilt,B],[A,->,B]).
+determine_content([wenn,A,dann,B],[A,->,B]).
+determine_content([falls,A,so,B],[A,->,B]).
+determine_content([falls,A,gilt,so,gilt,B],[A,->,B]).
+determine_content([falls,A,so,gilt,B],[A,->,B]).
+determine_content([falls,A,so,folgt,B],[A,->,B]).
+determine_content([falls,A,gilt,so,gilt,B],[A,->,B]).
+determine_content([falls|Content],Content).
+determine_content([widerspruch],[falsum]).
+determine_content([damit,ist,gezeigt,:|Content],Content).
+determine_content([damit,ist,gezeigt,dass|Content],Content).
+determine_content([damit,ist,Content,gezeigt],Content).
+determine_content([dann,folgt|Content],Content).
+determine_content([dann,gilt|Content],Content).
+determine_content([dann,folgt|Content],Content).
+determine_content([also,folgt|Content],Content).
+determine_content([damit,folgt|Content],Content).
+determine_content([damit,gilt|Content],Content).
+determine_content([dann|Content],Content).
+determine_content([also,gilt|Content],Content).
+determine_content([also|Content],Content).
+determine_content([gilt|Content],Content).
+determine_content([es,folgt|Content],Content).
+determine_content([damit,folgt|Content],Content).
+determine_content([damit,gilt|Content],Content).
+determine_content([damit|Content],Content).
+determine_content([fall,_,:,Content],Content).
+determine_content([in,jedem,fall,gilt|Content],Content).
+determine_content([wir,zeigen|Content],Content).
+determine_content([behauptung|Content],Content).
+determine_content([folgt|Content],Content).
+determine_content([da|Rest],Content):-
+ extract_begrbeh([da|Rest],Content).
+determine_content([wegen|Rest],Content):-
+ extract_begrbeh([wegen|Rest],Content).
+determine_content(_,[]).
+process_choices([],[]).
+process_choices(List,Choices):-
+ delete_und(List,List1),!,
+ list_choices(List1,Choices).
+list_choices([],[]).
+list_choices([X,:=,Y|Rest],[[X,:=,Y]|Rest1]):-
+ list_choices(Rest,Rest1).
+extract_begrbeh([_|Rest],[bbh,Begr,Beh]):-
+ delete_und(Rest,RestNeu),
+ cut_until_claim_marker(RestNeu,Begr,[Beh]).
+cut_until_type([],[],[]).
+cut_until_type([in|Type],[],Type).
+cut_until_type([aus|Type],[],Type).
+cut_until_type(List,[],List):-
+ starts_with_one(List,[[natuerliche,zahlen],[natuerlichen,zahlen],[eine,natuerliche,zahl],
+ [rationale,zahlen],[rationalen,zahlen],[eine,rationale,zahl],[rational],
+ [reelle,zahlen],[reellen,zahlen],[eine,reelle,zahl],[reell],
+ [eine,aussage],[aussagen],[mengen],[eine,menge],[eine,menge,von],[mengen,von],
+ [eine,funktion,von],[funktionen,von]]).
+cut_until_type([X|Rest],[X|Rest1],Type):-
+ cut_until_type(Rest,Rest1,Type).
+starts_with_one(List,[X|_Rest]):-
+ starts_with(List,X).
+starts_with_one(List,[_|Rest]):-
+ starts_with_one(List,Rest).
+starts_with(_,[]).
+starts_with([X|Rest],[X|Rest1]):-
+ starts_with(Rest,Rest1).
+starts_with_rest(X,[],X).
+starts_with_rest([X|Rest],[X|Rest1],Rest2):-
+ starts_with_rest(Rest,Rest1,Rest2).
+starts_with_this(List1,List2,X):-
+ member(X,List2),
+ starts_with(List1,X).
+nat_type_marker(X):-
+ member(X,[[natuerliche,zahlen],[natuerlichen,zahlen],[eine,natuerliche,zahl],
+ [rationale,zahlen],[rationalen,zahlen],[eine,rationale,zahl],[rational],
+ [reelle,zahlen],[reellen,zahlen],[eine,reelle,zahl],[reell],
+ [eine,aussage],[aussagen],[mengen],[eine,menge],[eine,menge,von],[mengen,von],
+ [eine,funktion,von],[funktionen,von]]).
+ground_type_marker(X):-
+ member(X,[[natuerliche,zahlen],[natuerlichen,zahlen],[eine,natuerliche,zahl],
+ [rationale,zahlen],[rationalen,zahlen],[eine,rationale,zahl],[rational],
+ [reelle,zahlen],[reellen,zahlen],[eine,reelle,zahl],[reell],
+ [eine,aussage],[aussagen],[mengen],[eine,menge]]).
+split_off_initial_type_marker([],[],[]).
+split_off_initial_type_marker([X|RestList],[nat|RestType],Rest):-
+ member(X,[nat,rational,real,prop,set]),
+ split_off_initial_type_marker(RestList,RestType,Rest).
+split_off_initial_type_marker([[X|R]|RestList],[[X|R]|RestType],Rest):-
+ split_off_initial_type_marker(RestList,RestType,Rest).
+split_off_initial_type_marker([eine,X,zahl|RestList],[eine,X,zahl|RestType],Rest):-
+ member(X,[natuerliche,rationale,reelle]),
+ split_off_initial_type_marker(RestList,RestType,Rest).
+split_off_initial_type_marker([X,zahlen|RestList],[X,zahlen|RestType],Rest):-
+ member(X,[natuerliche,natuerlichen,rationale,rationalen,reelle,reellen]),
+ split_off_initial_type_marker(RestList,RestType,Rest).
+split_off_initial_type_marker([reell|RestList],[reell|RestType],Rest):-
+ split_off_initial_type_marker(RestList,RestType,Rest).
+split_off_initial_type_marker([rational|RestList],[rational|RestType],Rest):-
+ split_off_initial_type_marker(RestList,RestType,Rest).
+split_off_initial_type_marker([eine,aussage|RestList],[eine,aussage|RestType],Rest):-
+ split_off_initial_type_marker(RestList,RestType,Rest).
+split_off_initial_type_marker([aussagen|RestList],[aussagen|RestType],Rest):-
+ split_off_initial_type_marker(RestList,RestType,Rest).
+split_off_initial_type_marker([eine,menge,von|RestList],[eine,menge,von|RestType],Rest):-
+ split_off_initial_type_marker(RestList,RestType,Rest).
+split_off_initial_type_marker([mengen,von|RestList],[mengen,von|RestType],Rest):-
+ split_off_initial_type_marker(RestList,RestType,Rest).
+split_off_initial_type_marker([eine,funktion,von,den|RestList],[eine,funktion,von|RestType],Rest):-
+ split_off_initial_type_marker(RestList,RestType,Rest).
+split_off_initial_type_marker([eine,funktion,von|RestList],[eine,funktion,von|RestType],Rest):-
+ split_off_initial_type_marker(RestList,RestType,Rest).
+split_off_initial_type_marker([funktionen,von,den|RestList],[funktionen,von|RestType],Rest):-
+ split_off_initial_type_marker(RestList,RestType,Rest).
+split_off_initial_type_marker([funktionen,von|RestList],[funktionen,von|RestType],Rest):-
+ split_off_initial_type_marker(RestList,RestType,Rest).
+split_off_initial_type_marker([nach|RestList],[nach|RestType],Rest):-
+ split_off_initial_type_marker(RestList,RestType,Rest).
+split_off_initial_type_marker([in,die|RestList],[in,die|RestType],Rest):-
+ split_off_initial_type_marker(RestList,RestType,Rest).
+split_off_initial_type_marker(X,[],X).
+multiple_declaration_marker([],[]):-!.
+multiple_declaration_marker(List,AllDeclarations):-
+ cut_until_type(List,Vars,Rest),!,
+ split_off_initial_type_marker(Rest,TypeMarker,ListenRest),!,
+ delete_und(Vars,Vars1),!,
+ standardize_type(TypeMarker,TypeFormal),!,
+ construct_declarations(Vars1,TypeFormal,Dekl1),!,
+ multiple_declaration_marker(ListenRest,DeklRest),!,
+ append(Dekl1,DeklRest,AllDeclarations).
+multiple_declcont_marker([],[]):-!.
+multiple_declcont_marker(Natural,[Assmpt1|FormalDecls]):-
+ cut_until_assumption_marker(Natural,Decls,Assmpt),!,
+ delete_und(Decls,Decls1),
+ multiple_declaration_marker(Decls1,FormalDecls),!,
+ formalize_sentence(Assmpt,Assmpt1).
+standardize_type([natuerliche,zahlen],nat).
+standardize_type([natuerlichen,zahlen],nat).
+standardize_type([eine,natuerliche,zahl],nat).
+standardize_type([den,natuerlichen,zahlen],nat).
+standardize_type([rationale,zahlen],rational).
+standardize_type([rationalen,zahlen],rational).
+standardize_type([eine,rationale,zahl],rational).
+standardize_type([den,rationalen,zahlen],rational).
+standardize_type([rational],rational).
+standardize_type([reelle,zahlen],real).
+standardize_type([reellen,zahlen],real).
+standardize_type([eine,reelle,zahl],real).
+standardize_type([den,reellen,zahlen],real).
+standardize_type([reell],real).
+standardize_type([eine,aussage],prop).
+standardize_type([aussagen],prop).
+standardize_type([mengen],set).
+standardize_type([eine,menge],set).
+standardize_type([eine,menge,von|Rest],[setof,Type]):-
+ standardize_type(Rest,Type).
+standardize_type([mengen,von|Rest],[setof,Type]):-
+ standardize_type(Rest,Type).
+standardize_type([eine,funktion,von,T1,nach,T2],[fkt,L,T1,T2]):-
+ length(T1,L).
+standardize_type([funktionen,von,T1,nach,T2],[fkt,L,T1,T2]):-
+ length(T1,L).
+standardize_type([den,funktionen,von,T1,nach,T2],[fkt,L,T1,T2]):-
+ length(T1,L).
+standardize_type([eine,funktion,von,T1,in,die,T2],[fkt,L,T1,T2]):-
+ length(T1,L).
+standardize_type([funktionen,von,T1,in,die,T2],[fkt,L,T1,T2]):-
+ length(T1,L).
+standardize_type([eine,funktion,von|Rest],[fkt,1,[T1],T2]):-
+ process_function_type([eine,funktion,von|Rest],T1,T2).
+standardize_type([funktionen,von|Rest],[fkt,1,[T1],T2]):-
+ process_function_type([funktionen,von|Rest],T1,T2).
+standardize_type(X,X).
+process_function_type(List,T1,T2):-
+ find_function_end_marker(List,Domain,Range),
+ standardize_type(Domain,T1),
+ standardize_type(Range,T2).
+find_function_end_marker([eine,funktion,von,den|List],Domain,Range):-
+ find_function_end_marker_aux(List,1,Domain,Range).
+find_function_end_marker([eine,funktion,von|List],Domain,Range):-
+ find_function_end_marker_aux(List,1,Domain,Range).
+find_function_end_marker([funktionen,von,den|List],Domain,Range):-
+ find_function_end_marker_aux(List,1,Domain,Range).
+find_function_end_marker([funktionen,von|List],Domain,Range):-
+ find_function_end_marker_aux(List,1,Domain,Range).
+find_function_end_marker_aux([],_,[],[]):-!.
+find_function_end_marker_aux([nach|Rest],1,[],Rest):-!.
+find_function_end_marker_aux([in,die|Rest],1,[],Rest):-!.
+find_function_end_marker_aux([eine,funktion,von,den|Rest],I,[eine,funktion,von|DomainRest],Range):-
+ J is I+1,!,
+ find_function_end_marker_aux(Rest,J,DomainRest,Range).
+find_function_end_marker_aux([funktionen,von,den|Rest],I,[funktionen,von|DomainRest],Range):-
+ J is I+1,!,
+ find_function_end_marker_aux(Rest,J,DomainRest,Range).
+find_function_end_marker_aux([eine,funktion,von|Rest],I,[eine,funktion,von|DomainRest],Range):-
+ J is I+1,!,
+ find_function_end_marker_aux(Rest,J,DomainRest,Range).
+find_function_end_marker_aux([funktionen,von|Rest],I,[funktionen,von|DomainRest],Range):-
+ J is I+1,!,
+ find_function_end_marker_aux(Rest,J,DomainRest,Range).
+find_function_end_marker_aux([nach|Rest],I,[nach|DomainRest],Range):-
+ I>1,!,
+ J is I-1,
+ find_function_end_marker_aux(Rest,J,DomainRest,Range).
+find_function_end_marker_aux([in,die|Rest],I,[in,die|DomainRest],Range):-
+ I>1,!,
+ J is I-1,
+ find_function_end_marker_aux(Rest,J,DomainRest,Range).
+find_function_end_marker_aux([X|Rest],I,[X|DomainRest],Range):-
+ find_function_end_marker_aux(Rest,I,DomainRest,Range).
+construct_declarations([],_,[]).
+construct_declarations([X|Rest],TypeFormal,[[X,is,TypeFormal]|Rest1]):-
+ construct_declarations(Rest,TypeFormal,Rest1).
+cut_until_assumption_marker([so,dass|Assmpt],[],Assmpt).
+cut_until_assumption_marker([derart,dass|Assmpt],[],Assmpt).
+cut_until_assumption_marker([mit|Assmpt],[],Assmpt).
+cut_until_assumption_marker([X|Rest],[X|Rest1],Assmpt):-
+ cut_until_assumption_marker(Rest,Rest1,Assmpt).
+cut_until_ex_statement([so,dass|Claim],[],Claim).
+cut_until_ex_statement([mit|Claim],[],Claim).
+cut_until_ex_statement([derart,dass|Claim],[],Claim).
+cut_until_ex_statement([und|Rest],Vars,Claim):-
+ cut_until_ex_statement(Rest,Vars,Claim).
+cut_until_ex_statement([sowie|Rest],Vars,Claim):-
+ cut_until_ex_statement(Rest,Vars,Claim).
+cut_until_ex_statement([X|Rest],[X|RestVars],Claim):-
+ cut_until_ex_statement(Rest,RestVars,Claim).
+cut_until_all_statement([gilt,dass|Claim],[],Claim).
+cut_until_all_statement([gilt|Claim],[],Claim).
+cut_until_all_statement([dass|Claim],[],Claim).
+cut_until_all_statement([und|Rest],Vars,Claim):-
+ cut_until_all_statement(Rest,Vars,Claim).
+cut_until_all_statement([sowie|Rest],Vars,Claim):-
+ cut_until_all_statement(Rest,Vars,Claim).
+cut_until_all_statement([X|Rest],[X|RestVars],Claim):-
+ cut_until_all_statement(Rest,RestVars,Claim).
+create_universal_statement([],F,F).
+create_universal_statement([X|VarRest],F,F1):-
+ create_universal_statement(VarRest,[all,X,F],F1).
+create_bnd_universal_statement(F,[],_,F).
+create_bnd_universal_statement(F,[X|VarRest],Type,[all,[X,in,Type],F1]):-
+ create_bnd_universal_statement(F,VarRest,Type,F1).
+create_existential_statement([],F,F).
+create_existential_statement([X|VarRest],F,F1):-
+ create_existential_statement(VarRest,[ex,X,F],F1).
+create_bnd_ex_statement(F,[],_,F).
+create_bnd_ex_statement(F,[X|VarRest],Type,[ex,[X,in,Type],F1]):-
+ create_bnd_ex_statement(F,VarRest,Type,F1).
+decl_assmpt_marker(X):-
+ member(X,[[mit],[so,dass],[derart,dass]]).
+nummerieren([],[],_).
+nummerieren([X],[[S|X]],S).
+nummerieren([X|Rest],[[S|X]|Rest1],S):-
+ T is S+1,
+ nummerieren(Rest,Rest1,T).
+annotate_sentence([],[]).
+annotate_sentence(S,[Refs,SName,Status,Function,Content]):-
+ extract_naming_sentence(S,SName,SRest),
+ !,
+ flatten(SRest,S1),
+ simplify_1(S1,S2),
+ !,
+ extract_referents(S2,Refs),
+ !,
+ determine_status(SRest,Status),
+ !,
+ determine_function(SRest,Function),
+ !,
+ determine_content(SRest,InformalContent),
+ !,
+ formalize_sentence(InformalContent,Content).
+annotate_text([],[]).
+annotate_text(Text,Ann):-
+ delete_fillers_text(Text,SimpleText),
+ maplist(annotate_sentence,SimpleText,NewText),
+ introduce_initial_bam(NewText,NewText1),
+ nummerieren(NewText1,Ann,1).
+introduce_initial_bam([],[]).
+introduce_initial_bam([[Refs,SName,ann,Fkt,Cnt]|Rest],[[Refs,SName,ann,Fkt,Cnt]|Rest]):-
+ member(Fkt,[bam,contr]),!.
+introduce_initial_bam([[Refs,SName,ann,goal,Cnt]|Rest],[[Refs,SName,ann,goal,Cnt]|Rest1]):-
+ introduce_initial_bam(Rest,Rest1),!.
+introduce_initial_bam(Text,[[[],[],ann,bam,[]]|Text]).
+delete_und([],[]).
+delete_und([und|Rest],Rest1):-
+ delete_und(Rest,Rest1).
+delete_und([sowie|Rest],Rest1):-
+ delete_und(Rest,Rest1).
+delete_und([X|Rest],[X|Rest1]):-
+ delete_und(Rest,Rest1).
+cut_until_claim_marker([gilt|Rest],[],Rest).
+cut_until_claim_marker([folgt|Rest],[],Rest).
+cut_until_claim_marker([haben,wir|Rest],[],Rest).
+cut_until_claim_marker([X|Rest],[X|BegrRest],Beh):-
+ cut_until_claim_marker(Rest,BegrRest,Beh).
+cut_until_vars([],[],[]).
+cut_until_vars([X|Rest],[],[X|VarRest]):-
+ variable(X),!,
+ cut_off_vars(Rest,VarRest).
+cut_until_vars([X|Rest],[X|TypeRest],Vars):-
+ cut_until_vars(Rest,TypeRest,Vars).
+cut_off_vars([],[]).
+cut_off_vars([X|Rest],[X|VarRest]):-
+ variable(X),
+ cut_off_vars(Rest,VarRest).
+cut_off_vars([und|Rest],VarRest):-
+ cut_off_vars(Rest,VarRest).
+cut_off_vars([sowie|Rest],VarRest):-
+ cut_off_vars(Rest,VarRest).
+cut_off_vars(_,[]).
+cut_after_vars([],[],[]).
+cut_after_vars([X|Rest],[X|VarRest],R):-
+ variable(X),
+ cut_after_vars(Rest,VarRest,R).
+cut_after_vars([und|Rest],VarRest,R):-
+ cut_after_vars(Rest,VarRest,R).
+cut_after_vars([sowie|Rest],VarRest,R):-
+ cut_after_vars(Rest,VarRest,R).
+cut_after_vars(List,[],List).
+simplify_1([],[]).
+simplify_1([X|Rest],Rest1):-
+ member(X,Rest),
+ simplify_1(Rest,Rest1).
+simplify_1([X|Rest],[X|Rest1]):-
+ simplify_1(Rest,Rest1).
+read_off_implication([falsum],_,_,falsum).
+read_off_implication(Assmpts,Claims,FormerTasks,Z):-
+ normalize(Z,[ANorm,->,BNorm]),!,
+ normalize_elements_1(Assmpts,AssmptsNorm),!,
+ normalize_elements_1(FormerTasks,FormerTasksNorm),!,
+ normalize_elements_1(Claims,ClaimsNorm),!,
+ some_end_segment(AssmptsNorm,ClaimsNorm,FormerTasksNorm,[ANorm,->,BNorm]).
+read_off_implication(Assmpts,Claims,FormerTasks,Z):-
+ normalize(Z,[ANorm,<->,BNorm]),!,
+ normalize_elements_1(Assmpts,AssmptsNorm),!,
+ normalize_elements_1(FormerTasks,FormerTasksNorm),!,
+ normalize_elements_1(Claims,ClaimsNorm),!,
+ some_end_segment(AssmptsNorm,ClaimsNorm,FormerTasksNorm,[ANorm,->,BNorm]),!,
+ some_end_segment(AssmptsNorm,ClaimsNorm,FormerTasksNorm,[BNorm,->,ANorm]).
+read_off_implication(Assmpts,Claims,FormerTasks,Z):-
+ normalize(Z,[neg,Z0]),!,
+ normalize_elements_1(Assmpts,AssmptsNorm),!,
+ normalize_elements_1(FormerTasks,FormerTasksNorm),!,
+ normalize_elements_1(Claims,ClaimsNorm),!,
+ some_end_segment(AssmptsNorm,ClaimsNorm,FormerTasksNorm,[Z0,->,falsum]).
+read_off_implication(Assmpts,Claims,FormerTasks,Z):-
+ normalize(Z,Z0),!,
+ normalize_elements_1(Assmpts,AssmptsNorm),!,
+ normalize_elements_1(FormerTasks,FormerTasksNorm),!,
+ normalize_elements_1(Claims,ClaimsNorm),!,
+ some_end_segment(AssmptsNorm,ClaimsNorm,FormerTasksNorm,[[neg,Z0],->,falsum]).
+some_end_segment(Assmpts,Claims,[X|_RestTasks],Z):-
+ union(Assmpts,Claims,Assmpts1),
+ end_segment(Assmpts1,Claims,X,Z).
+some_end_segment(Assmpts,Claims,[_|RestTasks],Z):-
+ some_end_segment(Assmpts,Claims,RestTasks,Z).
+end_segment(_Assmpts,_Claims,X,X).
+end_segment(Assmpts,Claims,[A,->,B],X):-
+ member(A,Assmpts),
+ end_segment(Assmpts,Claims,B,X).
+proof_step_normal([X],Y,A,B):-
+ normalize_fo(Y,Yneu),
+ normalize_fo(X,Xneu),
+ formula(Xneu),
+ !,
+ proof_step(_,[Xneu],Yneu,A,B).
+proof_step_normal(X,Y,A,B):-
+ normalize_fo(Y,Yneu),
+ normalize_fo(X,Xneu),
+ !,
+ proof_step(_,Xneu,Yneu,A,B).
+proof_step_qntfrs_normal(Name,[Vss],[Claims],Beh,Steps,Refs):-
+ normalize_fo(Vss,VssNorm),
+ formula(VssNorm),
+ normalize_fo(Claims,ClaimsNorm),
+ formula(ClaimsNorm),!,
+ normalize_fo(Beh,BehNorm),!,
+ proof_step_qntfrs(Name,[VssNorm],[ClaimsNorm],BehNorm,Steps,Refs).
+proof_step_qntfrs_normal(Name,[Vss],Claims,Beh,Steps,Refs):-
+ normalize_fo(Vss,VssNorm),
+ formula(VssNorm),!,
+ normalize_fo(Claims,ClaimsNorm),!,
+ normalize_fo(Beh,BehNorm),!,
+ proof_step_qntfrs(Name,[VssNorm],ClaimsNorm,BehNorm,Steps,Refs).
+proof_step_qntfrs_normal(Name,Vss,[Claims],Beh,Steps,Refs):-
+ normalize_fo(Claims,ClaimsNorm),
+ formula(ClaimsNorm),!,
+ normalize_fo(Vss,VssNorm),!,
+ normalize_fo(Beh,BehNorm),!,
+ proof_step_qntfrs(Name,VssNorm,[ClaimsNorm],BehNorm,Steps,Refs).
+proof_step_qntfrs_normal(Name,Vss,Claims,Beh,Steps,Refs):-
+ normalize_fo(Vss,VssNorm),!,
+ normalize_fo(Claims,ClaimsNorm),!,
+ normalize_fo(Beh,BehNorm),!,
+ proof_step_qntfrs(Name,VssNorm,ClaimsNorm,BehNorm,Steps,Refs).
+proof_step_qntfrs(rename,Vss,_Claims,F,1,_):-
+ member(G,Vss),
+ rename_initial_qntfrs(G,F).
+proof_step_qntfrs(rename,_Vss,Claims,F,1,_):-
+ member(G,Claims),
+ rename_initial_qntfrs(G,F).
+proof_step_qntfrs(allintr,Vss,Claims,[all,X,F],1,_):-
+ member(F1,Claims),
+ mgu(F,F1,[[X,V]]),
+ variable(V),
+ contains_freely_list(Vss,V,[]).
+proof_step_qntfrs(allintr,Vss,Claims,[all,X,F],1,_):-
+ member(F1,Claims),
+ mgu(F,F1,[[V,X]]),
+ variable(V),
+ contains_freely_list(Vss,V,[]).
+proof_step_qntfrs(allintr,Vss,Claims,[all,X,F],1,_):-
+ member(F1,Claims),
+ mgu(F,F1,[]),
+ contains_freely_list(Vss,X,[]).
+proof_step_qntfrs(allintr,Vss,Claims,[all,X,[Assmpts,->,F]],1,_):-
+ member(F1,Claims),
+ mgu(F,F1,[[X,V]]),
+ variable(V),
+ contains_freely_list(Vss,V,Assmpts0),
+ create_conjunction(Assmpts0,Assmpts).
+proof_step_qntfrs(allintr,Vss,Claims,[all,X,[Assmpts,->,F]],1,_):-
+ member(F1,Claims),
+ mgu(F,F1,[[V,X]]),
+ variable(V),
+ contains_freely_list(Vss,V,Assmpts0),
+ create_conjunction(Assmpts0,Assmpts).
+proof_step_qntfrs(allintr,Vss,Claims,[all,X,[Assmpts,->,F]],1,_):-
+ member(F1,Claims),
+ mgu(F,F1,[]),
+ contains_freely_list(Vss,X,Assmpts0),
+ create_conjunction(Assmpts0,Assmpts).
+proof_step_qntfrs(mltplex1,Vss,_Claims,[ex,X,[ex,Y,A]],1,_):-
+ split_off_ex_qntfrs(A,Vars,Ared),
+ append([X,Y],Vars,AllVars),
+ member(B,Vss),
+ mgu(Ared,B,Unif),
+ map_with_domain(Unif,AllVars).
+proof_step_qntfrs(mltplex2,_Vss,Claims,[ex,X,[ex,Y,A]],1,_):-
+ split_off_ex_qntfrs(A,Vars,Ared),
+ append([X,Y],Vars,AllVars),
+ member(B,Claims),
+ mgu(Ared,B,Unif),
+ map_with_domain(Unif,AllVars).
+proof_step_qntfrs(mltplall1,Vss,_Claims,A,1,_):-
+ member([all,X,[all,Y,B]],Vss),
+ split_off_univ_qntfrs(B,Vars,Bred),
+ append([X,Y],Vars,AllVars),
+ mgu(Bred,A,Unif),
+ map_with_domain(Unif,AllVars).
+proof_step_qntfrs(mltplall2,_Vss,Claims,A,1,_):-
+ member([all,X,[all,Y,B]],Claims),
+ split_off_univ_qntfrs(B,Vars,Bred),
+ append([X,Y],Vars,AllVars),
+ mgu(Bred,A,Unif),
+ map_with_domain(Unif,AllVars).
+proof_step(eq1,_Vss,[=,[X,X]],1,_).
+proof_step(eq2,Vss,[=,[X,Y]],1,_):-
+ member([=,[Y,X]],Vss).
+proof_step(eq3,Vss,[=,[X,Z]],1,_):-
+ member([=,[X,Y]],Vss),
+ member([=,[Y,Z]],Vss).
+proof_step(eq4,Vss,[=,[X,Z]],1,_):-
+ member([=,[X,Y]],Vss),
+ member([=,[Z,Y]],Vss).
+proof_step(eq5,Vss,[=,[X,Z]],1,_):-
+ member([=,[Y,X]],Vss),
+ member([=,[Y,Z]],Vss).
+proof_step(eq6,Vss,[=,[X,Z]],1,_):-
+ member([=,[Y,X]],Vss),
+ member([=,[Z,Y]],Vss).
+proof_step(allex1,Vss,[all,X,F],1,_):-
+ member([neg,[ex,X,[neg,F]]],Vss).
+proof_step(allex2,Vss,[all,X,F],1,_):-
+ member([[neg,[ex,X,F]],->,falsum],Vss).
+proof_step(allex1,Vss,[all,X,[neg,F]],1,_):-
+ member([neg,[ex,X,F]],Vss).
+proof_step(allex2,Vss,[all,X,[neg,F]],1,_):-
+ member([[ex,X,F],->,falsum],Vss).
+proof_step(exall1,Vss,[ex,X,F],1,_):-
+ member([neg,[all,X,[neg,F]]],Vss).
+proof_step(exall2,Vss,[ex,X,F],1,_):-
+ member([[all,X,[neg,F]],->,falsum],Vss).
+proof_step(exall1,Vss,[ex,X,[neg,F]],1,_):-
+ member([neg,[all,X,F]],Vss).
+proof_step(exall2,Vss,[ex,X,[neg,F]],1,_):-
+ member([[all,X,F],->,falsum],Vss).
+proof_step(exintr,Vss,[ex,X,F],1,_):-
+ member(F1,Vss),
+ mgu(F,F1,[[X,_]]).
+proof_step(exintr,Vss,[ex,X,F],1,_):-
+ member(F1,Vss),
+ mgu(F,F1,[[_,X]]).
+proof_step(exintr,Vss,[ex,_X,F],1,_):-
+ member(F1,Vss),
+ mgu(F,F1,[]).
+proof_step(specialize,Vss,F,1,_):-
+ member([all,X,F1],Vss),
+ mgu(F,F1,[[X,_]]).
+proof_step(specialize,Vss,F,1,_):-
+ member([all,X,F1],Vss),
+ mgu(F,F1,[[_,X]]).
+proof_step(specialize,Vss,F,1,_):-
+ member([all,_X,F1],Vss),
+ mgu(F,F1,[]).
+proof_step(dedvss,Vss,Beh,1,_):-
+ member(Beh,Vss).
+proof_step(defand,Vss,[A,and,B],1,_):-
+ member(A,Vss),
+ member(B,Vss).
+proof_step(defor1,Vss,[A,or,_B],1,_):-
+ member(A,Vss).
+proof_step(defor2,Vss,[_A,or,B],1,_):-
+ member(B,Vss).
+proof_step(defimpl1,Vss,[A,->,_B],1,_):-
+ member([neg,A],Vss).
+proof_step(defimpl2,Vss,[_A,->,B],1,_):-
+ member(B,Vss).
+proof_step(defimpl3,Vss,[[neg,A],->,_B],1,_):-
+ member(A,Vss).
+proof_step(defequiv1,Vss,[A,<->,B],1,_):-
+ member(A,Vss),
+ member(B,Vss).
+proof_step(defequiv2,Vss,[A,<->,B],1,_):-
+ member([neg,A],Vss),
+ member([neg,B],Vss).
+proof_step(defequiv3,Vss,[A,<->,[neg,B]],1,_):-
+ member([neg,A],Vss),
+ member(B,Vss).
+proof_step(defequiv4,Vss,[[neg,A],<->,B],1,_):-
+ member(A,Vss),
+ member([neg,B],Vss).
+proof_step(defequiv5,Vss,[[neg,A],<->,[neg,B]],1,_):-
+ member(A,Vss),
+ member(B,Vss).
+proof_step(command,Vss,[A,and,B],1,_):-
+ member([B,and,A],Vss).
+proof_step(commor,Vss,[A,or,B],1,_):-
+ member([B,or,A],Vss).
+proof_step(commequiv,Vss,[A,<->,B],1,_):-
+ member([B,<->,A],Vss).
+proof_step(doubleneg,Vss,A,1,_):-
+ member([neg,[neg,A]],Vss).
+proof_step(andneg1,Vss,[neg,[A,and,_B]],1,_):-
+ member([neg,A],Vss).
+proof_step(andneg2,Vss,[neg,[_A,and,B]],1,_):-
+ member([neg,B],Vss).
+proof_step(andneg3,Vss,[neg,[[neg,A],and,_B]],1,_):-
+ member(A,Vss).
+proof_step(andneg4,Vss,[neg,[_A,and,[neg,B]]],1,_):-
+ member(B,Vss).
+proof_step(orneg1,Vss,[neg,[A,or,B]],1,_):-
+ member([neg,A],Vss),
+ member([neg,B],Vss).
+proof_step(orneg2,Vss,[neg,[[neg,A],or,B]],1,_):-
+ member(A,Vss),
+ member([neg,B],Vss).
+proof_step(orneg3,Vss,[neg,[A,or,[neg,B]]],1,_):-
+ member([neg,A],Vss),
+ member(B,Vss).
+proof_step(orneg4,Vss,[neg,[[neg,A],or,[neg,B]]],1,_):-
+ member(A,Vss),
+ member(B,Vss).
+proof_step(implneg1,Vss,[neg,[A,->,B]],1,_):-
+ member(A,Vss),
+ member([neg,B],Vss).
+proof_step(implneg2,Vss,[neg,[A,->,[neg,B]]],1,_):-
+ member(A,Vss),
+ member(B,Vss).
+proof_step(equivneg1,Vss,[neg,[A,<->,B]],1,_):-
+ member(A,Vss),
+ member([neg,B],Vss).
+proof_step(equivneg2,Vss,[neg,[A,<->,B]],1,_):-
+ member([neg,A],Vss),
+ member(B,Vss).
+proof_step(equivneg3,Vss,[neg,[[neg,A],<->,B]],1,_):-
+ member(A,Vss),
+ member(B,Vss).
+proof_step(equivneg4,Vss,[neg,[A,<->,[neg,B]]],1,_):-
+ member(A,Vss),
+ member(B,Vss).
+proof_step(fullneg,Vss,F1,1,_):-
+ member([neg,F],Vss),
+ partial_negation(F,F1).
+proof_step(andor1,X,[[neg,A],and,[neg,B]],1,_Refs):-
+ member([neg,[A,or,B]],X).
+proof_step(andor2,X,[A,and,[neg,B]],1,_Refs):-
+ member([neg,[[neg,A],or,B]],X).
+proof_step(andor3,X,[[neg,A],and,B],1,_Refs):-
+ member([neg,[A,or,[neg,B]]],X).
+proof_step(andor4,X,[A,and,B],1,_Refs):-
+ member([neg,[[neg,A],or,[neg,B]]],X).
+proof_step(andor5,X,[neg,[A,and,B]],1,_):-
+ member([[neg,A],or,[neg,B]],X).
+proof_step(andor6,X,[neg,[[neg,A],and,B]],1,_):-
+ member([A,or,[neg,B]],X).
+proof_step(andor7,X,[neg,[A,and,[neg,B]]],1,_):-
+ member([[neg,A],or,B],X).
+proof_step(andor8,X,[neg,[[neg,A],and,[neg,B]]],1,_):-
+ member([A,or,B],X).
+proof_step(orand1,X,[neg,[A,or,B]],1,_Refs):-
+ member([[neg,A],and,[neg,B]],X).
+proof_step(orand2,X,[neg,[[neg,A],or,B]],1,_Refs):-
+ member([A,and,[neg,B]],X).
+proof_step(orand3,X,[neg,[A,or,[neg,B]]],1,_Refs):-
+ member([[neg,A],and,B],X).
+proof_step(orand4,X,[neg,[[neg,A],or,[neg,B]]],1,_Refs):-
+ member([A,and,B],X).
+proof_step(orand5,X,[A,or,B],1,_):-
+ member([neg,[[neg,A],and,[neg,B]]],X).
+proof_step(orand6,X,[[neg,A],or,B],1,_):-
+ member([neg,[A,and,[neg,B]]],X).
+proof_step(orand7,X,[A,or,[neg,B]],1,_):-
+ member([neg,[[neg,A],or,B]],X).
+proof_step(impland1,X,[neg,[A,->,B]],1,_Refs):-
+ member([A,and,[neg,B]],X).
+proof_step(andimpl1,X,[A,and,[neg,B]],1,_Refs):-
+ member([neg,[A,->,B]],X).
+proof_step(impland2,X,[neg,[[neg,A],->,B]],1,_Refs):-
+ member([[neg,A],and,[neg,B]],X).
+proof_step(andimpl2,X,[[neg,A],and,[neg,B]],1,_Refs):-
+ member([neg,[[neg,A],->,B]],X).
+proof_step(impland3,X,[neg,[A,->,[neg,B]]],1,_Refs):-
+ member([A,and,B],X).
+proof_step(andimpl3,X,[A,and,B],1,_Refs):-
+ member([neg,[A,->,[neg,B]]],X).
+proof_step(impland4,X,[neg,[[neg,A],->,[neg,B]]],1,_Refs):-
+ member([[neg,A],and,B],X).
+proof_step(andimpl4,X,[[neg,A],and,B],1,_Refs):-
+ member([neg,[[neg,A],->,[neg,B]]],X).
+proof_step(equivand1,X,[A,<->,B],1,_):-
+ member([A,and,B],X).
+proof_step(equivand2,X,[A,<->,B],1,_):-
+ member([[neg,A],and,[neg,B]],X).
+proof_step(equivand3,X,[[neg,A],<->,B],1,_):-
+ member([[neg,A],and,B],X).
+proof_step(equivand4,X,[[neg,A],<->,B],1,_):-
+ member([A,and,[neg,B]],X).
+proof_step(equivand5,X,[A,<->,[neg,B]],1,_):-
+ member(A,X),
+ member([neg,B],X).
+proof_step(equivand6,X,[A,<->,[neg,B]],1,_):-
+ member([neg,A],X),
+ member(B,X).
+proof_step(equivand7,X,[[neg,A],<->,[neg,B]],1,_):-
+ member(A,X),
+ member(B,X).
+proof_step(andequiv1,X,[A,and,B],1,_):-
+ member([A,<->,B],X),
+ member(A,X).
+proof_step(andequiv2,X,[A,and,B],1,_):-
+ member([A,<->,B],X),
+ member(B,X).
+proof_step(orimpl1,X,[A,or,B],1,_):-
+ member([[neg,A],->,B],X).
+proof_step(orimpl2,X,[[neg,A],or,B],1,_):-
+ member([A,->,B],X).
+proof_step(implor1,X,[A,->,B],1,_):-
+ member([[neg,A],or,B],X).
+proof_step(implor2,X,[[neg,A],->,B],1,_):-
+ member([A,or,B],X).
+proof_step(equivor1,X,[A,<->,B],1,_):-
+ member([[A,and,B],or,[[neg,A],and,[neg,B]]],X).
+proof_step(equivor2,X,[[neg,A],<->,B],1,_):-
+ member([[[neg,A],and,B],or,[A,and,[neg,B]]],X).
+proof_step(equivor3,X,[A,<->,[neg,B]],1,_):-
+ member([[A,and,[neg,B]],or,[[neg,A],and,B]],X).
+proof_step(equivor4,X,[[neg,A],<->,[neg,B]],1,_):-
+ member([[A,and,B],or,[[neg,A],and,[neg,B]]],X).
+proof_step(implequiv1,X,[A,->,B],1,_):-
+ member([A,<->,B],X).
+proof_step(implequiv2,X,[A,->,B],1,_):-
+ member([B,<->,A],X).
+proof_step(equivimpl1,X,[A,<->,B],1,_):-
+ member([A,->,B],X),
+ member([B,->,A],X).
+proof_step(equivimpl2,X,[A,<->,B],1,_):-
+ member([[A,->,B],and,[B,->,A]],X).
+proof_step(falsumdef,X,falsum,1,_):-
+ member(A,X),
+ member([neg,A],X).
+proof_step(tnd1,_,[A,or,[neg,A]],1,_).
+proof_step(tnd2,_,[[neg,A],or,A],1,_).
+proof_step(mp1,X,B,1,_):-
+ member([A,->,B],X),
+ member(A,X).
+proof_step(mp2,X,A,1,_):-
+ member([ba,Vss,->,A],X),
+ subset(Vss,X).
+proof_step(mp3,X,C,1,_):-
+ member(A,X),
+ member([A,->,B],X),
+ member([B,->,C],X).
+proof_step(contr1,X,_,1,_):-
+ member(falsum,X).
+proof_step(contr2,X,_,1,_):-
+ member(A,X),
+ member([neg,A],X).
+proof_step(contr3,X,[neg,A],1,_):-
+ member([A,->,falsum],X).
+proof_step(contr4,X,A,1,_):-
+ member([[neg,A],->,falsum],X).
+proof_step(kp1,X,[A,->,B],1,_Refs):-
+ member([[neg,B],->,[neg,A]],X).
+proof_step(kp2,X,[[neg,B],->,[neg,A]],1,_Refs):-
+ member([A,->,B],X).
+proof_step(kp3,X,[[neg,A],->,B],1,_Refs):-
+ member([[neg,B],->,A],X).
+proof_step(kp4,X,[A,->,[neg,B]],1,_Refs):-
+ member([B,->,[neg,A]],X).
+proof_step(kp5,X,[neg,Y],1,_Refs):-
+ member([Y,->,A],X),
+ member([neg,A],X).
+proof_step(kp6,X,[neg,Y],1,_Refs):-
+ member([Y,->,[neg,A]],X),
+ member(A,X).
+proof_step(fu1,X,Y,1,_):-
+ member([A,->,Y],X),
+ member([[neg,A],->,Y],X).
+proof_step(fu2,X,A,1,_):-
+ member([U,->,A],X),
+ member([V,->,A],X),
+ member([U,or,V],X).
+proof_step(orproof,X,[A,or,B],1,_):-
+ member([C,->,A],X),
+ member([D,->,B],X),
+ member([C,or,D],X).
+proof_step(implproof1,X,[A,->,C],1,_):-
+ member([A,->,B],X),
+ member([B,->,C],X).
+proof_step(implproof2,X,[A,->,[B,or,_C]],1,_):-
+ member([A,->,B],X).
+proof_step(implproof3,X,[A,->,[_B,or,C]],1,_):-
+ member([A,->,C],X).
+proof_step(implproof4,X,[A,->,B],1,_):-
+ member([A,->,[[neg,B],->,falsum]],X).
+proof_step(implproof5,X,[A,->,[neg,B]],1,_):-
+ member([A,->,[B,->,falsum]],X).
+proof_step(fromequiv,X,A,1,_):-
+ member([A,<->,B],X),
+ member(B,X).
+proof_step(fromequiv,X,B,1,_):-
+ member([A,<->,B],X),
+ member(A,X).
+proof_step(andpart1,X,A,1,_):-
+ member([A,and,_],X).
+proof_step(andpart2,X,B,1,_):-
+ member([_,and,B],X).
+proof_step(chain1,X,C,1,_):-
+ member(A,X),
+ member([A,->,B],X),
+ member([B,->,C],X).
+proof_step(ornot1,X,A,1,_):-
+ member([A,or,B],X),
+ member([not,B],X).
+proof_step(ornot2,X,A,1,_):-
+ member([B,or,A],X),
+ member([not,B],X).
+proof_step(ornot3,X,A,1,_):-
+ member([A,or,[neg,B]],X),
+ member(B,X).
+proof_step(ornot4,X,A,1,_):-
+ member([[neg,B],or,A],X),
+ member(B,X).
+proof_step(rec1,X,[A,->,B],1,_Refs):-
+ \+member(A,X),
+ nonrecursive(R),
+ proof_step(R,[A|X],B,1,[]).
+proof_step(rec2,X,A,1,_):-
+ member(B,X),
+ member([B,->,C],X),
+ \+member(C,X),
+ nonrecursive(R),
+ proof_step(R,[C|X],A,1,[]).
+proof_step(rec3,X,A,1,_):-
+ member(B,X),
+ member([B,->,C],X),
+ \+member(C,X),
+ member(D,X),
+ member([D,->,E],X),
+ \+member(E,X),
+ nonrecursive(R),
+ proof_step(R,[C,E|X],A,1,[]).
+nonrecursive(X):-
+ member(X,[ornot1,ornot2,ornot3,ornot4,andpart1,andpart2,chain1,orproof,
+ implproof1,implproof2,implproof3,implproof4,implproof5,fu1,fu2,
+ kp1,kp2,kp3,kp4,kp5,kp6,mp1,mp2,mp3,contr1,contr2,contr3,contr4,
+ falsumdef,implequiv1,implequiv2,equivimpl1,equivimpl2,
+ equivor1,equivor2,equivor3,equivor4,orimpl1,orimpl2,implor1,implor2,
+ andequiv1,andequiv2,equivand1,equivand2,equivand3,equivand4,equivand5,equivand6,equivand7,
+ impland1,impland2,impland3,impland4,andimpl1,andimpl2,andimpl3,andimpl4,
+ orand1,orand2,orand3,orand4,orand5,orand6,orand7,
+ andor1,andor2,andor3,andor4,andor5,andor6,andor7,andor8,
+ equivneg1,equivneg2,equivneg3,equivneg4,implneg1,implneg2,
+ orneg1,orneg2,orneg3,orneg4,andneg1,andneg2,andneg3,andneg4,doubleneg,
+ command,commor,commequiv,defequiv1,defequiv2,defequiv3,defequiv4,defequiv5,
+ defimpl1,defimpl2,defimpl3,defor1,defor2,defand,dedvss]).
+n_step_proof(_X,_A,0,_):-fail.
+n_step_proof(X,A,1,Refs):-
+ proof_step(_,X,A,1,Refs).
+n_step_proof(X,A,Z,Refs):-
+ Z>1,
+ findall(B,proof_step(_,X,B,1,Refs),Conslist),
+ !,
+ append(X,Conslist,X1),
+
+ !,
+ Zneu is Z-1,
+
+ n_step_proof(X1,A,Zneu,Refs).
+clever_proof(_,_,0,_):-!,fail.
+clever_proof(X,Y,_,_):-member(Y,X).
+clever_proof(X,[A,and,B],Z,Refs):-
+ Zneu is Z-1,
+ clever_proof(X,Zneu,A,Refs),
+ clever_proof(X,Zneu,B,Refs).
+clever_proof(X,_,_,_):-
+ member(falsum,X).
+clever_proof(X,falsum,_,_):-
+ member(A,X),
+ member([neg,A],X).
+clever_proof(X,Y,Z,Refs):-
+ atom(Y),
+ member([A,->,Y],X),
+ Zneu is Z-1,
+ clever_proof(X,A,Zneu,Refs).
+clever_proof(X,[A,or,_],Z,Refs):-
+ Zneu is Z-1,
+ clever_proof(X,A,Zneu,Refs).
+clever_proof(X,[_,or,B],Z,Refs):-
+ Zneu is Z-1,
+ clever_proof(X,B,Zneu,Refs).
+clever_proof(X,[A,or,B],Z,Refs):-
+ Zneu is Z-1,
+ clever_proof([[neg,A],[neg,B]|X],falsum,Zneu,Refs).
+clever_proof(X,[neg,A],Z,Refs):-
+ Zneu is Z-1,
+ clever_proof([A|X],falsum,Zneu,Refs).
+clever_proof(X,[A,->,B],Z,Refs):-
+ Zneu is Z-1,
+ clever_proof([A|X],B,Zneu,Refs).
+clever_proof(X,[A,<->,B],Z,Refs):-
+ Zneu is Z-1,
+ clever_proof(X,[A,->,B],Zneu,Refs),
+ clever_proof(X,[B,->,A],Zneu,Refs).
+clever_proof(X,A,Z,Refs):-
+ Zneu is Z-1,
+ clever_proof([[neg,A]|X],falsum,Zneu,Refs).
+clever_proof(X,A,1,Refs):-
+ proof_step(_,X,A,1,Refs).
+clever_proof(X,[neg,[neg,A]],Z,Refs):-
+ Zneu is Z-1,
+ clever_proof(X,A,Zneu,Refs).
+clever_proof(X,Y,Z,Refs):-
+
+ length(X,L),
+ L>1,
+ PreBound is log(10/log(L))/log(2),
+ Bound is floor(PreBound),
+
+ write([versuche,es,in,Bound,schritten]),
+ Bound=<Z,
+ n_step_proof(X,Y,Bound,Refs).
+clever_proof_prot(_,_,0,[],_):-!,fail.
+clever_proof_prot(X,Y,_,[Y],_):-member(Y,X).
+clever_proof_prot(X,[A,and,B],Z,Proof,Refs):-
+ Zneu is Z-1,
+ clever_proof_prot(X,A,Zneu,Proof1,Refs),
+ clever_proof_prot(X,B,Zneu,Proof2,Refs),
+ append(Proof1,Proof2,Proof3),
+ append(Proof3,[[A,and,B]],Proof).
+clever_proof_prot(X,Y,_,[falsum,Y],_):-
+ member(falsum,X).
+clever_proof_prot(X,falsum,_,[A,[neg,A],falsum],_):-
+ member(A,X),
+ member([neg,A],X).
+clever_proof_prot(X,Y,Z,Proof,Refs):-
+ atom(Y),
+ member([A,->,Y],X),
+ Zneu is Z-1,
+ clever_proof_prot(X,A,Zneu,Subproof,Refs),
+ append(Subproof,[[A,->,Y],Y],Proof).
+clever_proof_prot(X,[A,or,B],Z,Proof,Refs):-
+ Zneu is Z-1,
+ clever_proof_prot(X,A,Zneu,Subproof,Refs),
+ append(Subproof,[[A,or,B]],Proof).
+clever_proof_prot(X,[A,or,B],Z,Proof,Refs):-
+ Zneu is Z-1,
+ clever_proof_prot(X,B,Zneu,Subproof,Refs),
+ append(Subproof,[[A,or,B]],Proof).
+clever_proof_prot(X,[A,or,B],Z,[[ang,[[neg,A],and,[neg,B]]]|Proof],Refs):-
+ Zneu is Z-1,
+ clever_proof_prot([[neg,A],[neg,B]|X],falsum,Zneu,Subproof,Refs),
+ append(Subproof,[[[[neg,A],and,[neg,B]],->,falsum],[A,or,B]],Proof).
+clever_proof_prot(X,[neg,A],Z,[[ang,A]|Proof],Refs):-
+ Zneu is Z-1,
+ clever_proof_prot([A|X],falsum,Zneu,Subproof,Refs),
+ append(Subproof,[[A,->,falsum],[neg,A]],Proof).
+clever_proof_prot(X,[A,->,B],Z,[[ang,A]|Proof],Refs):-
+ Zneu is Z-1,
+ clever_proof_prot([A|X],B,Zneu,Subproof,Refs),
+ append(Subproof,[[A,->,B]],Proof).
+clever_proof_prot(X,[A,->,B],Z,Proof,Refs):-
+ Zneu is Z-1,
+ member([C,->,B],X),
+ clever_proof_prot(X,[A,->,C],Zneu,Subproof,Refs),
+ append(Subproof,[[C,->,B],[A,->,B]],Proof).
+clever_proof_prot(X,[A,->,B],Z,[[ang,[neg,B]]|Proof],Refs):-
+ Zneu is Z-1,
+ clever_proof_prot([[neg,B]|X],[neg,A],Zneu,Subproof,Refs),
+ append(Subproof,[[[neg,A],->,[neg,B]],[A,->,B]],Proof).
+clever_proof_prot(X,[A,->,B],Z,[[A,->,C]|Proof],Refs):-
+ Zneu is Z-1,
+ member([A,->,C],X),
+ clever_proof_prot(X,[C,->,B],Zneu,Subproof,Refs),
+ append(Subproof,[[A,->,B]],Proof).
+clever_proof_prot(X,[A,<->,B],Z,Proof,Refs):-
+ Zneu is Z-1,
+ clever_proof_prot(X,[A,->,B],Zneu,Subproof1,Refs),
+ clever_proof_prot(X,[B,->,A],Zneu,Subproof2,Refs),
+ append(Subproof1,Subproof2,Subproof3),
+ append(Subproof3,[[A,<->,B]],Proof).
+clever_proof_prot(X,A,Z,[[ang,[neg,A]]|Proof],Refs):-
+ Zneu is Z-1,
+ clever_proof_prot([[neg,A]|X],falsum,Zneu,Subproof,Refs),
+ append(Subproof,[[A]],Proof).
+clever_proof_prot(X,A,Z,[[ang,[neg,A]]|Proof],Refs):-
+ Zneu is Z-1,
+ clever_proof_prot([[neg,A]|X],A,Zneu,Proof,Refs).
+clever_proof_prot(X,[neg,[neg,A]],Z,Proof,Refs):-
+ Zneu is Z-1,
+ clever_proof_prot(X,A,Zneu,Subproof,Refs),
+ append(Subproof,[[neg,[neg,A]]],Proof).
+clever_proof_prot(X,A,Z,Proof,Refs):-
+ Zneu is Z-1,
+ member([B,->,A],X),
+ clever_proof_prot(X,B,Zneu,Subproof,Refs),
+ append(Subproof,[[B,->,A],A],Proof).
+clever_proof_prot(X,Y,Z,[[neg,[neg,A]],A|Proof],Refs):-
+ Zneu is Z-1,
+ \+member(A,X),
+ clever_proof_prot([A|X],Y,Zneu,Proof,Refs).
+clever_proof_prot(X,Y,Z,[[A,and,B],A,B|Proof],Refs):-
+ Zneu is Z-1,
+ member([A,and,B],X),
+ \+member(A,X),
+
+ clever_proof_prot([A,B|X],Y,Zneu,Proof,Refs).
+clever_proof_prot(X,Y,Z,[[A,and,B],A,B|Proof],Refs):-
+ Zneu is Z-1,
+ member([A,and,B],X),
+
+ \+member(B,X),
+ clever_proof_prot([A,B|X],Y,Zneu,Proof,Refs).
+clever_proof_prot(X,Y,Z,[A,[A,->,B],B|Proof],Refs):-
+ Zneu is Z-1,
+ member(A,X),
+ member([A,->,B],X),
+ \+member(B,X),
+ clever_proof_prot([B|X],Y,Zneu,Proof,Refs).
+clever_proof_prot(X,Y,Z,[[neg,B],[A,->,B],[neg,A]|Proof],Refs):-
+ Zneu is Z-1,
+ member([neg,B],X),
+ member([A,->,B],X),
+ \+member([neg,A],X),
+ clever_proof_prot([[neg,A]|X],Y,Zneu,Proof,Refs).
+clever_proof_prot(X,Y,Z,[[ba,A],[ba,A,->,B],B|Proof],Refs):-
+ Zneu is Z-1,
+ member([ba,A,->,B],X),
+ \+member(B,X),
+ subset(A,X),
+ clever_proof_prot([B|X],Y,Zneu,Proof,Refs).
+clever_proof_prot(X,Y,Z,[[A,or,B],[neg,[[neg,A],and,[neg,B]]]|Proof],Refs):-
+ Zneu is Z-1,
+ member([A,or,B],X),
+ \+member([neg,[[neg,A],and,[neg,B]]],X),
+ clever_proof_prot([[neg,[[neg,A],and,[neg,B]]]|X],Y,Zneu,Proof,Refs).
+clever_proof_prot(X,Y,Z,[[A,or,B]|Proof],Refs):-
+ Zneu is Z-1,
+ member([A,or,B],X),
+ clever_proof_prot([A|X],Y,Zneu,Subproof1,Refs),
+ clever_proof_prot([B|X],Y,Zneu,Subproof2,Refs),
+ append(Subproof1,Subproof2,Subproof3),
+ append(Subproof3,[Y],Proof).
+clever_proof_prot(X,Y,Z,[[neg,[A,or,B]],[[neg,A],and,[neg,B]]|Proof],Refs):-
+ Zneu is Z-1,
+ member([neg,[A,or,B]],X),
+ \+member([[neg,A],and,[neg,B]],X),
+ clever_proof_prot([[[neg,A],and,[neg,B]]|X],Y,Zneu,Proof,Refs).
+clever_proof_prot(X,Y,Z,Proof,Refs):-
+ Zneu is Z-1,
+ member([A,->,Y],X),
+ \+member(A,X),
+ clever_proof_prot([[neg,A]|X],Y,Zneu,Subproof,Refs),
+ append([[ang,A],[A,->,Y],Y,[ang,[neg,A]]|Subproof],[Y],Proof).
+clever_proof_prot(X,Y,Z,Proof,Refs):-
+ Zneu is Z-1,
+ member([A,->,B],X),
+ \+member(B,X),
+ \+member(A,X),
+ clever_proof_prot([A|X],Y,Zneu,Subproof1,Refs),
+ clever_proof_prot([[neg,A]|X],Y,Zneu,Subproof2,Refs),
+ append([[ang,A]|Subproof1],[[ang,[neg,A]]|Subproof2],Subproof3),
+ append(Subproof3,[Y],Proof).
+proof(Assmpts,Goal,Refs,Proof,Depth):-
+ normalize(Assmpts,Assmpts1),
+ normalize(Goal,Goal1),
+ !,
+ proof_aux(Assmpts1,Goal1,Refs,Proof,Depth).
+proof_aux(Assmpts,Goal,_Refs,[],0):-
+ member(Goal,Assmpts),!.
+proof_aux(Assmpts,Goal,Refs,[Goal],1):-
+ proof_step(_,Assmpts,Goal,1,Refs),!.
+
+proof_aux(Assmpts,Goal,Refs,[Step|Rest],Depth):-
+
+ Depth>1,
+ proof_step(_,Assmpts,Step,1,Refs),
+ \+member(Step,Assmpts),
+ NewDepth is Depth-1,
+ proof([Step|Assmpts],Goal,Refs,Rest,NewDepth),!.
+helpful(X,Y,Z,Refs,Bound):-
+ !,
+ proof_length_after(X,Y,0,Refs,L1,Bound),
+ !,
+ proof_length_after([Z|X],Y,0,Refs,L2,Bound),
+ !,
+ L2<L1.
+proof_length_after(X,Y,_Z,Refs,9999,Bound):-
+ \+clever_proof(X,Y,Bound,Refs).
+proof_length_after(X,Y,Z,Refs,Z,Bound):-
+ Z<Bound,
+ clever_proof(X,Y,Z,Refs).
+proof_length_after(X,Y,Z,Refs,U,Bound):-
+ Z<Bound,
+ Zneu is Z+1,
+ proof_length_after(X,Y,Zneu,Refs,U,Bound).
+proof_step_fo(Assmpts,Claim):-
+ sort_out_dcls(Assmpts,Assmpts1,_Dcls),
+ one_step_fo(Assmpts1,Claim).
+one_step_fo(X,F):-
+ proof_step(_,X,1,F,[]).
+one_step_fo(X,F):-
+ member([all,V,F1],X),
+ variant(F1,V,F).
+one_step_fo(X,[ex,A,F]):-
+ member(F1,X),
+ variant(F,A,F1).
+one_step_fo(X,[all,_V,F]):-
+ member(F,X).
+one_step_fo(X,[F,->,[all,V,G]]):-
+ member([F,->,G],X),
+ all_free_in(F,V).
+one_step_fo(X,[ex,A,F]):-
+ member([neg,[all,A,[neg,F]]],X).
+one_step_fo(X,[ex,A,[neg,F]]):-
+ member([neg,[all,A,F]],X).
+one_step_fo(X,[all,A,F]):-
+ member([neg,[ex,A,[neg,F]]],X).
+one_step_fo(X,[all,A,[neg,F]]):-
+ member([neg,[ex,A,F]],X).
+one_step_fo(X,[all,A,[F,and,G]]):-
+ member([all,A,F],X),
+ member([all,A,G],X).
+one_step_fo(X,[all,A,[F,or,_G]]):-
+ member([all,A,F],X).
+one_step_fo(X,[all,A,[_F,or,G]]):-
+ member([all,A,G],X).
+one_step_fo(X,[[all,A,F],->,[all,A,G]]):-
+ member([all,A,[F,->,G]],X).
+one_step_fo(X,[neg,[all,A,F]]):-
+ member([ex,A,[neg,F]],X).
+one_step_fo(X,[neg,[all,A,[neg,F]]]):-
+ member([ex,A,F],X).
+one_step_fo(X,[ex,A,[F,or,_G]]):-
+ member([ex,A,F],X).
+one_step_fo(X,[ex,A,[_F,or,G]]):-
+ member([ex,A,G],X).
+one_step_fo(X,[neg,[ex,A,F]]):-
+ member([all,A,[neg,F]],X).
+one_step_fo(X,[neg,[ex,A,[neg,F]]]):-
+ member([all,A,F],X).
+variant(_,_,_).
+variant(F,V,F1):-
+ subterm(T,F1),
+ specified_variant(F,V,T,F1).
+specified_variant([],_,_,[]):-!.
+specified_variant(V,V,T,T):-!.
+specified_variant([neg,A],V,T,[neg,A1]):-
+ specified_variant(A,V,T,A1).
+specified_variant([F,PreIm],V,T,[F,PreImNew]):-
+ function(F),
+ specified_variant(PreIm,V,T,PreImNew),!.
+specified_variant([P,PreIm],V,T,[P,PreImNew]):-
+ predicate(P),
+ specified_variant(PreIm,V,T,PreImNew),!.
+specified_variant([A,J,B],V,T,[A1,J,B1]):-
+ member(J,[and,or,->,<->]),
+ specified_variant(A,V,T,A1),
+ specified_variant(B,V,T,B1),!.
+specified_variant([all,V,F],V,_,[all,V,F]):-!.
+specified_variant([all,X,F],V,T,[all,X,F1]):-
+ specified_variant(F,V,T,F1),!.
+specified_variant([ex,V,F],V,_,[ex,V,F]):-!.
+specified_variant([ex,X,F],V,T,[ex,X,F1]):-
+ specified_variant(F,V,T,F1),!.
+specified_variant([X|Rest],V,T,[Y|Rest1]):-
+ specified_variant(X,V,T,Y),
+ specified_variant(Rest,V,T,Rest1).
+specified_variant(X,_,_,X).
+subformula(F,F):-!.
+subformula(F,G):-
+ immediate_subformula(F1,G),
+ subformula(F,F1).
+immediate_subformula(A,[A,J,_]):-
+ member(J,[and,or,->,<->]).
+immediate_subformula(B,[_,J,B]):-
+ member(J,[and,or,->,<->]).
+immediate_subformula(A,[neg,A]).
+immediate_subformula(A,[ex,_,A]).
+immediate_subformula(A,[all,_,A]).
+subterm(X,X):-!.
+subterm(T,T2):-
+ immediate_subterm(T1,T2),
+ subterm(T,T1).
+immediate_subterm(X,[_F,Args]):-
+ member(X,Args).
+subterm_of_formula(T,T):-!.
+subterm_of_formula(T,[F,Args]):-
+ function(F),
+ member(T1,Args),
+ subterm(T,T1).
+subterm_of_formula(T,[P,Args]):-
+ predicate(P),
+ member(T1,Args),
+ subterm(T,T1).
+subterm_of_formula(T,[A,J,_]):-
+ member(J,[and,or,->,<->]),
+ subterm_of_formula(T,A).
+subterm_of_formula(T,[_,J,B]):-
+ member(J,[and,or,->,<->]),
+ subterm_of_formula(T,B).
+subterm_of_formula(T,[neg,A]):-
+ subterm_of_formula(T,A).
+subterm_of_formula(T,[Q,_,F]):-
+ member(Q,[all,ex]),
+ subterm_of_formula(T,F).
+negate_through([],[]):-!.
+negate_through([P,Args],[neg,[P,Args]]):-
+ predicate(P),!.
+negate_through([A,and,B],[A1,or,B1]):-
+ negate_through(A,A1),
+ negate_through(B,B1),!.
+negate_through([A,or,B],[A1,and,B1]):-
+ negate_through(A,A1),
+ negate_through(B,B1),!.
+negate_through([A,->,B],[A1,or,B]):-
+ negate_through(A,A1).
+negate_through([A,<->,B],[C,or,D]):-
+ negate_through([A,->,B],C),
+ negate_through([B,->,A],D).
+negate_through([all,A,F],[ex,A,NegF]):-
+ negate_through(F,NegF).
+negate_through([ex,A,F],[all,A,NegF]):-
+ negate_through(F,NegF).
+negate_through(X,[neg,X]).
+partial_negation([],[]).
+partial_negation(F,[neg,F]).
+partial_negation([A,and,B],[A1,or,B1]):-
+ partial_negation(A,A1),
+ partial_negation(B,B1).
+partial_negation([A,or,B],[A1,and,B1]):-
+ partial_negation(A,A1),
+ partial_negation(B,B1).
+partial_negation([neg,F],F).
+partial_negation([A,->,B],[A,and,B1]):-
+ partial_negation(B,B1).
+partial_negation([ex,X,F],[all,X,F1]):-
+ partial_negation(F,F1).
+partial_negation([all,X,F],[ex,X,F1]):-
+ partial_negation(F,F1).
+partial_negation([A,<->,B],[C,or,D]):-
+ partial_negation([A,->,B],C),
+ partial_negation([B,->,A],D).
+sort_out_dcls([],[],[]).
+sort_out_dcls([[X,is,T]|Rest],[[X,is,T]|RestDcls],Assmpts):-
+ sort_out_dcls(Rest,RestDcls,Assmpts).
+sort_out_dcls([A|Rest],Dcls,[A|AssmptsRest]):-
+ sort_out_dcls(Rest,Dcls,AssmptsRest).
+predicate(X):-
+ member(X,[p,q,r,=,<,>]).
+variable(X):-
+ member(X,[a,b,c,d,e,f,g,h,i,j,k,l,m,n,s,t,u,v,w,x,y,z]).
+prop_var(X):-
+ member(X,[a,b,c,d]).
+function(X):-
+ member(X,[f,g,h,+,*,-]).
+constant(d).
+all_vars([]).
+all_vars([X|Rest]):-
+ variable(X),
+ all_vars(Rest).
+term(X):-
+ variable(X),!.
+term(X):-
+ constant(X),!.
+term(X):-number(X).
+term([F,Args]):-
+ function(F),!,
+ term_list(Args).
+term_list([]).
+term_list([X|Rest]):-
+ term(X),
+ term_list(Rest).
+atomic_formula([P,Args]):-
+ predicate(P),
+ term_list(Args).
+formula(F):-
+ prop_var(F).
+formula(F):-
+ atomic_formula(F),!.
+formula([F,J,G]):-
+ member(J,[and,or,->,<->]),
+ formula(F),
+ formula(G).
+formula([neg,F]):-
+ formula(F).
+formula([all,X,F]):-
+ variable(X),
+ formula(F).
+formula([ex,X,F]):-
+ variable(X),
+ formula(F).
+all_free_in(F,_V):-
+ atomic_formula(F).
+all_free_in([neg,A],V):-
+ all_free_in(A,V).
+all_free_in([A,J,B],V):-
+ member(J,[and,or,->,<->]),
+ all_free_in(A,V),
+ all_free_in(B,V).
+all_free_in([Q,X,F],V):-
+ member(Q,[ex,all]),
+ \+X=V,
+ all_free_in(F,V).
+mgu(F,F,[]):-!.
+mgu(X,T,[[X,T]]):-
+ variable(X),
+ term(T),!,
+ \+contains_var(T,X).
+mgu(T,X,[[X,T]]):-
+ variable(X),
+ term(T),!,
+ \+contains_var(T,X).
+mgu(X,F,[[X,F]]):-
+ prop_var(X),
+ formula(F).
+mgu(F,X,[[X,F]]):-
+ prop_var(X),
+ formula(F).
+mgu([A,J,B],[A1,J,B1],U):-
+ member(J,[and,or,->,<->]),!,
+ mgu(A,A1,U1),
+ mgu(B,B1,U2),
+ compatible_functions(U1,U2),
+ union(U1,U2,U).
+mgu([neg,A],[neg,B],U):-
+ mgu(A,B,U).
+mgu([P,Args],[P,Args1],U):-
+ predicate(P),!,
+ unify_args(Args,Args1,U).
+mgu([F,Args],[F,Args1],U):-
+ function(F),!,
+ unify_args(Args,Args1,U).
+mgu([all,X,F],[all,X,G],U):-
+ mgu(F,G,U).
+mgu([all,X,F],[all,Y,G],[[X,Y]|U]):-
+ mgu(F,G,U).
+mgu([ex,X,F],[ex,X,G],U):-
+ mgu(F,G,U).
+mgu([ex,X,F],[ex,Y,G],[[X,Y]|U]):-
+ mgu(F,G,U).
+unify_args(X,X,[]).
+unify_args([X|Rest],[X1|Rest1],U):-
+ mgu(X,X1,U1),
+ unify_args(Rest,Rest1,U2),
+ compatible_functions(U1,U2),
+ union(U1,U2,U).
+compatible_functions([],_).
+compatible_functions([[X,Y]|Rest],F2):-
+ member([X,Y],F2),
+ compatible_functions(Rest,F2).
+compatible_functions([[X,_Y]|Rest],F2):-
+ \+member([X,_],F2),
+ compatible_functions(Rest,F2).
+range_1([],[]).
+range_1([[_X,Y]|Rest],Rng):-
+ range_1(Rest,Rng),
+ member(Y,Rng).
+range_1([[_X,Y]|Rest],[Y|RngRest]):-
+ range_1(Rest,RngRest).
+different_and_available([],_).
+different_and_available([X|Rest],Vss):-
+ \+member(X,Rest),
+ contains_freely_list(Vss,X,[]),
+ different_and_available(Rest,Vss).
+contains_freely_list([],_,[]):-!.
+contains_freely_list(_,[],[]):-!.
+contains_freely_list([F|Rest],V,[F|Rest1]):-
+ contains_freely(F,V),!,
+ contains_freely_list(Rest,V,Rest1).
+contains_freely_list([F|Rest],V,Rest1):-
+ \+contains_freely(F,V),!,
+ contains_freely_list(Rest,V,Rest1).
+contains_freely([P,Args],Var):-
+ predicate(P),!,
+ contains_var_list(Args,Var).
+contains_freely([neg,A],Var):-
+ contains_freely(A,Var),!.
+contains_freely([A,J,_B],Var):-
+ member(J,[and,or,->,<->]),
+ contains_freely(A,Var).
+contains_freely([_A,J,B],Var):-
+ member(J,[and,or,->,<->]),
+ contains_freely(B,Var).
+contains_freely([Q,X,F],V):-
+ member(Q,[ex,all]),!,
+ \+V=X,
+ contains_freely(F,V).
+contains_var_list([X|_Rest],Var):-
+ contains_var(X,Var).
+contains_var_list([_|Rest],Var):-
+ contains_var(Rest,Var).
+contains_var(Var,Var).
+contains_var([F,TermList],Var):-
+ function(F),
+ contains_var(TermList,Var).
+contains_var([X|_Rest],Var):-
+ contains_var(X,Var).
+contains_var([_|Rest],Var):-
+ contains_var(Rest,Var).
+create_conjunction([],[]):-!.
+create_conjunction([X],X):-!.
+create_conjunction([X|Rest],[X,and,Rest1]):-
+ create_conjunction(Rest,Rest1).
+split_off_ex_qntfrs([ex,X,A],[X|RestVars],Ared):-
+ split_off_ex_qntfrs(A,RestVars,Ared).
+split_off_ex_qntfrs(A,[],A).
+split_off_univ_qntfrs([all,X,A],[X|RestVars],Ared):-
+ split_off_univ_qntfrs(A,RestVars,Ared).
+split_off_univ_qntfrs(A,[],A).
+rename_initial_qntfrs(F,F):-!.
+rename_initial_qntfrs([all,X,F],[all,Y,F2]):-
+ specified_variant(F,X,Y,F1),
+ rename_initial_qntfrs(F1,F2).
+rename_initial_qntfrs([ex,X,F],[ex,Y,F2]):-
+ specified_variant(F,X,Y,F1),
+ rename_initial_qntfrs(F1,F2).
+map_with_domain([],_).
+map_with_domain([[X,_]|Rest],Dom):-
+ member(X,Dom),
+ map_with_domain(Rest,Dom).
+normalize_object([],[]).
+normalize_object([X],Y):-
+ normalize_object(X,Y).
+normalize_object(X,X).
+prenormalize([],[]).
+prenormalize([X|Rest],[Z|RestNeu]):-
+ normalize_object(X,Y),
+ prenormalize(Y,Z),
+ prenormalize(Rest,RestNeu).
+prenormalize(X,X).
+normalize(A,B):-
+ prenormalize([1,A],[1,B]).
+normalize_fo(A,B):-
+ prenormalize_fo([1,A],[1,B]).
+normalize_object_fo([],[]).
+normalize_object_fo([X],Y):-
+ normalize_object(X,Y).
+normalize_object_fo(X,X).
+prenormalize_fo([],[]).
+prenormalize_fo([P,X],[P,X]):-
+ predicate(P).
+prenormalize_fo([F,X],[F,X]):-
+ function(F).
+prenormalize_fo([X|Rest],[Z|RestNeu]):-
+ normalize_object_fo(X,Y),
+ prenormalize_fo(Y,Z),
+ prenormalize_fo(Rest,RestNeu).
+prenormalize_fo(X,X).
+notmember(_,[]).
+notmember(X,Y):-
+ member(X,Y),
+ !,
+ fail.
+notmember(_,_).
+simplify_2([],[]).
+simplify_2([X|Rest],Rest1):-
+ member(X,Rest),
+ simplify_2(Rest,Rest1).
+simplify_2([X|Rest],[X|Rest1]):-
+ simplify_2(Rest,Rest1).
+generate_atp_task(Text,Graph,I,Task):-
+ iterate(Text,Graph,I,_,Task).
+generate_atp_task_step(Text,_Graph,I,FormerTasks,FormerTasks,[[[falsum],[],[],[]],falsum]):-
+ member([I,_,_,X,Fkt,_],Text),
+ member(X,[ang,ann,axm]),
+ \+Fkt=dklcnt,!.
+generate_atp_task_step(Text,Graph,1,FormerTasks,[Impl|FormerTasks],[[Begr,[],[],[]],Beh]):-
+
+ member([1,_,_,beh,bbh,[bbh,Begr,Beh]],Text),!,
+ available_assumptions(Text,Graph,1,Assmpts),
+ normalize_1_fo_1(Assmpts,AssmptsNorm),
+ available_claims(Text,Graph,1,Claims),
+ normalize_1_fo_1(Claims,ClaimsNorm),
+ available_axioms(Text,1,Axms),
+ normalize_1_fo_1(Axms,AxmsNorm),
+ union(AssmptsNorm,ClaimsNorm,List),
+ union(List,FormerTasks,List1),
+ union(List1,AxmsNorm,Annahmen),
+ normalize_1(Annahmen,NormAnn),!,
+ subsetmod(Begr,NormAnn),
+ task_to_implication([Assmpts,Beh],Impl),!.
+generate_atp_task_step(Text,Graph,I,FormerTasks,[Impl|FormerTasks],[[[Beh1|Begr1],[],[],[]],Beh]):-
+
+ member([I,_,_,beh,bbh,[bbh,Begr,Beh]],Text),
+ I>1,
+ J is I-1,
+ member([J,_,_,beh,_,[bbh,_,Beh1]],Text),!,
+ catch_referred_sentences(Begr,I,Text,Begr1),!,
+ available_assumptions(Text,Graph,I,Assmpts),
+ available_claims(Text,Graph,I,Claims),
+ available_axioms(Text,I,Axms),
+ union(Assmpts,Claims,List),
+ union(List,FormerTasks,List1),
+ union(List1,Axms,Annahmen),
+ normalize_1(Begr1,Begr2),!,
+ normalize_1(Annahmen,NormAnn),!,
+ subsetmod(Begr2,NormAnn),
+ task_to_implication([Assmpts,Beh],Impl),!.
+generate_atp_task_step(Text,Graph,I,FormerTasks,[Impl|FormerTasks],[[[Beh1|Begr1],[],[],[]],Beh]):-
+
+ member([I,_,_,beh,bbh,[bbh,Begr,Beh]],Text),
+ I>1,
+ J is I-1,
+ member([J,_,_,X,Fkt,Beh1],Text),
+ member(X,[beh,ang]),
+ \+Fkt=bbh,!,
+ catch_referred_sentences(Begr,I,Text,Begr1),!,
+ available_assumptions(Text,Graph,I,Assmpts),
+ available_claims(Text,Graph,I,Claims),
+ available_axioms(Text,I,Axms),
+ union(Assmpts,Claims,List),
+ union(List,FormerTasks,List1),
+ union(List1,Axms,Annahmen),
+ normalize_1(Begr1,Begr2),!,
+ normalize_1(Annahmen,NormAnn),!,
+ subsetmod(Begr2,NormAnn),
+ task_to_implication([Assmpts,Beh],Impl),!.
+generate_atp_task_step(Text,Graph,I,FormerTasks,[Impl|FormerTasks],[[Begr1,[],[],[]],Beh]):-
+
+ member([I,_,_,beh,bbh,[bbh,Begr,Beh]],Text),
+ I>1,
+ J is I-1,
+ member([J,_,_,Sts,_,_],Text),
+ \+member(Sts,[ang,beh]),!,
+ catch_referred_sentences(Begr,I,Text,Begr1),!,
+ available_assumptions(Text,Graph,I,Assmpts),
+ available_claims(Text,Graph,I,Claims),
+ available_axioms(Text,I,Axms),
+ union(Assmpts,Claims,List),
+ union(List,FormerTasks,List1),
+ union(List1,Axms,Annahmen),
+ normalize_1(Begr1,Begr2),!,
+ normalize_1(Annahmen,NormAnn),!,
+ subsetmod(Begr2,NormAnn),
+ task_to_implication([Assmpts,Beh],Impl),!.
+generate_atp_task_step(Text,Graph,I,FormerTasks,[Impl|FormerTasks],[[Assmpts1,Claims,FormerTasks,Decls],Ziel]):-
+
+ member([I,_,_,beh,Fkt,Ziel],Text),
+ \+Fkt=bbh,!,
+ available_assumptions(Text,Graph,I,Assmpts),
+ sort_assmpts_decls(Assmpts,PureAssmpts,Decls),
+ available_claims(Text,Graph,I,Claims),
+ available_axioms(Text,I,Axms),
+ union(Axms,PureAssmpts,Assmpts1),
+
+
+
+ task_to_implication([Assmpts1,Ziel],Impl),!.
+
+generate_atp_task_step(Text,Graph,I,FormerTasks,[Impl|FormerTasks],[[Assmpts1,Claims,FormerTasks,Decls],Ziel]):-
+ member([I,_,_,ang,dklcnt,[Cnt|Dcls]],Text),!,
+ available_assumptions(Text,Graph,I,Assmpts),
+ sort_assmpts_decls(Assmpts,PureAssmpts,Decls1),
+ union(Decls1,Dcls,Decls),
+ available_claims(Text,Graph,I,Claims),
+ available_axioms(Text,I,Axms),
+ union(Axms,PureAssmpts,Assmpts1),
+ generate_simplified_existential_statement(Dcls,Cnt,Ziel),
+ task_to_implication([Assmpts1,Ziel],Impl),!.
+iterate(_Text,_Graph,0,[],[[[falsum],[],[],[]],falsum]):-!.
+iterate(Text,Graph,I,FormerTasks,Task):-
+ J is I-1,
+ !,
+ iterate(Text,Graph,J,TasksUpToJ,_TaskJ),
+ !,
+ generate_atp_task_step(Text,Graph,I,TasksUpToJ,FormerTasks,Task).
+available_assumptions(Text,_,I,[falsum]):-
+ member([I,_,_,X,Fkt,_],Text),
+ member(X,[axm,ann,ang]),
+ \+Fkt=dklcnt,!.
+available_assumptions(Text,Graph,I,Assmpts):-
+ available_assumptions_from_to(Text,Graph,1,I,Assmpts).
+available_assumptions_from_to(_Text,_Graph,I,I,[]):-!.
+available_assumptions_from_to(_Text,_Graph,J,I,[]):-
+ I<J,!.
+available_assumptions_from_to(Text,Graph,J,I,Assmpts):-
+ member([J,I],Graph),
+ member([J,_,_,ang,chc,Choices],Text),!,
+ K is J+1,
+ available_assumptions_from_to(Text,Graph,K,I,Assmpts1),
+ append(Choices,Assmpts1,Assmpts).
+available_assumptions_from_to(Text,Graph,J,I,Assmpts):-
+ member([J,I],Graph),
+ member([J,_,_,ang,dkl,Decls],Text),!,
+ K is J+1,
+ available_assumptions_from_to(Text,Graph,K,I,Assmpts1),
+ append(Decls,Assmpts1,Assmpts).
+available_assumptions_from_to(Text,Graph,J,I,Assmpts):-
+ member([J,I],Graph),
+ member([J,_,_,ang,dklcnt,DclCont],Text),!,
+ K is J+1,
+ available_assumptions_from_to(Text,Graph,K,I,Assmpts1),
+ append(DclCont,Assmpts1,Assmpts).
+available_assumptions_from_to(Text,Graph,J,I,[F|Rest]):-
+ member([J,I],Graph),
+ member([J,_,_,ang,[],F],Text),!,
+ K is J+1,
+ available_assumptions_from_to(Text,Graph,K,I,Rest).
+available_assumptions_from_to(Text,Graph,J,I,Assmpts):-
+ \+member([J,I],Graph),
+ member([J,_,_,ang,_,_],Text),!,
+ K is J+1,
+ available_assumptions_from_to(Text,Graph,K,I,Assmpts).
+available_assumptions_from_to(Text,Graph,J,I,Assmpts):-
+ member([J,_,_,Sts,_,_],Text),
+ \+Sts=ang,!,
+ K is J+1,
+ available_assumptions_from_to(Text,Graph,K,I,Assmpts).
+available_axioms(Text,I,Axms):-
+ findall(A,(member([J,_,_,axm,_,A],Text),J<I),Axms).
+available_claims(Text,_,I,[falsum]):-
+ member([I,_,_,X,Fkt,_],Text),
+ member(X,[ann,ang]),
+ \+Fkt=dklcnt,!.
+available_claims(Text,Graph,I,Claims):-
+ member([I,_,_,beh,_,_],Text),
+ findall(F,(member([J,_,_,beh,_,F],Text),\+F=[bbh|_],less_assumptions(Text,Graph,I,J)),Claims1),!,
+ findall(F,(member([J,_,_,beh,_,[bbh,_,F]],Text),less_assumptions(Text,Graph,I,J)),Claims2),!,
+ union(Claims1,Claims2,Claims).
+available_claims(Text,Graph,I,Claims):-
+ member([I,_,_,ang,dklcnt,_],Text),
+ findall(F,(member([J,_,_,beh,_,F],Text),\+F=[bbh|_],less_assumptions(Text,Graph,I,J)),Claims1),!,
+ findall(F,(member([J,_,_,beh,_,[bbh,_,F]],Text),less_assumptions(Text,Graph,I,J)),Claims2),!,
+ union(Claims1,Claims2,Claims).
+less_assumptions(Text,Graph,I,J):-
+ J<I,
+ member([J,_,_,beh,_,_],Text),
+ available_assumptions(Text,Graph,I,Assmpts1),
+ available_assumptions(Text,Graph,J,Assmpts2),
+ subset(Assmpts2,Assmpts1).
+task_to_implication([[],F],F).
+task_to_implication([[X|Rest],F],[X,->,Impl]):-
+ task_to_implication([Rest,F],Impl).
+catch_referred_sentences([],_,_,[]).
+catch_referred_sentences([X|Rest],I,Text,[Y|Restneu]):-
+ member([J,_Refs,[X],_Sts,_Fkt,Y],Text),
+ J<I,
+ !,
+ catch_referred_sentences(Rest,I,Text,Restneu).
+catch_referred_sentences([X|Rest],I,Text,[X|Restneu]):-
+ catch_referred_sentences(Rest,I,Text,Restneu).
+sort_assmpts_decls([],[],[]).
+sort_assmpts_decls([[X,is,T]|Rest],PureAssmpts,[[X,is,T]|DeclRest]):-
+ sort_assmpts_decls(Rest,PureAssmpts,DeclRest).
+sort_assmpts_decls([A|Rest],[A|PureAssmptsRest],Decls):-
+ sort_assmpts_decls(Rest,PureAssmptsRest,Decls).
+generate_existential_statement([],Cnt,Cnt).
+generate_existential_statement([[X,is,T]|RestDecls],Cnt,[ex,[X,el,T],RestCnt]):-
+ generate_existential_statement(RestDecls,Cnt,RestCnt).
+generate_simplified_existential_statement([],Cnt,Cnt).
+generate_simplified_existential_statement([[X,is,_T]|RestDecls],Cnt,[ex,X,RestCnt]):-
+ generate_simplified_existential_statement(RestDecls,Cnt,RestCnt).
+subsetmod([X],X):-!.
+subsetmod(X,[X]):-!.
+subsetmod(X,X):-!.
+subsetmod(X,Y):-
+ is_list(X),
+ is_list(Y),!,
+ subset(X,Y).
+goal_testfall(1,[[1,1,1,ann,goal,[a,<->,b]],[2,1,1,beh,1,[a]],[3,1,1,ann,hr,[]],[4,1,1,beh,1,[a,->,b]],[5,1,1,ann,bem,[]],[6,1,1,ann,rr,[]],[7,1,1,ang,1,[d]],[8,1,1,beh,1,[e]],[9,1,1,ann,bem,1],[10,1,1,beh,1,[f]],[11,1,1,ann,bem,[]],[12,1,1,ann,goal,[a,and,b]],[13,1,1,ang,1,[g]],[14,1,1,beh,1,b],[15,1,1,beh,1,b],[16,1,1,ann,goal,[a,->,b]],[17,1,1,ang,1,a],[18,1,1,ann,bem,[]]]).
+goal_testfall(2,[[1,1,1,ann,goal,[a,<->,b]],[2,1,1,beh,1,[a,->,b]],[3,1,1,ann,hr,[]],[4,1,1,beh,1,[a,->,b]],[5,1,1,ann,bem,[]],[6,1,1,ann,rr,[]],[7,1,1,ang,1,[d]],[8,1,1,beh,1,[b,->,a]],[9,1,1,ann,bem,1],[10,1,1,beh,1,[a,<->,b]],[11,1,1,ann,bem,[]],[12,1,1,ann,goal,[a,and,b]],[13,1,1,ang,1,[g]],[14,1,1,beh,1,b],[15,1,1,beh,1,b],[16,1,1,ann,goal,[a,->,b]],[17,1,1,ang,1,a],[18,1,1,ann,bem,[]]]).
+update_goal([],GoalList,Goal,GoalList,Goal).
+update_goal([[_,_,_,ann,goal,F]|_],GoalList,_,[F|GoalList],F).
+update_goal([[_,_,_,ann,hr,_]|_],GoalList,[A,<->,B],[[A,->,B]|GoalList],[A,->,B]).
+update_goal([[_,_,_,ann,rr,_]|_],GoalList,[A,<->,B],[[B,->,A]|GoalList],[B,->,A]).
+update_goal([[_,_,_,ann,sfu,_]|Rest],GoalList,_,[F|GoalList],F):-
+ collect_cases(Rest,CaseList),
+ disjunction(CaseList,F).
+update_goal([[_,_,_,ann,fe,[]],[_,_,_,ang,_,F]|_],[G,A|RestGoalList],G,[[F,->,A],G,A|RestGoalList],[F,->,A]).
+update_goal([[_,_,_,ann,fe,F]|_],[G,A|RestGoalList],G,[[F,->,A],G,A|RestGoalList],[F,->,A]).
+update_goal([[_,_,_,ann,contr,_]|_],GoalListe,A,[[[neg,A],->,falsum]|GoalListe],[[neg,A],->,falsum]).
+update_goal([[_,_,_,ang,_,A]|_],[[A,->,B]|RestGoalListe],[A,->,B],[B|RestGoalListe],B).
+update_goal([[_,_,_,ann,bem,_]|_],[],_,[],[]).
+update_goal([[_,_,_,ann,bem,_]|_],[X],X,[],[]).
+update_goal([[_,_,_,ann,bem,_]|_],[X|[Y|RestGoalListe]],X,[Y|RestGoalListe],Y).
+update_goal([[_,_,_,ann,efu,_]|_],[],_,[],[]).
+update_goal([[_,_,_,ann,efu,_]|_],[X],X,[],[]).
+update_goal([[_,_,_,ann,efu,_]|_],[X|[Y|RestGoalListe]],X,[Y|RestGoalListe],Y).
+update_goal(_,GoalList,Goal,GoalList,Goal).
+trace_goal(_Text,0,[],[]):-!.
+trace_goal(Text,I,GoalList1,Goal1):-
+ J is I-1,!,
+ trace_goal(Text,J,GoalList0,Goal0),
+ truncate_text(Text,I,TextTeil),
+ update_goal(TextTeil,GoalList0,Goal0,GoalList,Goal),!,
+ normalize_2_elements_2(GoalList,GoalList1),
+ normalize_2(Goal,Goal1).
+goal_checker(Text,FailingLines):-
+ normalize_2(Text,Text1),!,
+ check_closings(Text1,0,0),!,
+ enforce_closing(Text1,Text2),!,
+ goal_checker_from(Text2,1,FailingLines).
+goal_checker(_Text,[]):-
+ nl,write("Fehler: Beweisendmarker ohne zugehoerigen Anfangsmarker"),nl.
+goal_checker_from(Text,I,[]):-
+ length(Text,J),
+ I>J,
+ !.
+goal_checker_from(Text,I,FailingLines):-
+ goal_checker_update(Text,I,X),
+ J is I+1,
+ goal_checker_from(Text,J,FailingLines1),
+ append(X,FailingLines1,FailingLines).
+goal_checker_update(Text,I,X):-
+ J is I-1,
+ trace_goal(Text,J,_GoalList,Goal),
+ !,
+ goal_reached(Text,I,Goal,X).
+check_closings([],I,J):-
+ I>=J,!.
+check_closings([[_,_,_,ann,goal,_]|Rest],I,J):-
+ I>=J,
+ I1 is I+1,!,
+ check_closings(Rest,I1,J).
+check_closings([[_,_,_,ann,Fkt,_]|Rest],I,J):-
+ I>=J,
+ member(Fkt,[bam,goal,sbh,hr,rr,fe]),!,
+ I1 is I+1,!,
+ check_closings(Rest,I1,J).
+check_closings([[_,_,_,ann,bem,_]|Rest],I,J):-
+ I>=J,
+ J1 is J+1,!,
+ check_closings(Rest,I,J1).
+check_closings([_|Rest],I,J):-
+ I>=J,!,
+ check_closings(Rest,I,J).
+enforce_closing(Text,TextNeu):-
+ length(Text,L),
+ count_bams(Text,BamNumber),
+ count_bems(Text,BemNumber),
+ fill_in_bems(Text,L,BamNumber,BemNumber,TextNeu).
+count_bams([],0).
+count_bams([[_,_,_,ann,Fkt,_]|Rest],Z):-
+ member(Fkt,[bam,goal,hr,rr,sbh,fe]),!,
+ count_bams(Rest,Y),
+ Z is Y+1.
+count_bams([_|Rest],Z):-
+ count_bams(Rest,Z).
+count_bems([],0).
+count_bems([[_,_,_,ann,bem,_]|Rest],Z):-
+ count_bems(Rest,Y),
+ Z is Y+1.
+count_bems([_|Rest],Z):-
+ count_bems(Rest,Z).
+fill_in_bems(Text,_L,BamNumber,BemNumber,Text):-
+ BamNumber=<BemNumber,!.
+fill_in_bems(Text,L,BamNumber,BemNumber,Text2):-
+ K is L+1,
+ append(Text,[[K,[],[],ann,bem,[]]],Text1),
+ BNeu is BemNumber+1,
+ fill_in_bems(Text1,K,BamNumber,BNeu,Text2).
+goal_reached(Text,I,_Goal,[]):-
+ member([I,_,_,_,X,_],Text),
+ \+X=bem,
+ nl,write("zeile "),write(I),write(" in zielpruefung uebergangen"),nl.
+goal_reached(_Text,I,[],[]):-
+ nl,write("Kein Ziel fuer Zeile "),write(I),write(" deklariert."),nl.
+goal_reached(Text,I,Goal,[[I,Goal]]):-
+ member([I,_,_,_,bem,_],Text),
+ no_claim(Text,I),
+ nl,write("relevantes,ziel "),write(Goal),write(" fuer zeile "),write(I),write(" wurde NICHT erreicht"),nl.
+goal_reached(Text,I,Goal,[]):-
+ member([I,_,_,_,bem,_],Text),
+ last_claim(Text,I,[_J,_Refs,_N,_Sts,_Fkt,Content]),
+ Content=Goal,!,
+ nl,write("relevantes ziel "),write(Goal),write(" fuer zeile "),write(I),write(" wurde erreicht"),nl.
+goal_reached(Text,I,Goal,[[I,Goal]]):-
+ member([I,_,_,_,bem,_],Text),
+ nl,write("relevantes ziel "),write(Goal),write(" fuer zeile "),write(I),write(" wurde NICHT erreicht"),nl.
+last_claim(_Text,0,[]):-!.
+last_claim(Text,I,[I,Refs,N,beh,Fkt,Content]):-
+ member([I,Refs,N,beh,Fkt,Content],Text),!.
+last_claim(Text,I,Line):-
+ J is I-1,!,
+ last_claim(Text,J,Line).
+no_claim([],_):-!.
+no_claim([[J,_,_,_,_,_]|_],I):-
+ J>=I,!.
+no_claim([[_,_,_,Sts,_,_]|Rest],I):-
+ \+Sts=beh,!,
+ no_claim(Rest,I).
+truncate_text([],_,[]).
+truncate_text([[J|SatzRest]|TextRest],I,[[J|SatzRest]|TextRest]):-
+ I=<J.
+truncate_text([_|Rest],I,TextTeil):-
+ truncate_text(Rest,I,TextTeil).
+
+collect_cases([],[]).
+collect_cases([[_,_,_,ann,efu,_]|_],[]).
+collect_cases([[_,_,_,ann,fe,[]],[_,_,_,ang,_,F]|Rest],[F|CaseListRest]):-
+ collect_cases(Rest,CaseListRest).
+collect_cases([[_,_,_,ann,fe,F]|Rest],[F|CaseListRest]):-
+ collect_cases(Rest,CaseListRest).
+collect_cases([_|Rest],CaseList):-
+ collect_cases(Rest,CaseList).
+disjunction([],[]).
+disjunction([X],X).
+disjunction([X|Rest],[X,or,Rest1]):-
+ disjunction(Rest,Rest1).
+normalize_2_object([],[]).
+normalize_2_object([X],Y):-
+ normalize_2_object(X,Y).
+normalize_2_object(X,X).
+prenormalize_1_2([],[]).
+prenormalize_1_2([X|Rest],[Z|RestNeu]):-
+ normalize_2_object(X,Y),
+ prenormalize_1_2(Y,Z),
+ prenormalize_1_2(Rest,RestNeu).
+prenormalize_1_2(X,X).
+normalize_2(A,B):-
+ prenormalize_1_2([1,A],[1,B]).
+normalize_2_elements_2([],[]):-!.
+normalize_2_elements_2([X|Rest],[NX|NRest]):-
+ normalize_2(X,NX),
+ normalize_2_elements_2(Rest,NRest).
+diproche_fo([],[]):-
+ nl,
+ write("Fehler gibt es keine - aber auch sonst nicht viel..."),
+ nl.
+diproche_fo(ListenText,LogicFails):-
+ annotate_text(ListenText,AnnText),!,
+ enforce_closing(AnnText,AnnText1),!,
+ nl,nl,write(AnnText1),nl,nl,
+ accessible(AnnText1,Graph),!,
+ nl,nl,write(Graph),nl,nl,
+ length(AnnText1,L),
+ K is L+1,
+ formal_proof_checker_quick(AnnText1,Graph,1,K,List),!,
+ failing_lines(List,LogicFails),
+ auswertung(LogicFails).
+diproche_full("",_InitialDeclarations,_InitialAssumptions,[],[],[],[]):-
+ write("Dieser Beweis enthaelt keine Fehler, ist aber leider etwas nichtssagend. Wuerde man ihn singen, klaenge er nach John Cage.").
+diproche_full(NatProof,_InitialDeclarations,_InitialAssumptions,[],[],[],[]):-
+ \+text_to_input(NatProof,_),!,
+ write("Ich kann den Beweis sprachlich nicht nachvollziehen. Bitte schaue dir die aufgefuehrten Stellen an und korrigiere sie. Eine Liste verwendbarer Formulierungen findest Du in der Dokumentation.").
+diproche_full(NatProof,InitialDeclarations,_InitialAssumptions,Sprachfehler,FailingLines,FailingGoals,LogicFails):-
+ text_to_input(NatProof,List),!,
+ proof_read_text(List,Sprachfehler),!,
+ nl,nl,write("Sprachliche Fehler: "),write(Sprachfehler),nl,nl,
+ type_checking(List,InitialDeclarations,FailingLines),!,
+ annotate_text(List,AnnotatedProof),!,
+ goal_checker(AnnotatedProof,FailingGoals),!,
+ diproche_aux_quick(List,LogicFails).
+diproche_aux_quick(Proof,Fails):-
+ natural_proof_check_quick(Proof,[_,_,_,_,_,_|Fails]),
+ !,
+ auswertung(Fails).
+natural_proof_check_quick(Proof,[alle,schritte,verifiziert,bis,auf,folgende,Fails]):-
+ annotate_text(Proof,AnnotatedProof),
+ nl,write(AnnotatedProof),nl,
+ write("endmarker einfuegen!"),nl,nl,
+ enforce_closing(AnnotatedProof,AnnotatedProof1),!,
+ accessible(AnnotatedProof1,AccessibilityGraph),
+ nl,nl,write(AnnotatedProof1),nl,nl,
+ !,
+ length(Proof,L),
+ K is L+2,
+ formal_proof_checker_quick(AnnotatedProof1,AccessibilityGraph,1,K,List),
+ failing_lines(List,Fails).
+formal_proof_checker_quick(_AnnotatedProof,_Graph,I,I,[[I,1]]).
+formal_proof_checker_quick(AnnotatedProof,Graph,I,J,[[I,1]|Rest]):-
+ generate_atp_task(AnnotatedProof,Graph,I,[[Assmpts,Claims,FormerTasks,_Dekls],Ziel]),
+ proof_attempt(Assmpts,Claims,FormerTasks,Ziel),
+ !,
+ K is I+1,
+ formal_proof_checker_quick(AnnotatedProof,Graph,K,J,Rest).
+formal_proof_checker_quick(AnnotatedProof,Graph,I,J,[[I,0]|Rest]):-
+ K is I+1,
+ !,
+ formal_proof_checker_quick(AnnotatedProof,Graph,K,J,Rest).
+proof_attempt(Assmpts,Claims,FormerTasks,Ziel):-
+ read_off_implication(Assmpts,Claims,FormerTasks,Ziel),!.
+proof_attempt(Assmpts,Claims,_FormerTasks,Ziel):-
+ union(Assmpts,Claims,List),
+ proof_step_normal(List,Ziel,1,[]).
+proof_attempt(Assmpts,Claims,_FormerTasks,Ziel):-
+ proof_step_qntfrs_normal(_,Assmpts,Claims,Ziel,1,[]).
+diproche(""):-
+ write("Dieser Beweis ist etwas nichtssagend. Hat ihn John Cage geschrieben?"),!.
+diproche(NatProof):-
+ text_to_input(NatProof,AnnotatedProof),!,
+ diproche_aux(AnnotatedProof).
+diproche_aux(Proof):-
+ natural_proof_check_prot(Proof,[_,_,_,_,_,_|Fails]),
+ !,
+ auswertung(Fails).
+auswertung([]):-
+ nl,nl,nl,write("Der Beweis ist korrekt!"),nl,nl,nl.
+auswertung([[]]):-
+ nl,nl,nl,write("Der Beweis ist korrekt!"),nl,nl,nl.
+auswertung(X):-
+ nl,nl,nl,write("Folgende Zeilen konnten nicht verifiziert werden: "),write(X),nl,nl,nl.
+natural_proof_check_prot(Proof,[alle,schritte,verifiziert,bis,auf,folgende,Fails]):-
+ annotate_text(Proof,AnnotatedProof),
+ nl,
+ write("Annotation erfolgreich"),
+ nl,
+ nl,
+ nl,
+ write("Annotierter Text:"),
+ nl,
+ nl,
+ nl,
+ pretty_write(AnnotatedProof),
+ nl,
+ nl,
+ nl,
+ accessible(AnnotatedProof,AccessibilityGraph),
+ write("Zugaenglichkeitsgraph generiert:"),
+ nl,
+ nl,
+ write(AccessibilityGraph),
+ nl,nl,nl,
+ !,
+ length(Proof,L),
+ K is L+1,
+ formal_proof_checker_prot(AnnotatedProof,AccessibilityGraph,1,K,List),
+ failing_lines(List,Fails).
+formal_proof_checker_prot(_AnnotatedProof,_Graph,I,I,[[I,1]]):-
+ nl,
+ write("Verifikationsalgorithmus hat die letzte Zeile "),write(I),write(" erreicht."),!.
+formal_proof_checker_prot(AnnotatedProof,Graph,I,J,[[I,1]|Rest]):-
+ nl,
+ nl,
+ write("Prover hat Zeile "),write(I),write(" erreicht"),
+ I<J,
+
+ generate_atp_task(AnnotatedProof,Graph,I,[Assmpts,Con]),
+ nl,
+ write("Versuche, aus "),nl,pretty_write(Assmpts),nl,write(" zu beweisen, dass "),nl,
+ write(Con),nl,
+
+ proof_step_normal(Assmpts,Con,1,[]),
+ nl,
+ write("Zeile "),write(I),write(" erfolgreich geprueft"),
+ nl,
+ !,
+ K is I+1,
+ formal_proof_checker_prot(AnnotatedProof,Graph,K,J,Rest).
+formal_proof_checker_prot(AnnotatedProof,Graph,I,J,[[I,0]|Rest]):-
+ nl,nl,nl,
+ write("Verifikation bei Zeile "),write(I),write(" gescheitert."),nl,nl,nl,
+ K is I+1,
+ !,
+ formal_proof_checker_prot(AnnotatedProof,Graph,K,J,Rest).
+failing_lines([],[]):-!.
+failing_lines([[I,0]|Rest],[I|Rest1]):-
+ failing_lines(Rest,Rest1).
+failing_lines([_|Rest],Fails):-
+ failing_lines(Rest,Fails).
+natural_proof_check([],[der,beweis,ist,etwas,nichtssagend]).
+natural_proof_check(Proof,[alle,beweiszeilen,ueberprueft]):-
+ annotate_text(Proof,AnnotatedProof),
+ nl,
+ write("Annotation erfolgreich"),
+ nl,
+ write("Annotierter Text:"),
+ nl,
+ pretty_write(AnnotatedProof),
+ nl,
+ nl,
+ nl,
+ accessible(AnnotatedProof,AccessibilityGraph),
+ write("Zugaenglichkeitsgraph generiert:"),
+ nl,
+ write(AccessibilityGraph),
+ !,
+ length(Proof,L),
+ K is L+1,
+ formal_proof_checker(AnnotatedProof,AccessibilityGraph,1,K).
+formal_proof_checker(_,_,I,I):-
+ nl,
+ write("Verifikation bis Zeile "),write(I),write(" erfolgreich"),!.
+formal_proof_checker(AnnotatedProof,Graph,I,J):-
+ nl,
+ nl,
+ write("Prover hat Zeile "),write(I),write(" erreicht."),
+ I<J,
+ generate_atp_task(AnnotatedProof,Graph,I,[Assmpts,Con]),
+ nl,
+ write("Versuche, aus "),write(Assmpts),write(" zu beweisen, dass "),write(Con),
+ proof_step_normal(Assmpts,Con,1,[]),
+ nl,
+ write("Zeile "),write(I),write(" erfolgreich geprueft."),
+ nl,
+ !,
+ K is I+1,
+ formal_proof_checker(AnnotatedProof,Graph,K,J).
+formal_proof_checker(AnnotatedProof,Graph,I,J):-
+ nl,nl,nl,
+ write("Verifikation bei Zeile "),write(I),write(" gescheitert"),
+ nl,nl,nl,
+ K is I+1,
+ !,
+ formal_proof_checker(AnnotatedProof,Graph,K,J).
+diproche_wait(""):-
+ write("Dieser Beweis ist etwas nichtssagend. Hat ihn John Cage geschrieben?"),!.
+diproche_wait(NatProof):-
+ text_to_input(NatProof,AnnotatedProof),!,
+ diproche_aux_wait(AnnotatedProof).
+diproche_aux_wait(Proof):-
+ natural_proof_check_prot_wait(Proof,[_,_,_,_,_,_|Fails]),
+ !,
+ auswertung(Fails).
+natural_proof_check_prot_wait(Proof,[alle,schritte,verifiziert,bis,auf,folgende,Fails]):-
+ annotate_text(Proof,AnnotatedProof),
+ nl,
+ write("Annotation erfolgreich"),
+ nl,
+ nl,
+ nl,
+ write("Annotierter Text:"),
+ nl,
+ nl,
+ nl,
+ pretty_write(AnnotatedProof),
+ nl,
+ nl,
+ nl,
+ accessible(AnnotatedProof,AccessibilityGraph),
+ write("Zugaenglichkeitsgraph generiert:"),
+ nl,
+ nl,
+ write(AccessibilityGraph),
+ nl,nl,nl,
+ !,
+ length(Proof,L),
+ K is L+1,
+ formal_proof_checker_prot_wait(AnnotatedProof,AccessibilityGraph,1,K,List),
+ failing_lines(List,Fails).
+formal_proof_checker_prot_wait(_AnnotatedProof,_Graph,I,I,[[I,1]]):-
+ nl,
+ write("Verifikationsalgorithmus hat die letzte Zeile "),write(I),write(" erreicht."),!.
+formal_proof_checker_prot_wait(AnnotatedProof,Graph,I,J,[[I,1]|Rest]):-
+ nl,
+ nl,
+ write("Prover hat Zeile "),write(I),write(" erreicht"),
+ I<J,
+ generate_atp_task(AnnotatedProof,Graph,I,[Assmpts,Con]),
+ nl,
+ write("Versuche, aus "),nl,pretty_write(Assmpts),nl,write(" zu beweisen, dass "),nl,
+ write(Con),nl,
+ proof_step_normal(Assmpts,Con,1,[]),
+ nl,
+ write("Zeile "),write(I),write(" erfolgreich geprueft"),
+ nl,
+ !,
+ K is I+1,
+ read(_),
+ formal_proof_checker_prot_wait(AnnotatedProof,Graph,K,J,Rest).
+formal_proof_checker_prot_wait(AnnotatedProof,Graph,I,J,[[I,0]|Rest]):-
+ nl,nl,nl,
+ write("Verifikation bei Zeile "),write(I),write(" gescheitert."),nl,nl,nl,
+ K is I+1,
+ !,
+ read(_),
+ formal_proof_checker_prot_wait(AnnotatedProof,Graph,K,J,Rest).
+pretty_write([]):-!.
+pretty_write([X|Rest]):-nl,write(X),nl,pretty_write(Rest).
+normalize_elements([],[]):-!.
+normalize_elements([X|Rest],[NX|NRest]):-
+ normalize(X,NX),
+ normalize_elements(Rest,NRest).

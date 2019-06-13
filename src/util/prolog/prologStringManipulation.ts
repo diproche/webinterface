@@ -2,7 +2,7 @@ import {fetchAllMatchesForAGroup} from "../regExpUtils";
 import builtInPredicates from "./builtInPredicates";
 
 export function removeFileExtension(path: string) {
-	const fetchFileExtension = /(.*)\.[^\.]*/;
+	const fetchFileExtension = /(.+)\.[^\.]*/;
 
 	const fetch: string[] | null = fetchFileExtension.exec(path);
 	if (fetch === null) { return ""; }
