@@ -148,4 +148,5 @@ export function detectMissingStatementsOrConnector(formattedExpression: string[]
 	if (foundStatement === false || foundConnector === true || foundNegation === true) {
 		addIssue("MISSING_STATEMENT_AT_THE_END");
 	}
+
 }
