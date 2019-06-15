@@ -177,4 +177,23 @@ describe("prologStringManipulation Module", () => {
 		expect(results).toEqual(assets.expectedNF);
 	});
 
+	test("fixVariableShadowingInImport() renames predicates to have no predicate name shadowing", async () => {
+		const results = PSM.fixVariableShadowingInImport("male(bob).", "male(frank).");
+		expect(results).toEqual("male_1(frank).");
+	});
+
+	test("fixVariableShadowingInImport() increases the identifier on overlap", async () => {
+		const results = PSM.fixVariableShadowingInImport("male(bob). male_1(karl).", "male(frank).");
+		expect(results).toEqual("male_2(frank).");
+	});
+
+	test("fixVariableShadowingInImport() renames multiple predicates", async () => {
+		const results = PSM.fixVariableShadowingInImport("male(bob). male_1(karl).", "male(frank). male(hannes).");
+		expect(results).toEqual("male_2(frank). male_2(hannes).");
+	});
+
+	test("fixVariableShadowingInImport() work even with parameters containing braces", async () => {
+		const results = PSM.fixVariableShadowingInImport("male(b(ob)).", "male(ha(n(ne)s)).");
+		expect(results).toEqual("male_1(ha(n(ne)s)).");
+	});
 });
