@@ -8,7 +8,7 @@ import uniqueValues from "./Iterators";
  * Regular expression that looks for any and all words. A word is defined as some sequence of
  * characters (\w+) betweeen wordbarriers (\b)
  */
-const anyWord = new RegExp(/\b\w+\b/g);
+export const anyWord = new RegExp(/\b\w+\b/g);
 /**
  * Predefined dictionary containing all allowed Words
  */
