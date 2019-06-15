@@ -16,7 +16,7 @@ export function importFile(relativePath: string): PrologSession {
 	const absolutePath = path.resolve(__dirname, relativePath);
 	const program = fs.readFileSync(absolutePath, "utf-8");
 	const fileName = PSM.removeFileExtension(path.basename(absolutePath));
-	return new PrologSession(program, path.dirname(absolutePath), fileName, 9999999);
+	return new PrologSession(program, path.dirname(absolutePath), fileName, 999999999);
 }
 
 function resolveImports(program: string, defaultPath: string, currentFileName: string = "main"): string {

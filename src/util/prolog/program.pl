@@ -13,7 +13,7 @@ memberchk(Elem, List):-
 
 length(0,[]).
 length(L+1, [H|T]):-
-  length_1(L,T).
+  length(L,T).
 
 maplist(Goal, List1, List2) :-
   maplist_(List1, List2, Goal).
