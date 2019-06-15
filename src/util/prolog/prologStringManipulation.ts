@@ -1,3 +1,5 @@
+import fs from "fs";
+import path from "path";
 import {fetchAllMatchesForAGroup} from "../regExpUtils";
 import builtInPredicates from "./builtInPredicates";
 
@@ -59,11 +61,13 @@ export function fixVariableShadowingInImport(program: string, importedProgram: s
 	const fetchImportedPredicatesRegExp = /:-[\r\t\f\v ]*module\([^,)]*,\[([^)]*)\][\r\t\f\v ]*\)[\r\t\f\v ]*/;
 
 	const useModuleSecondParam: string[] | null = fetchImportedPredicatesRegExp.exec(importedProgram);
+
 	if (useModuleSecondParam == null) {
 		return identifyPredicatesUniquely(program, importedProgram);
 	}
 	// The following regex will return in group one the name of the functions
 	const importedPredicates: string[] = fetchAllMatchesForAGroup(useModuleSecondParam![1], /[\r\t\f\v ]*(\w*)\/\d,?/g, 1);
+
 	return identifyPredicatesUniquely(program, importedProgram, importedPredicates);
 }
 
@@ -94,14 +98,13 @@ function identifyPredicatesUniquely(program: string, importedProgram: string, im
 
 	// Renaming Process
 
-	console.log(predicatesToRename);
-
 	predicatesToRename.forEach((toRename: string) => {
+		// This RegExp might be a potential source of errors
 		const getToRenameRegExp = new RegExp(toRename + "(\(.*?\))", "g");
 		importedProgram = importedProgram.replace(getToRenameRegExp, (_, parameters: string) => {
 
 			let identifier = 1;
-			while (mainProgramPredicates.has(toRename + "_" + identifier)) {
+			while (mainProgramPredicates.has(toRename + "_" + identifier )) {
 				identifier++;
 			}
 
@@ -126,6 +129,7 @@ function getNonBuiltInPredicates(program: string): Set<string> {
 
 	// Delete built in predicates from the Set
 	builtInPredicates.forEach((predicate: string) => predicates.delete(predicate));
+	console.log(predicates);
 
 	return predicates;
 }

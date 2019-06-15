@@ -87,12 +87,39 @@ const tauPrologBuiltInPredicates: Set<string> = new Set(
 	"write_term",
 	"use_module",
 	"module",
-	// The following were added when they were declared as undefined in SWI Prolog
-	"member",
+	"log",
+	"floor",
+	// Selfdefined
 	"memberchk",
-	"length",
-	"append",
 	"union",
-	"subset"]);
+	"subset",
+	"flatten",
+	// Tau-Prolog List Module
+	"append",
+	"drop",
+	"keysort",
+	"last",
+	"length",
+	"list_to_set",
+	"max_list",
+	"member",
+	"min_list",
+	"msort",
+	"nth0",
+	"nth1",
+	"permutation",
+	"prefix",
+	"prod_list",
+	"replicate",
+	"reverse",
+	"select",
+	"sort",
+	"take",
+	"exclude",
+	"foldl",
+	"include",
+	"maplist",
+	// This is a dirty fix to an renaming bug
+	"normalize_elements"]);
 
 export default tauPrologBuiltInPredicates;

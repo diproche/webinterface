@@ -3,6 +3,7 @@ import path from "path";
 import { format_answer, type } from "tau-prolog/modules/core";
 import getTopologicalOrder, {Edge} from "../getTopologicalOrder";
 import {fetchAllMatchesForAGroup} from "../regExpUtils";
+import {libraryLists} from "./libraries/libraries";
 import { PrologResult } from "./prologResult";
 // PSM ~ prologStringManipulation
 import * as PSM from "./prologStringManipulation";
@@ -15,7 +16,7 @@ export function importFile(relativePath: string): PrologSession {
 	const absolutePath = path.resolve(__dirname, relativePath);
 	const program = fs.readFileSync(absolutePath, "utf-8");
 	const fileName = PSM.removeFileExtension(path.basename(absolutePath));
-	return new PrologSession(program, path.dirname(absolutePath), fileName);
+	return new PrologSession(program, path.dirname(absolutePath), fileName, 9999999);
 }
 
 function resolveImports(program: string, defaultPath: string, currentFileName: string = "main"): string {
@@ -26,6 +27,7 @@ function resolveImports(program: string, defaultPath: string, currentFileName: s
 		let importedPrograms: string = "";
 		importList.forEach((importFileName: string) => {
 			let currentImport = fs.readFileSync(path.resolve(defaultPath, importFileName + ".pl"), "utf-8");
+
 			currentImport = PSM.removeNonFunctionalities(currentImport);
 			importedPrograms = importedPrograms + PSM.fixVariableShadowingInImport(importedPrograms + program, currentImport);
 		});
@@ -67,6 +69,7 @@ export class PrologSession {
 				this.session = new type.Session(limit);
 				program = PSM.removeModuleDeclarations(program);
 				program = PSM.removeModuleImports(program);
+				program = libraryLists + "\n\n" + program;
 
 				fs.writeFileSync(path.resolve(__dirname, "program.pl"), program);
 

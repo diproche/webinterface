@@ -1,3 +1,83 @@
+:- use_module(library(lists)).
+
+member(El, [H|T]) :-
+  member_(T, El, H).
+
+member_(_, El, El).
+member_([H|T], El, _) :-
+  member_(T, El, H).
+
+memberchk(Elem, List):-
+  member(Elem, List),
+  !.
+
+length(0,[]).
+length(L+1, [H|T]):-
+  length_1(L,T).
+
+maplist(Goal, List1, List2) :-
+  maplist_(List1, List2, Goal).
+
+maplist_([], [], _).
+maplist_([Elem1|Tail1], [Elem2|Tail2], Goal) :-
+  call(Goal, Elem1, Elem2),
+  maplist_(Tail1, Tail2, Goal).
+
+
+
+union([], L, L) :- !.
+
+union([H|T], L, R) :-
+  memberchk(H, L),
+  !,
+  union(T, L, R).
+
+union([H|T], L, [H|R]) :-
+  union(T, L, R).
+
+
+subset([], _) :- !.
+
+subset([E|R], Set) :-
+  memberchk(E, Set),
+
+subset(R, Set).
+
+flatten(List, FlatList) :-
+  flatten(List, [], FlatList0),
+  !,
+  FlatList = FlatList0.
+
+flatten(Var, Tl, [Var|Tl]) :-
+  var(Var),
+  !.
+flatten([], Tl, Tl) :- !.
+flatten([Hd|Tl], Tail, List) :-
+  !,
+  flatten(Hd, FlatHeadTail, List),
+flatten(Tl, Tail, FlatHeadTail).
+flatten(NonList, Tl, [NonList|Tl]).
+
+
+accessible(Text,Graph):-
+ !,
+ length(Text,Length),
+ !,
+ count_up(1,Length,Lines),
+ !,
+ findall([X,Y],(member(X,Lines),member(Y,Lines),reachable(X,Y,Text)),PreGraph),
+ simplify(PreGraph,Graph).
+count_up(I,I,[I]):-!.
+count_up(I,J,[I|Rest]):-
+ !,
+ K is I+1,
+ count_up(K,J,Rest).
+simplify([],[]).
+simplify([X|Rest],Rest1):-
+ member(X,Rest),
+ simplify(Rest,Rest1).
+simplify([X|Rest],[X|Rest1]):-
+ simplify(Rest,Rest1).
 reachable(I,J,Text):-
  I<J,
  count_up(I,J,List),
@@ -47,14 +127,6 @@ reachable(I,J,Text):-
 
 
 
-accessible(Text,Graph):-
- !,
- length(Text,Length),
- !,
- count_up(1,Length,Lines),
- !,
- findall([X,Y],(member(X,Lines),member(Y,Lines),reachable(X,Y,Text)),PreGraph),
- simplify(PreGraph,Graph).
 anfangsmarker(X):-
  member(X,[sfu,fe,hr,rr,sbh,bam]).
 endmarker(X):-
@@ -206,17 +278,6 @@ domain([[X,_Y]|Rest],[X|Rest1]):-
 range([],[]).
 range([[_X,Y]|Rest],[Y|Rest1]):-
  range(Rest,Rest1).
-count_up(I,I,[I]):-!.
-count_up(I,J,[I|Rest]):-
- !,
- K is I+1,
- count_up(K,J,Rest).
-simplify([],[]).
-simplify([X|Rest],Rest1):-
- member(X,Rest),
- simplify(Rest,Rest1).
-simplify([X|Rest],[X|Rest1]):-
- simplify(Rest,Rest1).
 delete_fillers([],[]).
 delete_fillers([X|Rest],Res):-
  member(X,[nun, jetzt, ferner, ausserdem, weiter, aber, auch, insbesondere, andererseits,sicherlich,jedenfalls, schon, ebenfalls, endlich, schliesslich]),
@@ -953,28 +1014,28 @@ simplify_1([X|Rest],[X|Rest1]):-
 read_off_implication([falsum],_,_,falsum).
 read_off_implication(Assmpts,Claims,FormerTasks,Z):-
  normalize(Z,[ANorm,->,BNorm]),!,
- normalize_elements_1(Assmpts,AssmptsNorm),!,
- normalize_elements_1(FormerTasks,FormerTasksNorm),!,
- normalize_elements_1(Claims,ClaimsNorm),!,
+ normalize_elements(Assmpts,AssmptsNorm),!,
+ normalize_elements(FormerTasks,FormerTasksNorm),!,
+ normalize_elements(Claims,ClaimsNorm),!,
  some_end_segment(AssmptsNorm,ClaimsNorm,FormerTasksNorm,[ANorm,->,BNorm]).
 read_off_implication(Assmpts,Claims,FormerTasks,Z):-
  normalize(Z,[ANorm,<->,BNorm]),!,
- normalize_elements_1(Assmpts,AssmptsNorm),!,
- normalize_elements_1(FormerTasks,FormerTasksNorm),!,
- normalize_elements_1(Claims,ClaimsNorm),!,
+ normalize_elements(Assmpts,AssmptsNorm),!,
+ normalize_elements(FormerTasks,FormerTasksNorm),!,
+ normalize_elements(Claims,ClaimsNorm),!,
  some_end_segment(AssmptsNorm,ClaimsNorm,FormerTasksNorm,[ANorm,->,BNorm]),!,
  some_end_segment(AssmptsNorm,ClaimsNorm,FormerTasksNorm,[BNorm,->,ANorm]).
 read_off_implication(Assmpts,Claims,FormerTasks,Z):-
  normalize(Z,[neg,Z0]),!,
- normalize_elements_1(Assmpts,AssmptsNorm),!,
- normalize_elements_1(FormerTasks,FormerTasksNorm),!,
- normalize_elements_1(Claims,ClaimsNorm),!,
+ normalize_elements(Assmpts,AssmptsNorm),!,
+ normalize_elements(FormerTasks,FormerTasksNorm),!,
+ normalize_elements(Claims,ClaimsNorm),!,
  some_end_segment(AssmptsNorm,ClaimsNorm,FormerTasksNorm,[Z0,->,falsum]).
 read_off_implication(Assmpts,Claims,FormerTasks,Z):-
  normalize(Z,Z0),!,
- normalize_elements_1(Assmpts,AssmptsNorm),!,
- normalize_elements_1(FormerTasks,FormerTasksNorm),!,
- normalize_elements_1(Claims,ClaimsNorm),!,
+ normalize_elements(Assmpts,AssmptsNorm),!,
+ normalize_elements(FormerTasks,FormerTasksNorm),!,
+ normalize_elements(Claims,ClaimsNorm),!,
  some_end_segment(AssmptsNorm,ClaimsNorm,FormerTasksNorm,[[neg,Z0],->,falsum]).
 some_end_segment(Assmpts,Claims,[X|_RestTasks],Z):-
  union(Assmpts,Claims,Assmpts1),
@@ -1029,12 +1090,12 @@ proof_step_qntfrs(rename,_Vss,Claims,F,1,_):-
 proof_step_qntfrs(allintr,Vss,Claims,[all,X,F],1,_):-
  member(F1,Claims),
  mgu(F,F1,[[X,V]]),
- variable(V),
+ variable_1(V),
  contains_freely_list(Vss,V,[]).
 proof_step_qntfrs(allintr,Vss,Claims,[all,X,F],1,_):-
  member(F1,Claims),
  mgu(F,F1,[[V,X]]),
- variable(V),
+ variable_1(V),
  contains_freely_list(Vss,V,[]).
 proof_step_qntfrs(allintr,Vss,Claims,[all,X,F],1,_):-
  member(F1,Claims),
@@ -1043,13 +1104,13 @@ proof_step_qntfrs(allintr,Vss,Claims,[all,X,F],1,_):-
 proof_step_qntfrs(allintr,Vss,Claims,[all,X,[Assmpts,->,F]],1,_):-
  member(F1,Claims),
  mgu(F,F1,[[X,V]]),
- variable(V),
+ variable_1(V),
  contains_freely_list(Vss,V,Assmpts0),
  create_conjunction(Assmpts0,Assmpts).
 proof_step_qntfrs(allintr,Vss,Claims,[all,X,[Assmpts,->,F]],1,_):-
  member(F1,Claims),
  mgu(F,F1,[[V,X]]),
- variable(V),
+ variable_1(V),
  contains_freely_list(Vss,V,Assmpts0),
  create_conjunction(Assmpts0,Assmpts).
 proof_step_qntfrs(allintr,Vss,Claims,[all,X,[Assmpts,->,F]],1,_):-
@@ -1430,10 +1491,8 @@ n_step_proof(X,A,Z,Refs):-
  findall(B,proof_step(_,X,B,1,Refs),Conslist),
  !,
  append(X,Conslist,X1),
-
  !,
  Zneu is Z-1,
-
  n_step_proof(X1,A,Zneu,Refs).
 clever_proof(_,_,0,_):-!,fail.
 clever_proof(X,Y,_,_):-member(Y,X).
@@ -1479,13 +1538,10 @@ clever_proof(X,[neg,[neg,A]],Z,Refs):-
  Zneu is Z-1,
  clever_proof(X,A,Zneu,Refs).
 clever_proof(X,Y,Z,Refs):-
-
  length(X,L),
  L>1,
  PreBound is log(10/log(L))/log(2),
  Bound is floor(PreBound),
-
- write([versuche,es,in,Bound,schritten]),
  Bound=<Z,
  n_step_proof(X,Y,Bound,Refs).
 clever_proof_prot(_,_,0,[],_):-!,fail.
@@ -1816,7 +1872,7 @@ sort_out_dcls([A|Rest],Dcls,[A|AssmptsRest]):-
  sort_out_dcls(Rest,Dcls,AssmptsRest).
 predicate(X):-
  member(X,[p,q,r,=,<,>]).
-variable(X):-
+variable_1(X):-
  member(X,[a,b,c,d,e,f,g,h,i,j,k,l,m,n,s,t,u,v,w,x,y,z]).
 prop_var(X):-
  member(X,[a,b,c,d]).
@@ -1825,10 +1881,10 @@ function(X):-
 constant(d).
 all_vars([]).
 all_vars([X|Rest]):-
- variable(X),
+ variable_1(X),
  all_vars(Rest).
 term(X):-
- variable(X),!.
+ variable_1(X),!.
 term(X):-
  constant(X),!.
 term(X):-number(X).
@@ -1853,10 +1909,10 @@ formula([F,J,G]):-
 formula([neg,F]):-
  formula(F).
 formula([all,X,F]):-
- variable(X),
+ variable_1(X),
  formula(F).
 formula([ex,X,F]):-
- variable(X),
+ variable_1(X),
  formula(F).
 all_free_in(F,_V):-
  atomic_formula(F).
@@ -1872,11 +1928,11 @@ all_free_in([Q,X,F],V):-
  all_free_in(F,V).
 mgu(F,F,[]):-!.
 mgu(X,T,[[X,T]]):-
- variable(X),
+ variable_1(X),
  term(T),!,
  \+contains_var(T,X).
 mgu(T,X,[[X,T]]):-
- variable(X),
+ variable_1(X),
  term(T),!,
  \+contains_var(T,X).
 mgu(X,F,[[X,F]]):-
@@ -2252,15 +2308,14 @@ trace_goal(Text,I,GoalList1,Goal1):-
  trace_goal(Text,J,GoalList0,Goal0),
  truncate_text(Text,I,TextTeil),
  update_goal(TextTeil,GoalList0,Goal0,GoalList,Goal),!,
- normalize_2_elements_2(GoalList,GoalList1),
+ normalize_2_elements(GoalList,GoalList1),
  normalize_2(Goal,Goal1).
 goal_checker(Text,FailingLines):-
  normalize_2(Text,Text1),!,
  check_closings(Text1,0,0),!,
  enforce_closing(Text1,Text2),!,
  goal_checker_from(Text2,1,FailingLines).
-goal_checker(_Text,[]):-
- nl,write("Fehler: Beweisendmarker ohne zugehoerigen Anfangsmarker"),nl.
+goal_checker(_Text,[]).
 goal_checker_from(Text,I,[]):-
  length(Text,J),
  I>J,
@@ -2320,22 +2375,17 @@ fill_in_bems(Text,L,BamNumber,BemNumber,Text2):-
  fill_in_bems(Text1,K,BamNumber,BNeu,Text2).
 goal_reached(Text,I,_Goal,[]):-
  member([I,_,_,_,X,_],Text),
- \+X=bem,
- nl,write("zeile "),write(I),write(" in zielpruefung uebergangen"),nl.
-goal_reached(_Text,I,[],[]):-
- nl,write("Kein Ziel fuer Zeile "),write(I),write(" deklariert."),nl.
+ \+X=bem.
+goal_reached(_Text,I,[],[]).
 goal_reached(Text,I,Goal,[[I,Goal]]):-
  member([I,_,_,_,bem,_],Text),
- no_claim(Text,I),
- nl,write("relevantes,ziel "),write(Goal),write(" fuer zeile "),write(I),write(" wurde NICHT erreicht"),nl.
+ no_claim(Text,I).
 goal_reached(Text,I,Goal,[]):-
  member([I,_,_,_,bem,_],Text),
  last_claim(Text,I,[_J,_Refs,_N,_Sts,_Fkt,Content]),
- Content=Goal,!,
- nl,write("relevantes ziel "),write(Goal),write(" fuer zeile "),write(I),write(" wurde erreicht"),nl.
+ Content=Goal,!.
 goal_reached(Text,I,Goal,[[I,Goal]]):-
- member([I,_,_,_,bem,_],Text),
- nl,write("relevantes ziel "),write(Goal),write(" fuer zeile "),write(I),write(" wurde NICHT erreicht"),nl.
+ member([I,_,_,_,bem,_],Text).
 last_claim(_Text,0,[]):-!.
 last_claim(Text,I,[I,Refs,N,beh,Fkt,Content]):-
  member([I,Refs,N,beh,Fkt,Content],Text),!.
@@ -2378,54 +2428,19 @@ prenormalize_1_2([X|Rest],[Z|RestNeu]):-
 prenormalize_1_2(X,X).
 normalize_2(A,B):-
  prenormalize_1_2([1,A],[1,B]).
-normalize_2_elements_2([],[]):-!.
-normalize_2_elements_2([X|Rest],[NX|NRest]):-
+normalize_2_elements([],[]):-!.
+normalize_2_elements([X|Rest],[NX|NRest]):-
  normalize_2(X,NX),
- normalize_2_elements_2(Rest,NRest).
-diproche_fo([],[]):-
- nl,
- write("Fehler gibt es keine - aber auch sonst nicht viel..."),
- nl.
+ normalize_2_elements(Rest,NRest).
+diproche_fo([],[]).
 diproche_fo(ListenText,LogicFails):-
  annotate_text(ListenText,AnnText),!,
  enforce_closing(AnnText,AnnText1),!,
- nl,nl,write(AnnText1),nl,nl,
  accessible(AnnText1,Graph),!,
- nl,nl,write(Graph),nl,nl,
  length(AnnText1,L),
  K is L+1,
  formal_proof_checker_quick(AnnText1,Graph,1,K,List),!,
- failing_lines(List,LogicFails),
- auswertung(LogicFails).
-diproche_full("",_InitialDeclarations,_InitialAssumptions,[],[],[],[]):-
- write("Dieser Beweis enthaelt keine Fehler, ist aber leider etwas nichtssagend. Wuerde man ihn singen, klaenge er nach John Cage.").
-diproche_full(NatProof,_InitialDeclarations,_InitialAssumptions,[],[],[],[]):-
- \+text_to_input(NatProof,_),!,
- write("Ich kann den Beweis sprachlich nicht nachvollziehen. Bitte schaue dir die aufgefuehrten Stellen an und korrigiere sie. Eine Liste verwendbarer Formulierungen findest Du in der Dokumentation.").
-diproche_full(NatProof,InitialDeclarations,_InitialAssumptions,Sprachfehler,FailingLines,FailingGoals,LogicFails):-
- text_to_input(NatProof,List),!,
- proof_read_text(List,Sprachfehler),!,
- nl,nl,write("Sprachliche Fehler: "),write(Sprachfehler),nl,nl,
- type_checking(List,InitialDeclarations,FailingLines),!,
- annotate_text(List,AnnotatedProof),!,
- goal_checker(AnnotatedProof,FailingGoals),!,
- diproche_aux_quick(List,LogicFails).
-diproche_aux_quick(Proof,Fails):-
- natural_proof_check_quick(Proof,[_,_,_,_,_,_|Fails]),
- !,
- auswertung(Fails).
-natural_proof_check_quick(Proof,[alle,schritte,verifiziert,bis,auf,folgende,Fails]):-
- annotate_text(Proof,AnnotatedProof),
- nl,write(AnnotatedProof),nl,
- write("endmarker einfuegen!"),nl,nl,
- enforce_closing(AnnotatedProof,AnnotatedProof1),!,
- accessible(AnnotatedProof1,AccessibilityGraph),
- nl,nl,write(AnnotatedProof1),nl,nl,
- !,
- length(Proof,L),
- K is L+2,
- formal_proof_checker_quick(AnnotatedProof1,AccessibilityGraph,1,K,List),
- failing_lines(List,Fails).
+ failing_lines(List,LogicFails).
 formal_proof_checker_quick(_AnnotatedProof,_Graph,I,I,[[I,1]]).
 formal_proof_checker_quick(AnnotatedProof,Graph,I,J,[[I,1]|Rest]):-
  generate_atp_task(AnnotatedProof,Graph,I,[[Assmpts,Claims,FormerTasks,_Dekls],Ziel]),
@@ -2437,6 +2452,11 @@ formal_proof_checker_quick(AnnotatedProof,Graph,I,J,[[I,0]|Rest]):-
  K is I+1,
  !,
  formal_proof_checker_quick(AnnotatedProof,Graph,K,J,Rest).
+failing_lines([],[]):-!.
+failing_lines([[I,0]|Rest],[I|Rest1]):-
+ failing_lines(Rest,Rest1).
+failing_lines([_|Rest],Fails):-
+ failing_lines(Rest,Fails).
 proof_attempt(Assmpts,Claims,FormerTasks,Ziel):-
  read_off_implication(Assmpts,Claims,FormerTasks,Ziel),!.
 proof_attempt(Assmpts,Claims,_FormerTasks,Ziel):-
@@ -2444,188 +2464,6 @@ proof_attempt(Assmpts,Claims,_FormerTasks,Ziel):-
  proof_step_normal(List,Ziel,1,[]).
 proof_attempt(Assmpts,Claims,_FormerTasks,Ziel):-
  proof_step_qntfrs_normal(_,Assmpts,Claims,Ziel,1,[]).
-diproche(""):-
- write("Dieser Beweis ist etwas nichtssagend. Hat ihn John Cage geschrieben?"),!.
-diproche(NatProof):-
- text_to_input(NatProof,AnnotatedProof),!,
- diproche_aux(AnnotatedProof).
-diproche_aux(Proof):-
- natural_proof_check_prot(Proof,[_,_,_,_,_,_|Fails]),
- !,
- auswertung(Fails).
-auswertung([]):-
- nl,nl,nl,write("Der Beweis ist korrekt!"),nl,nl,nl.
-auswertung([[]]):-
- nl,nl,nl,write("Der Beweis ist korrekt!"),nl,nl,nl.
-auswertung(X):-
- nl,nl,nl,write("Folgende Zeilen konnten nicht verifiziert werden: "),write(X),nl,nl,nl.
-natural_proof_check_prot(Proof,[alle,schritte,verifiziert,bis,auf,folgende,Fails]):-
- annotate_text(Proof,AnnotatedProof),
- nl,
- write("Annotation erfolgreich"),
- nl,
- nl,
- nl,
- write("Annotierter Text:"),
- nl,
- nl,
- nl,
- pretty_write(AnnotatedProof),
- nl,
- nl,
- nl,
- accessible(AnnotatedProof,AccessibilityGraph),
- write("Zugaenglichkeitsgraph generiert:"),
- nl,
- nl,
- write(AccessibilityGraph),
- nl,nl,nl,
- !,
- length(Proof,L),
- K is L+1,
- formal_proof_checker_prot(AnnotatedProof,AccessibilityGraph,1,K,List),
- failing_lines(List,Fails).
-formal_proof_checker_prot(_AnnotatedProof,_Graph,I,I,[[I,1]]):-
- nl,
- write("Verifikationsalgorithmus hat die letzte Zeile "),write(I),write(" erreicht."),!.
-formal_proof_checker_prot(AnnotatedProof,Graph,I,J,[[I,1]|Rest]):-
- nl,
- nl,
- write("Prover hat Zeile "),write(I),write(" erreicht"),
- I<J,
-
- generate_atp_task(AnnotatedProof,Graph,I,[Assmpts,Con]),
- nl,
- write("Versuche, aus "),nl,pretty_write(Assmpts),nl,write(" zu beweisen, dass "),nl,
- write(Con),nl,
-
- proof_step_normal(Assmpts,Con,1,[]),
- nl,
- write("Zeile "),write(I),write(" erfolgreich geprueft"),
- nl,
- !,
- K is I+1,
- formal_proof_checker_prot(AnnotatedProof,Graph,K,J,Rest).
-formal_proof_checker_prot(AnnotatedProof,Graph,I,J,[[I,0]|Rest]):-
- nl,nl,nl,
- write("Verifikation bei Zeile "),write(I),write(" gescheitert."),nl,nl,nl,
- K is I+1,
- !,
- formal_proof_checker_prot(AnnotatedProof,Graph,K,J,Rest).
-failing_lines([],[]):-!.
-failing_lines([[I,0]|Rest],[I|Rest1]):-
- failing_lines(Rest,Rest1).
-failing_lines([_|Rest],Fails):-
- failing_lines(Rest,Fails).
-natural_proof_check([],[der,beweis,ist,etwas,nichtssagend]).
-natural_proof_check(Proof,[alle,beweiszeilen,ueberprueft]):-
- annotate_text(Proof,AnnotatedProof),
- nl,
- write("Annotation erfolgreich"),
- nl,
- write("Annotierter Text:"),
- nl,
- pretty_write(AnnotatedProof),
- nl,
- nl,
- nl,
- accessible(AnnotatedProof,AccessibilityGraph),
- write("Zugaenglichkeitsgraph generiert:"),
- nl,
- write(AccessibilityGraph),
- !,
- length(Proof,L),
- K is L+1,
- formal_proof_checker(AnnotatedProof,AccessibilityGraph,1,K).
-formal_proof_checker(_,_,I,I):-
- nl,
- write("Verifikation bis Zeile "),write(I),write(" erfolgreich"),!.
-formal_proof_checker(AnnotatedProof,Graph,I,J):-
- nl,
- nl,
- write("Prover hat Zeile "),write(I),write(" erreicht."),
- I<J,
- generate_atp_task(AnnotatedProof,Graph,I,[Assmpts,Con]),
- nl,
- write("Versuche, aus "),write(Assmpts),write(" zu beweisen, dass "),write(Con),
- proof_step_normal(Assmpts,Con,1,[]),
- nl,
- write("Zeile "),write(I),write(" erfolgreich geprueft."),
- nl,
- !,
- K is I+1,
- formal_proof_checker(AnnotatedProof,Graph,K,J).
-formal_proof_checker(AnnotatedProof,Graph,I,J):-
- nl,nl,nl,
- write("Verifikation bei Zeile "),write(I),write(" gescheitert"),
- nl,nl,nl,
- K is I+1,
- !,
- formal_proof_checker(AnnotatedProof,Graph,K,J).
-diproche_wait(""):-
- write("Dieser Beweis ist etwas nichtssagend. Hat ihn John Cage geschrieben?"),!.
-diproche_wait(NatProof):-
- text_to_input(NatProof,AnnotatedProof),!,
- diproche_aux_wait(AnnotatedProof).
-diproche_aux_wait(Proof):-
- natural_proof_check_prot_wait(Proof,[_,_,_,_,_,_|Fails]),
- !,
- auswertung(Fails).
-natural_proof_check_prot_wait(Proof,[alle,schritte,verifiziert,bis,auf,folgende,Fails]):-
- annotate_text(Proof,AnnotatedProof),
- nl,
- write("Annotation erfolgreich"),
- nl,
- nl,
- nl,
- write("Annotierter Text:"),
- nl,
- nl,
- nl,
- pretty_write(AnnotatedProof),
- nl,
- nl,
- nl,
- accessible(AnnotatedProof,AccessibilityGraph),
- write("Zugaenglichkeitsgraph generiert:"),
- nl,
- nl,
- write(AccessibilityGraph),
- nl,nl,nl,
- !,
- length(Proof,L),
- K is L+1,
- formal_proof_checker_prot_wait(AnnotatedProof,AccessibilityGraph,1,K,List),
- failing_lines(List,Fails).
-formal_proof_checker_prot_wait(_AnnotatedProof,_Graph,I,I,[[I,1]]):-
- nl,
- write("Verifikationsalgorithmus hat die letzte Zeile "),write(I),write(" erreicht."),!.
-formal_proof_checker_prot_wait(AnnotatedProof,Graph,I,J,[[I,1]|Rest]):-
- nl,
- nl,
- write("Prover hat Zeile "),write(I),write(" erreicht"),
- I<J,
- generate_atp_task(AnnotatedProof,Graph,I,[Assmpts,Con]),
- nl,
- write("Versuche, aus "),nl,pretty_write(Assmpts),nl,write(" zu beweisen, dass "),nl,
- write(Con),nl,
- proof_step_normal(Assmpts,Con,1,[]),
- nl,
- write("Zeile "),write(I),write(" erfolgreich geprueft"),
- nl,
- !,
- K is I+1,
- read(_),
- formal_proof_checker_prot_wait(AnnotatedProof,Graph,K,J,Rest).
-formal_proof_checker_prot_wait(AnnotatedProof,Graph,I,J,[[I,0]|Rest]):-
- nl,nl,nl,
- write("Verifikation bei Zeile "),write(I),write(" gescheitert."),nl,nl,nl,
- K is I+1,
- !,
- read(_),
- formal_proof_checker_prot_wait(AnnotatedProof,Graph,K,J,Rest).
-pretty_write([]):-!.
-pretty_write([X|Rest]):-nl,write(X),nl,pretty_write(Rest).
 normalize_elements([],[]):-!.
 normalize_elements([X|Rest],[NX|NRest]):-
  normalize(X,NX),
