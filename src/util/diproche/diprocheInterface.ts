@@ -53,7 +53,7 @@ export default function displayErrors(userInput: string) {
 	getErrors(userInput);
 	if (listAllIssues().length > 0) {
 		for (const issue of listAllIssues()) {
-			console.log(issue.message);
+			throw new Error(issue.message);
 		}
 	}
 }
