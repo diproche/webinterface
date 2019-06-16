@@ -51,9 +51,11 @@ export function getErrors(diprocheInput: string) {
 
 export default function displayErrors(userInput: string) {
 	getErrors(userInput);
+	let errormessage: string = "";
 	if (listAllIssues().length > 0) {
 		for (const issue of listAllIssues()) {
-			throw new Error(issue.message);
+			errormessage += issue.message;
 		}
 	}
+	throw new Error(errormessage);
 }
