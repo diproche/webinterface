@@ -54,8 +54,8 @@ export default function displayErrors(userInput: string) {
 	let errormessage: string = "";
 	if (listAllIssues().length > 0) {
 		for (const issue of listAllIssues()) {
-			errormessage += issue.message;
+			errormessage += issue.message + "\n";
 		}
+		throw new Error(errormessage);
 	}
-	throw new Error(errormessage);
 }
