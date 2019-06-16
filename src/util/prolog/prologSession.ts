@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { format_answer, type } from "tau-prolog/modules/core";
+import { create, format_answer } from "tau-prolog/modules/core";
 import getTopologicalOrder, {Edge} from "../getTopologicalOrder";
 import {fetchAllMatchesForAGroup} from "../regExpUtils";
 import {libraryLists} from "./libraries/libraries";
@@ -66,7 +66,7 @@ export class PrologSession {
 				program = PSM.removeNonFunctionalities(program);
 				program = resolveImports(program, defaultPath, fileName);
 
-				this.session = new type.Session(limit);
+				this.session = create(limit);
 				program = PSM.removeModuleDeclarations(program);
 				program = PSM.removeModuleImports(program);
 				program = libraryLists + "\n\n" + program;

@@ -44,7 +44,7 @@ export function removeComments(prologProgram: string) {
 function removeEmptyLines(prologProgram: string) {
 	const fetchEmptyLinesRegExp = /\n(?:\s)*\n/gm;
 
-	return prologProgram.replace(fetchEmptyLinesRegExp, "\n");
+	return prologProgram.replace(fetchEmptyLinesRegExp, "\n\n");
 }
 
 function removeDoubleWhitespaces(prologProgram: string) {
