@@ -1,5 +1,4 @@
 import { addIssue } from "../issueHandling/issueMapping";
-import { addPosition } from "../issueHandling/position";
 
 const Regexes = {
 	whiteSpace: /\s/,
@@ -146,7 +145,7 @@ export function detectBracketIssues(expression: string[], expressionPosition: nu
 			bracketCount--;
 		}
 		if (bracketCount < 0) {
-			addIssue("BRACKET_OVERCLOSING", addPosition(fromPos, toPos));
+			addIssue("BRACKET_OVERCLOSING", { fromIndex: fromPos, toIndex: fromPos + element.length });
 			bracketCount = 0;
 		}
 		fromPos = toPos;
@@ -174,9 +173,9 @@ export function detectMissingStatementsOrConnector(expression: string[], express
 			fromPos = fromPos + element.length;
 		} else if (element.match(logicConnector)) {
 			if (foundNegation === true) {
-				addIssue("MISSING_STATEMENT_AFTER_NEGATION", addPosition(fromPos, fromPos + element.length));
+				addIssue("MISSING_STATEMENT_AFTER_NEGATION", { fromIndex: fromPos, toIndex: fromPos + element.length });
 			} else if (foundConnector === true) {
-				addIssue("MISSING_STATEMENT_INSIDE", addPosition(fromPos, fromPos + element.length));
+				addIssue("MISSING_STATEMENT_INSIDE", { fromIndex: fromPos, toIndex: fromPos + element.length });
 			}
 			fromPos = fromPos + element.length;
 			foundConnector = true;
@@ -184,7 +183,7 @@ export function detectMissingStatementsOrConnector(expression: string[], express
 			foundNegation = false;
 		} else {
 			if (foundStatement === true) {
-				addIssue("MISSING_CONNECTOR", addPosition(fromPos, fromPos + element.length));
+				addIssue("MISSING_CONNECTOR", { fromIndex: fromPos, toIndex: fromPos + element.length });
 			}
 			foundConnector = false;
 			foundStatement = true;
@@ -193,7 +192,7 @@ export function detectMissingStatementsOrConnector(expression: string[], express
 		}
 	}
 	if (foundStatement === false || foundConnector === true || foundNegation === true) {
-		addIssue("MISSING_STATEMENT_AT_THE_END", addPosition(fromPos, fromPos));
+		addIssue("MISSING_STATEMENT_AT_THE_END", { fromIndex: fromPos, toIndex: fromPos });
 	}
 
 }
