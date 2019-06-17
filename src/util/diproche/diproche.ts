@@ -7,9 +7,8 @@ private readonly session: PrologSession;
 		this.session = importFile("../../.././readable_node_module_copies/diproche/diproche.pl");
 	}
 
-	public async getFeedback(input: string): Promise<ReadonlyMap<string, Array<string | boolean>>> {
-		const resultObject =  await this.session.executeQuery(input);
-		return new Promise(resolve => resolve(resultObject.getResults()));
+	public async getFeedback(input: string) {
+		return await this.session.executeQuery(input);
 	}
 
 }

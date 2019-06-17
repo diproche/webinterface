@@ -12,7 +12,7 @@ describe("Tau-Prolog Behavior", () => {
 			.set("X", ["16", "[]", "[]"])
 			.set("booleanAnswers", [false]);
 
-	  expect(results).toStrictEqual(expected);
+		 expect(results).toStrictEqual(expected);
 	});
 
 });
