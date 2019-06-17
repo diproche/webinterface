@@ -6,7 +6,6 @@ import styles from "./proofEditor.module.scss";
 
 // tslint:disable-next-line:no-empty-interface
 export interface Props {
-
 }
 
 interface State {
