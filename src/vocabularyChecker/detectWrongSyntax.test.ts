@@ -10,7 +10,7 @@ import {
 describe("getInvalidWords", () => {
 	it("Returns the correct word for a normal text", () => {
 		const wrongWords = getInvalidWords("fu bar bloedsinn"); // fu and bar are indeed included in allowedVocab
-		expect(wrongWords).toEqual(["bloedsinn"]);
+		expect(wrongWords).toEqual(["fu", "bar", "bloedsinn"]);
 	});
 
 	it("Returns an empty array, if input is the empty string", () => {
@@ -26,7 +26,7 @@ describe("getInvalidWords", () => {
 // maybe it should not care about case sensitivity, but that's more of a design choice
 	it("is case sensitive", () => {
 		const wrongWords = getInvalidWords("fu Fu");
-		expect(wrongWords).toEqual(["Fu"]);
+		expect(wrongWords).toEqual(["fu", "Fu"]);
 	});
 
 	it("Does not return a wrong word, if a string consists only of a whitespace", () => {
@@ -35,7 +35,7 @@ describe("getInvalidWords", () => {
 	});
 
 	it("Does not detect a wrong word, if there is none", () => {
-		const wrongWords = getInvalidWords("fu bar");
+		const wrongWords = getInvalidWords("wir nehmen an");
 		expect(wrongWords).toEqual([]);
 	});
 
@@ -43,14 +43,14 @@ describe("getInvalidWords", () => {
 		const wrongWords = getInvalidWords(`This is just a really long String to test some extreme case so
 		the next letters will only be some copies of the letter a.
 		aaaaaaaaaaaaaaaaaaaaaaaaaaa`);
-		expect(wrongWords).toEqual(["This", "is", "just", "a", "really", "long", "String", "to", "test",
-		"some", "extreme", "case", "so", "the", "next", "letters", "will", "only", "be", "copies",
+		expect(wrongWords).toEqual(["This", "is", "just", "really", "long", "String", "to", "test",
+		"some", "extreme", "case", "the", "next", "letters", "will", "only", "be", "copies",
 		"of", "letter", "aaaaaaaaaaaaaaaaaaaaaaaaaaa"]);
 	});
 
 	it("Recognizes the words correctly", () => {
-		const result = getInvalidWords("Hallo Welt, fu. foo, bar");
-		expect(result).toEqual(["Hallo", "Welt", "foo"]);
+		const result = getInvalidWords("Hallo Welt, wir. nehmen, an.");
+		expect(result).toEqual(["Hallo", "Welt"]);
 	});
 
 	it("Seperates words correctly along dots", () => {
@@ -111,7 +111,7 @@ describe("logSingleWord", () => {
 
 describe("CollectAllInvalidWordsInIssues", () => {
 	it("Creates a correct Issue-array for one wrong word containing only this word", () => {
-		collectInvalidWordsInIssues("WrongWord RightWord");
+		collectInvalidWordsInIssues("WrongWord beweis");
 		expect(listAllIssues()).toEqual([
 			{
 				code: "INVALID_WORD",
