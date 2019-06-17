@@ -13,20 +13,16 @@ export class IssueInformation extends React.Component<Props> {
 
 		let displayedPosition: any = "";
 		const position = this.props.issue.position;
-		if (isPosition(position)) {
+		if (position) {
 			displayedPosition = <IssuePositionInformation position={ position! } />;
 		}
 
 		return <div className={styles.IssuePositionInformation}>
 				{this.props.issue.message} {displayedPosition}
-			</div>;
+		</div>;
 
 	}
 
-}
-
-function isPosition(object: any): boolean {
-	return object != null && typeof object.toIndex === "number" && typeof object.fromIndex === "number";
 }
 
 export default IssueInformation;
