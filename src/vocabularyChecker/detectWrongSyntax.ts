@@ -1,4 +1,5 @@
 import Issue from "../issueHandling/issue";
+import { addIssue } from "../issueHandling/issueMapping";
 import issueJson from "../issueHandling/knownIssues.json";
 import json from "./allowedVocab.json";
 import uniqueValues from "./Iterators";
@@ -7,40 +8,26 @@ import uniqueValues from "./Iterators";
  * Regular expression that looks for any and all words. A word is defined as some sequence of
  * characters (\w+) betweeen wordbarriers (\b)
  */
-const anyWord = new RegExp(/\b\w+\b/g);
+export const anyWord = new RegExp(/\b\w+\b/g);
 /**
  * Predefined dictionary containing all allowed Words
  */
 const allowedWords = json;
 export interface Position { fromIndex: number; toIndex: number; }
 
-/**
- * Takes all wrong words of a text and puts them into an array of Issues.
- * For example: "WrongWord RightWord" should result in an
- * result Issue[] = {message = "wrongWord", position: {fromIndex = 0, toIndex = 9}}
- */
-
-export function getAllIssues(text: string): Issue[] {
-	return collectInvalidWordsInIssues(text, collectAllInvalidWords(text));
-}
-
-export function collectInvalidWordsInIssues(text: string, invalidWords: string[]): Issue[] {
-	const issues = [];
+export function collectInvalidWordsInIssues(text: string) {
+	const invalidWords = collectAllInvalidWords(text);
 	const positions: Position[] = [];
 	for (const word of invalidWords) {
-		const temp: Position = {
-			fromIndex: text.indexOf(word),
-			toIndex: (text.indexOf(word) + word.length),
-		};
-		positions.push(temp);
-		issues.push({
-			message: word,
-			position: temp,
-			severity: issueJson.INVALID_WORD.severity,
-			code: issueJson.INVALID_WORD.message,
-		});
+		if (!(allowedWords.includes(word))) {
+			const temp: Position = {
+				fromIndex: text.indexOf(word),
+				toIndex: (text.indexOf(word) + word.length),
+			};
+			positions.push(temp);
+			addIssue("INVALID_WORD", temp, {word});
+		}
 	}
-	return issues;
 }
 
 /**

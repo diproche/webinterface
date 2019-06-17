@@ -1,7 +1,7 @@
+import { emptyIssueList, listAllIssues } from "../issueHandling/issueMapping";
 import issueJson from "../issueHandling/knownIssues.json";
 import {
 	collectInvalidWordsInIssues,
-	getAllIssues,
 	getInvalidWords,
 	logSingleWord,
 	Position,
@@ -10,7 +10,7 @@ import {
 describe("getInvalidWords", () => {
 	it("Returns the correct word for a normal text", () => {
 		const wrongWords = getInvalidWords("fu bar bloedsinn"); // fu and bar are indeed included in allowedVocab
-		expect(wrongWords).toEqual(["bloedsinn"]);
+		expect(wrongWords).toEqual(["fu", "bar", "bloedsinn"]);
 	});
 
 	it("Returns an empty array, if input is the empty string", () => {
@@ -23,10 +23,10 @@ describe("getInvalidWords", () => {
 		expect(wrongWords).toEqual(["bloedsinn"]);
 	});
 
-	// maybe it should not care about case sensitivity, but that's more of a design choice
+// maybe it should not care about case sensitivity, but that's more of a design choice
 	it("is case sensitive", () => {
 		const wrongWords = getInvalidWords("fu Fu");
-		expect(wrongWords).toEqual(["Fu"]);
+		expect(wrongWords).toEqual(["fu", "Fu"]);
 	});
 
 	it("Does not return a wrong word, if a string consists only of a whitespace", () => {
@@ -35,7 +35,7 @@ describe("getInvalidWords", () => {
 	});
 
 	it("Does not detect a wrong word, if there is none", () => {
-		const wrongWords = getInvalidWords("fu bar");
+		const wrongWords = getInvalidWords("wir nehmen an");
 		expect(wrongWords).toEqual([]);
 	});
 
@@ -43,14 +43,14 @@ describe("getInvalidWords", () => {
 		const wrongWords = getInvalidWords(`This is just a really long String to test some extreme case so
 		the next letters will only be some copies of the letter a.
 		aaaaaaaaaaaaaaaaaaaaaaaaaaa`);
-		expect(wrongWords).toEqual(["This", "is", "just", "a", "really", "long", "String", "to", "test",
-			"some", "extreme", "case", "so", "the", "next", "letters", "will", "only", "be", "copies",
-			"of", "letter", "aaaaaaaaaaaaaaaaaaaaaaaaaaa"]);
+		expect(wrongWords).toEqual(["This", "is", "just", "really", "long", "String", "to", "test",
+		"some", "extreme", "case", "the", "next", "letters", "will", "only", "be", "copies",
+		"of", "letter", "aaaaaaaaaaaaaaaaaaaaaaaaaaa"]);
 	});
 
 	it("Recognizes the words correctly", () => {
-		const result = getInvalidWords("Hallo Welt, fu. foo, bar");
-		expect(result).toEqual(["Hallo", "Welt", "foo"]);
+		const result = getInvalidWords("Hallo Welt, wir. nehmen, an.");
+		expect(result).toEqual(["Hallo", "Welt"]);
 	});
 
 	it("Seperates words correctly along dots", () => {
@@ -61,7 +61,7 @@ describe("getInvalidWords", () => {
 
 describe("logSingleWord", () => {
 	it("Logs a ordinary word correctly", () => {
-		const position: Position = { fromIndex: 0, toIndex: 4 };
+		const position: Position = {fromIndex: 0, toIndex: 4};
 		const issues = logSingleWord("Hello", position);
 		expect(issues).toEqual({
 			code: issueJson.INVALID_WORD.message,
@@ -74,14 +74,14 @@ describe("logSingleWord", () => {
 		});
 	});
 
-	/**
-	 * The next two testcases should never actually appear in practice. Since an empty word and a single whitespace
-	 * are not classified as "words" for our purposes. For the sake of completeness those cases are
-	 * tested nonetheless
-	 */
+//
+// The next two testcases should never actually appear in practice. Since an empty word and a single whitespace
+// are not classified as "words" for our purposes. For the sake of completeness those cases are
+// tested nonetheless
+//
 
 	it("Logs a empty word correctly", () => {
-		const position: Position = { fromIndex: 0, toIndex: 0 };
+		const position: Position = {fromIndex: 0, toIndex: 0};
 		const issues = logSingleWord("", position);
 		expect(issues).toEqual({
 			code: issueJson.INVALID_WORD.message,
@@ -95,7 +95,7 @@ describe("logSingleWord", () => {
 	});
 
 	it("Logs a word consisting only of a whitespace correctly", () => {
-		const position: Position = { fromIndex: 0, toIndex: 1 };
+		const position: Position = {fromIndex: 0, toIndex: 1};
 		const issues = logSingleWord(" ", position);
 		expect(issues).toEqual({
 			code: issueJson.INVALID_WORD.message,
@@ -111,11 +111,11 @@ describe("logSingleWord", () => {
 
 describe("CollectAllInvalidWordsInIssues", () => {
 	it("Creates a correct Issue-array for one wrong word containing only this word", () => {
-		const issues = collectInvalidWordsInIssues("WrongWord RightWord", ["WrongWord"]);
-		expect(issues).toEqual([
+		collectInvalidWordsInIssues("WrongWord beweis");
+		expect(listAllIssues()).toEqual([
 			{
-				code: issueJson.INVALID_WORD.message,
-				message: "WrongWord",
+				code: "INVALID_WORD",
+				message: "Das Wort 'WrongWord' in der Eingabe ist nicht erlaubt.",
 				position: {
 					fromIndex: 0,
 					toIndex: 9,
@@ -126,109 +126,7 @@ describe("CollectAllInvalidWordsInIssues", () => {
 	});
 
 	it("Creates a correct Issue-array for a word consisting only of a Whitespace", () => {
-		const issues = collectInvalidWordsInIssues("Te st", [" "]);
-		expect(issues).toEqual([
-			{
-				code: issueJson.INVALID_WORD.message,
-				message: " ",
-				position: {
-					fromIndex: 2,
-					toIndex: 3,
-				},
-				severity: issueJson.INVALID_WORD.severity,
-			},
-		]);
-	});
-});
-
-describe("getAllIssues", () => {
-	it("Creates a correct Issue-array for one wrong word containing only this word", () => {
-		const issues = getAllIssues("WrongWord RightWord");
-		expect(issues).toEqual([
-			{
-				code: issueJson.INVALID_WORD.message,
-				message: "WrongWord",
-				position: {
-					fromIndex: 0,
-					toIndex: 9,
-				},
-				severity: issueJson.INVALID_WORD.severity,
-			},
-		]);
-	},
-	);
-
-	it("Creates a correct Issue-array for two words seperated by a Whitespace", () => {
-		const issues = getAllIssues("Te st");
-		expect(issues).toEqual([
-			{
-				code: issueJson.INVALID_WORD.message,
-				message: "Te",
-				position: {
-					fromIndex: 0,
-					toIndex: 2,
-				},
-				severity: issueJson.INVALID_WORD.severity,
-			},
-			{
-				code: issueJson.INVALID_WORD.message,
-				message: "st",
-				position: {
-					fromIndex: 3,
-					toIndex: 5,
-				},
-				severity: issueJson.INVALID_WORD.severity,
-			},
-		]);
-	},
-	);
-
-	it("Detects a String of word1.word2 as two words", () => {
-		const issues = getAllIssues("Te.st");
-		expect(issues).toEqual([
-			{
-				code: issueJson.INVALID_WORD.message,
-				message: "Te",
-				position: {
-					fromIndex: 0,
-					toIndex: 2,
-				},
-				severity: issueJson.INVALID_WORD.severity,
-			},
-			{
-				code: issueJson.INVALID_WORD.message,
-				message: "st",
-				position: {
-					fromIndex: 3,
-					toIndex: 5,
-				},
-				severity: issueJson.INVALID_WORD.severity,
-			},
-		]);
-	},
-	);
-
-	it("Detects a String of word1,;:<>=word2 as two words", () => {
-		const issues = getAllIssues("Te,;<>=st");
-		expect(issues).toEqual([
-			{
-				code: issueJson.INVALID_WORD.message,
-				message: "Te",
-				position: {
-					fromIndex: 0,
-					toIndex: 2,
-				},
-				severity: issueJson.INVALID_WORD.severity,
-			},
-			{
-				code: issueJson.INVALID_WORD.message,
-				message: "st",
-				position: {
-					fromIndex: 7,
-					toIndex: 9,
-				},
-				severity: issueJson.INVALID_WORD.severity,
-			},
-		]);
+		emptyIssueList();
+		expect(listAllIssues()).toEqual([]);
 	});
 });
