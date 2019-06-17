@@ -50,9 +50,3 @@ export class ProofEditor extends React.Component<Props, State> {
 		this.setState({issues:  issueArray});
 	}
 }
-
-function isNotUndefined<T>(toCheck: T): T | boolean {
-	if (toCheck === undefined) { return false; }
-
-	return toCheck;
-}
