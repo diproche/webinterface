@@ -1,4 +1,5 @@
 import Issue from "../issueHandling/issue";
+import {addIssue} from "../issueHandling/issueMapping";
 import {listAllIssues} from "../issueHandling/issueMapping";
 
 // Ordered by their degree of fatality
@@ -12,6 +13,9 @@ const severities: string[] = ["FATALERROR", "ERROR", "WARNING", "HINT"];
 export function checkProof(userInput: string): readonly Issue[] {
 
 	// runPipeline(userinput); (or whatever will run the userinput through the checks)
+	userInput = userInput;
+	addIssue("BRACKET_OVERCLOSING");
+	addIssue("BRACKET_UNDERCLOSING", { fromIndex: 24, toIndex: 29});
 	return orderIssuesBySeverity(listAllIssues());
 }
 
