@@ -36,5 +36,6 @@
 		"@types/react-dom": "16.8.3",
 		"shx": "^0.3.2",
 		"tslint": "^5.17.0"
-	}
+	},
+	"proxy" : "http://localhost:5000" 
 }

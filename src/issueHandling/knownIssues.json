@@ -26,5 +26,9 @@
 	"INVALID_WORD": {
 		"severity": "WARNING",
 		"message": "Das Wort '{word}' in der Eingabe ist nicht erlaubt."
+	},
+	"UNVERIFIED_LINE": {
+		"severity": "HINT",
+		"message": "Eine Zeile konnte nicht verfiziert werden."
 	}
 }
