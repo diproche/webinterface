@@ -70,53 +70,23 @@ test("replace detected expression-elements into readable prolog commands", () =>
 	expect(result).toEqual(expectedResult);
 });
 
-test("splitting full text into full listFormat including expressions and paragraph marker: ", () => {
+test("expression formatter testcase", () => {
+	emptyIssueList();
+	const result: string = textFormatter("Es gilt: $((a&b)<->(b&a))$");
+	const expectedResult = "[[Es,gilt:],[[[a,and,b],<->,[b,and,a]]]].";
+	expect(result).toEqual(expectedResult);
+});
+
+test("splitting full text into readable prolog format including formatted expressions and paragraph marker: ", () => {
 	emptyIssueList();
 	const result = textFormatter(
-		"Hello, this is a test! Is it Working? I   hope so. \n Paragraphs are marked with an " +
-		"empty List: \n \n \n Here is also an expression: $[AUNDbracketLEFTB<-->]-> D ODERNOT E]$ " +
-		"And a second one: $[5 ADD 12 equal 3 mal 5 plus 2]$",
-	);
-	const expectedResult = [
-		["Hello", "this", "is", "a", "test"],
-		["Is", "it", "Working"],
-		["I", "hope", "so"],
-		[],
-		["Paragraphs", "are", "marked", "with", "an", "empty", "List:"],
-		[],
-		[],
-		[],
-		["Here", "is", "also", "an", "expression:"],
-		[
-			"[",
-			"A",
-			"and",
-			"[",
-			"B",
-			"<->",
-			"]",
-			"->",
-			"D",
-			"or",
-			"neg",
-			"E",
-			"]",
-		],
-		["And", "a", "second", "one:"],
-		[
-			"[",
-			"5",
-			"+",
-			"12",
-			"=",
-			"3",
-			"*",
-			"5",
-			"+",
-			"2",
-			"]",
-		],
-	];
+		"Hello, this is a test! Is it Working? I     hope so. \n Paragraphs are marked with an " +
+		"abs List: \n \n \n Here is also an expression: $[AUNDbracketLEFTB<-->]-> D ODERNOT E]$ " +
+		"And a second one: $[5 ADD 12 equal 3 mal 5 plus 2]$");
+	const expectedResult = "[[Hello,this,is,a,test],[Is,it,Working]," +
+		"[I,hope,so],[abs],[Paragraphs,are,marked,with,an,abs,List:]," +
+		"[abs],[abs],[abs],[Here,is,also,an,expression:],[[A,and,[B,<->],->," +
+		"D,or,neg,E]],[And,a,second,one:],[[5,+,12,=,3,*,5,+,2]]].";
 	expect(result).toEqual(expectedResult);
 	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
 	expect(issue).toEqual({
@@ -129,6 +99,34 @@ test("splitting full text into full listFormat including expressions and paragra
 		},
 	});
 
+});
+
+test("splitting full text into readable prolog format including formatted expressions and paragraph marker|2: ", () => {
+	emptyIssueList();
+	const result = textFormatter(
+		"Wir zeigen" +
+		"$((a&b)<->(b&a))$." +
+		"$=>$" +
+		"Angenommen, es gilt" +
+		"$a und b$." +
+		"Dann gilt auch a. Ferner gilt b. Damit folgt b und a. Qed. \n" +
+		"Also gilt ((a&b)->(b&a)). \n" +
+		"<=" +
+		"Nehmen wir jetzt an, dass b und a. Dann folgt a. Ausserdem folgt b. Also gilt nun a und b. Qed. \n" +
+		"Also gilt ((b&a)->(a&b))." +
+		"Damit folgt ((a&b)<->(b&a)). Qed.");
+	const expectedResult = "[wir,zeigen,[[a,and,b],<->,[b,and,a]]]" +
+		"[=>]," +
+		"[angenommen,[a,and,b]]," +
+		"[dann,a],[ferner,gilt,b],[damit,folgt,[b,and,a]]," +
+		"[qed]," +
+		"[abs]," +
+		"[<=]," +
+		"[nehmen,wir,jetzt,an,dass,[b,and,a]],[dann,folgt,a]," +
+		"[ausserdem,folgt,b],[also,gilt,nun,[a,and,b]]," +
+		"[qed]," +
+		"[damit,gilt,[[a,and,b],<->,[b,and,a]]]]";
+	expect(result).toEqual(expectedResult);
 });
 
 test("scan for bracket errors - test 1: [][][[]]", () => {

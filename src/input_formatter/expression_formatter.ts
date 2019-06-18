@@ -1,6 +1,6 @@
 import { addIssue } from "../issueHandling/issueMapping";
 
-const Regexes = {
+export const Regexes = {
 	whiteSpace: /\s/,
 	expressionmarker: /\$/,
 	bracketLeft: new RegExp(/(\[|\(|bracketLeft)/, "ig"),
@@ -21,7 +21,7 @@ const Regexes = {
 const orRegex = (...regexes: RegExp[]) =>
 	new RegExp(regexes.map(r => r.source).join("|"));
 
-const bracket = new RegExp(orRegex(
+export const bracket = new RegExp(orRegex(
 	Regexes.bracketLeft,
 	Regexes.bracketRight,
 ), "ig");

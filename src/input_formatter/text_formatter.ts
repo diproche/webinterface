@@ -1,6 +1,6 @@
-import { expressionFormatter } from "./expression_formatter";
+import { expressionFormatter, Regexes } from "./expression_formatter";
 
-const inputSeparator = /([.!?]|\n|\$[^$]*\$)+/g;
+const inputSeparator = /(\!|\?|\.|\n|\$[^$]*\$)+/g;
 const wordSeparator = /[ ,]+/;
 
 /**
@@ -52,13 +52,26 @@ export function formattedTextIntoString(formattedText: string[][]): string {
 	let output = "[";
 	formattedText.forEach(element => {
 		output = output + "[";
-		element.forEach(element2 => {
-			output = output + element2 + ",";
+		element.forEach(innerElement => {
+			if (innerElement.match(Regexes.bracketLeft)) {
+				output = output + innerElement;
+			} else if (innerElement.match(Regexes.bracketRight)) {
+				if (output.match(/^(.+),$/)) {
+					output = output.slice(0, output.length - 1);
+				}
+				output = output + innerElement + ",";
+			} else {
+				output = output + innerElement + ",";
+			}
 		});
-		output = output.slice(0, output.length - 1);
+		if (output.match(/^(.+),$/)) {
+			output = output.slice(0, output.length - 1);
+		}
 		output = output + "],";
 	});
-	output = output.slice(0, output.length - 1);
+	if (output.match(/^(.+),$/)) {
+		output = output.slice(0, output.length - 1);
+	}
 	output = output + "].";
 
 	return output;
