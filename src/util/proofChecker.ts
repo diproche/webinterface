@@ -1,3 +1,4 @@
+import {textFormatter} from "../input_formatter/text_formatter";
 import Issue from "../issueHandling/issue";
 import {listAllIssues} from "../issueHandling/issueMapping";
 import {addDiprocheIssues} from "../util/diproche/diprocheResponseProcessing";
@@ -14,7 +15,8 @@ export async function checkProof(userInput: string): Promise<readonly Issue[]> {
 
 	// runPipeline(userinput); (or whatever will run the userinput through the checks)
 
-	addDiprocheIssues( await getDiprocheResponse(userInput) );
+	const request: string = textFormatter(await getDiprocheResponse(userInput));
+	addDiprocheIssues(request);
 
 	return orderIssuesBySeverity(listAllIssues());
 }
@@ -32,7 +34,6 @@ async function getDiprocheResponse(userInput: string): Promise<string> {
 	});
 
 	const responseText = await response.text();
-	console.log(responseText);
 	return responseText;
 }
 
