@@ -1,5 +1,4 @@
 import Issue from "../issueHandling/issue";
-import {addIssue} from "../issueHandling/issueMapping";
 import {listAllIssues} from "../issueHandling/issueMapping";
 import {addDiprocheIssues} from "../util/diproche/diprocheResponseProcessing";
 
@@ -14,8 +13,6 @@ const severities: string[] = ["FATALERROR", "ERROR", "WARNING", "HINT"];
 export async function checkProof(userInput: string): Promise<readonly Issue[]> {
 
 	// runPipeline(userinput); (or whatever will run the userinput through the checks)
-	addIssue("BRACKET_OVERCLOSING");
-	addIssue("BRACKET_UNDERCLOSING", { fromIndex: 24, toIndex: 29});
 
 	addDiprocheIssues( await getDiprocheResponse(userInput) );
 
