@@ -4,7 +4,6 @@
 	"private": true,
 	"dependencies": {
 		"@types/lodash": "^4.14.133",
-		"diproche": "git+ssh://git@github.com/TimothyGillespie/Diproche-Prolog.git",
 		"lodash": "^4.17.11",
 		"node-sass": "^4.12.0",
 		"react": "^16.8.6",
@@ -14,14 +13,11 @@
 		"typescript": "3.4.2"
 	},
 	"scripts": {
-		"start": "npm run import-diproche && react-scripts start",
+		"start": "react-scripts start",
 		"lint": "tslint --project .",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
-		"eject": "react-scripts eject",
-		"import-diproche": "npm run copy-diproche && npm run clean-diproche-import",
-		"copy-diproche": "shx mkdir -p ./src/util/diproche/diprocheProgram && shx cp ./node_modules/diproche/* ./src/util/diproche/diprocheProgram",
-		"clean-diproche-import": "shx rm ./src/util/diproche/diprocheProgram/package.json"
+		"eject": "react-scripts eject"
 	},
 	"eslintConfig": {
 		"extends": "react-app"
