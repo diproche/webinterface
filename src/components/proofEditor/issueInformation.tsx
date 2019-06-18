@@ -1,6 +1,7 @@
 import React from "react";
 import Issue from "../../issueHandling/issue";
 import IssuePositionInformation from "./issuePositionInformation";
+
 import styles from "./proofEditor.module.scss";
 
 export interface Props {

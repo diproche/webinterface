@@ -44,8 +44,8 @@ export class ProofEditor extends React.Component<Props, State> {
 
 	}
 
-	private readonly checkInput = (): void => {
-		const issueArray: readonly Issue[] = checkProof(this.state.userInput);
+	private readonly checkInput = async (): Promise<void> => {
+		const issueArray: readonly Issue[] = await checkProof(this.state.userInput);
 		this.setState({issues:  issueArray});
 	}
 }

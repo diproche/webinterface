@@ -1,6 +1,6 @@
 import Issue from "../issueHandling/issue";
-import {addIssue} from "../issueHandling/issueMapping";
 import {listAllIssues} from "../issueHandling/issueMapping";
+import {addDiprocheIssues} from "../util/diproche/diprocheResponseProcessing";
 
 // Ordered by their degree of fatality
 const severities: string[] = ["FATALERROR", "ERROR", "WARNING", "HINT"];
@@ -10,13 +10,30 @@ const severities: string[] = ["FATALERROR", "ERROR", "WARNING", "HINT"];
 	* @param {string} userInput - The user input
 	* @return {Array<Issue>} The syntatical, sementatical and technical issues for the given user input
 	*/
-export function checkProof(userInput: string): readonly Issue[] {
+export async function checkProof(userInput: string): Promise<readonly Issue[]> {
 
 	// runPipeline(userinput); (or whatever will run the userinput through the checks)
-	userInput = userInput;
-	addIssue("BRACKET_OVERCLOSING");
-	addIssue("BRACKET_UNDERCLOSING", { fromIndex: 24, toIndex: 29});
+
+	addDiprocheIssues( await getDiprocheResponse(userInput) );
+
 	return orderIssuesBySeverity(listAllIssues());
+}
+
+async function getDiprocheResponse(userInput: string): Promise<string> {
+
+	const body = userInput;
+
+	const response = await fetch("http://localhost:3000/dipr", {
+		headers: {
+			"Content-Type": "application/x-prolog",
+		},
+		method: "POST",
+		body,
+	});
+
+	const responseText = await response.text();
+	console.log(responseText);
+	return responseText;
 }
 
 /**
