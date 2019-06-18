@@ -10,9 +10,9 @@ const wordSeparator = /[ ,]+/;
  * @return the formatted text as a Array of string[] inculding
  * formatted expressions, list of words (setences) and paragraph marker (empty Array)
  */
-export function textFormatter(input: string): string[][] {
+export function textFormatter(input: string): string {
 	const splittedText = input.split(inputSeparator);
-	const formattedText = [];
+	const formattedText: string[][] = [];
 	let position: number = 0;
 	for (const element of splittedText) {
 		position = position + element.length;
@@ -20,13 +20,14 @@ export function textFormatter(input: string): string[][] {
 			const formattedExpression = expressionFormatter(element, position);
 			formattedText.push(formattedExpression);
 		} else if (element.match(/\n/)) {
-			formattedText.push([]);
+			formattedText.push(["abs"]);
 		} else if (element.match(/([A-Za-zäöüß]+)/g)) {
 			const ListOfWords = sentenceIntoWordList(element.trim());
 			formattedText.push(ListOfWords);
 		}
 	}
-	return formattedText;
+	const output = formattedTextIntoString(formattedText);
+	return output;
 }
 
 /**
@@ -45,4 +46,20 @@ export function sentenceIntoWordList(input: string): string[] {
 		}
 	}
 	return listOfWords;
+}
+
+export function formattedTextIntoString(formattedText: string[][]): string {
+	let output = "[";
+	formattedText.forEach(element => {
+		output = output + "[";
+		element.forEach(element2 => {
+			output = output + element2 + ",";
+		});
+		output = output.slice(0, output.length - 1);
+		output = output + "],";
+	});
+	output = output.slice(0, output.length - 1);
+	output = output + "].";
+
+	return output;
 }
