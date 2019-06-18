@@ -1,5 +1,5 @@
 import Issue from "../issueHandling/issue";
-import {listAllIssues} from "../issueHandling/issueMappin";
+import {listAllIssues} from "../issueHandling/issueMapping";
 import { createErrors } from "./diproche/diprocheInterface";
 
 // Ordered by their degree of fatality
