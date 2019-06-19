@@ -1,59 +1,6 @@
 import { addIssue } from "../issueHandling/issueMapping";
+import { allowedExpressionToken, bracket, logicConnector, Regexes } from "./regexes";
 
-export const Regexes = {
-	whiteSpace: /\s/,
-	expressionmarker: /\$/,
-	bracketLeft: new RegExp(/(\[|\(|bracketLeft)/, "ig"),
-	bracketRight: new RegExp(/(\]|\)|bracketRight)/, "ig"),
-	equivalence: new RegExp(/(<-->|<==>|<=>|<->|equivalence)/, "ig"),
-	implicationRight: new RegExp(/(->|-->|=>|==>|\\rightarrow|implicationRight)/, "ig"),
-	implicationLeft: new RegExp(/(<-|<--|<=|<==|\/leftarrow|implicationLeft)/, "ig"),
-	negation: new RegExp(/(neq|not|nicht|¬|neg)/, "ig"),
-	conjunction: new RegExp(/(and|und|&|\/\\|conjunction)/, "ig"),
-	disjunction: new RegExp(/(or|oder|\||\\\/|disjunction)/, "ig"),
-	equal: new RegExp(/(=|==|===|gleich|equal)/, "ig"),
-	addition: new RegExp(/(\+|plus|add|sum)/, "ig"),
-	subtraction: new RegExp(/(-|minus)/, "ig"),
-	division: new RegExp(/(:|\/|div|geteilt)/, "ig"),
-	multiplication: new RegExp(/(\*|mal|mult)/, "ig"),
-};
-
-const orRegex = (...regexes: RegExp[]) =>
-	new RegExp(regexes.map(r => r.source).join("|"));
-
-export const bracket = new RegExp(orRegex(
-	Regexes.bracketLeft,
-	Regexes.bracketRight,
-), "ig");
-
-const implication = new RegExp(orRegex(
-	Regexes.implicationRight,
-	Regexes.implicationLeft,
-), "ig");
-const logicConnector = new RegExp(orRegex(
-	Regexes.conjunction,
-	Regexes.disjunction,
-	Regexes.equivalence,
-	implication,
-), "ig");
-const functionalConnector = new RegExp(orRegex(
-	Regexes.equal,
-	Regexes.addition,
-	Regexes.subtraction,
-	Regexes.multiplication,
-	Regexes.division,
-), "ig");
-
-const allowedExpressionToken = new RegExp(orRegex(
-	Regexes.expressionmarker,
-	bracket,
-	Regexes.equivalence,
-	implication,
-	Regexes.negation,
-	Regexes.conjunction,
-	Regexes.disjunction,
-	functionalConnector,
-), "ig");
 /**
  * main method to format expressions
  * @param expression written by user
@@ -106,7 +53,7 @@ export function replaceExpressionElementsIntoPrologCode(preFormattedExpression: 
 export function replaceASingleExpressionElementIntoPrologCode(preformattedExpressionElement: string): string {
 	const finalExpression: string = preformattedExpressionElement;
 	return finalExpression
-		.replace(Regexes.expressionmarker, "")
+		.replace(Regexes.expressionMarker, "")
 		.replace(Regexes.whiteSpace, "")
 		.replace(Regexes.bracketLeft, "\[")
 		.replace(Regexes.bracketRight, "\]")
@@ -163,26 +110,29 @@ export function detectMissingStatementsOrConnector(expression: string[], express
 	let foundStatement: boolean = false;
 	let foundNegation: boolean = false;
 	let fromPos: number = expressionPosition;
-	for (const element of expression) {
-		if (element.match(bracket)) {
-			fromPos = fromPos + element.length;
-		} else if (element.match(Regexes.whiteSpace)) {
+	for (let element of expression) {
+		element = element.trim();
+		if (element.match(bracket) || element.match(Regexes.whiteSpace)) {
+			if (element.match(Regexes.bracketRight ) &&
+			foundStatement === false && (foundConnector === true || foundNegation === true)) {
+				addIssue("MISSING_STATEMENT_INSIDE", { fromIndex: fromPos, toIndex: fromPos });
+			}
 			fromPos = fromPos + element.length;
 		} else if (element.match(Regexes.negation)) {
 			foundNegation = true;
 			fromPos = fromPos + element.length;
 		} else if (element.match(logicConnector)) {
 			if (foundNegation === true) {
-				addIssue("MISSING_STATEMENT_AFTER_NEGATION", { fromIndex: fromPos, toIndex: fromPos + element.length });
-			} else if (foundConnector === true) {
-				addIssue("MISSING_STATEMENT_INSIDE", { fromIndex: fromPos, toIndex: fromPos + element.length });
+				addIssue("MISSING_STATEMENT_AFTER_NEGATION", { fromIndex: fromPos, toIndex: fromPos});
+			} else if (foundConnector === true || element.match(Regexes.bracketLeft)) {
+				addIssue("MISSING_STATEMENT_INSIDE", { fromIndex: fromPos, toIndex: fromPos});
 			}
 			fromPos = fromPos + element.length;
 			foundConnector = true;
 			foundStatement = false;
 			foundNegation = false;
 		} else {
-			if (foundStatement === true) {
+			if (foundStatement === true && foundNegation === false) {
 				addIssue("MISSING_CONNECTOR", { fromIndex: fromPos, toIndex: fromPos + element.length });
 			}
 			foundConnector = false;
@@ -191,8 +141,4 @@ export function detectMissingStatementsOrConnector(expression: string[], express
 			fromPos = fromPos + element.length;
 		}
 	}
-	if (foundStatement === false || foundConnector === true || foundNegation === true) {
-		addIssue("MISSING_STATEMENT_AT_THE_END", { fromIndex: fromPos, toIndex: fromPos });
-	}
-
 }

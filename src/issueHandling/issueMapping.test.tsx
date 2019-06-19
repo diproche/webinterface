@@ -18,14 +18,12 @@ test("check if the issuelist contains a searched issue", () => {
 	addIssue("BRACKET_UNDERCLOSING");
 	/** add fourth issue */
 	addIssue("MISSING_STATEMENT_INSIDE");
-	/** add fifth issue */
-	addIssue("MISSING_STATEMENT_AT_THE_END");
 
 	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
 
 	expect(issue).toEqual({
 		code: "MISSING_STATEMENT_INSIDE",
-		message: "Es fehlt mindestens ein Argument.",
+		message: "Es fehlt ein Argument.",
 		severity: "WARNING",
 	});
 });

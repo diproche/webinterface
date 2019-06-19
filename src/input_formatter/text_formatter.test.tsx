@@ -73,7 +73,7 @@ test("replace detected expression-elements into readable prolog commands", () =>
 test("expression formatter testcase", () => {
 	emptyIssueList();
 	const result: string = textFormatter("Es gilt: $((a&b)<->(b&a))$");
-	const expectedResult = "[[Es,gilt:],[[[a,and,b],<->,[b,and,a]]]].";
+	const expectedResult = "[[es,gilt:],[[[a,and,b],<->,[b,and,a]]]].";
 	expect(result).toEqual(expectedResult);
 });
 
@@ -83,19 +83,19 @@ test("splitting full text into readable prolog format including formatted expres
 		"Hello, this is a test! Is it Working? I     hope so. \n Paragraphs are marked with an " +
 		"abs List: \n \n \n Here is also an expression: $[AUNDbracketLEFTB<-->]-> D ODERNOT E]$ " +
 		"And a second one: $[5 ADD 12 equal 3 mal 5 plus 2]$");
-	const expectedResult = "[[Hello,this,is,a,test],[Is,it,Working]," +
-		"[I,hope,so],[abs],[Paragraphs,are,marked,with,an,abs,List:]," +
-		"[abs],[abs],[abs],[Here,is,also,an,expression:],[[A,and,[B,<->],->," +
-		"D,or,neg,E]],[And,a,second,one:],[[5,+,12,=,3,*,5,+,2]]].";
+	const expectedResult = "[[hello,this,is,a,test],[is,it,working]," +
+		"[i,hope,so],[abs],[paragraphs,are,marked,with,an,abs,list:]," +
+		"[abs],[abs],[abs],[here,is,also,an,expression:],[[a,and,[b,<->],->," +
+		"d,or,neg,e]],[and,a,second,one:],[[5,+,12,=,3,*,5,+,2]]].";
 	expect(result).toEqual(expectedResult);
 	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
 	expect(issue).toEqual({
 		code: "MISSING_STATEMENT_INSIDE",
-		message: "Es fehlt mindestens ein Argument.",
+		message: "Es fehlt ein Argument.",
 		severity: "WARNING",
 		position: {
-			fromIndex: 190,
-			toIndex: 192,
+			fromIndex: 150,
+			toIndex: 150,
 		},
 	});
 
@@ -105,17 +105,17 @@ test("splitting full text into readable prolog format including formatted expres
 	emptyIssueList();
 	const result = textFormatter(
 		"Wir zeigen" +
-		"$((a&b)<->(b&a))$." +
-		"$=>$" +
-		"Angenommen, es gilt" +
-		"$a und b$." +
-		"Dann gilt auch a. Ferner gilt b. Damit folgt b und a. Qed. \n" +
+		"$((a&b)<->(b&a))$" +
+		"=>" +
+		"Angenommen" +
+		"$a und b$" +
+		"Dann a. Ferner gilt b. Damit folgt $b und a$ Qed \n" +
 		"Also gilt ((a&b)->(b&a)). \n" +
 		"<=" +
-		"Nehmen wir jetzt an, dass b und a. Dann folgt a. Ausserdem folgt b. Also gilt nun a und b. Qed. \n" +
-		"Also gilt ((b&a)->(a&b))." +
-		"Damit folgt ((a&b)<->(b&a)). Qed.");
-	const expectedResult = "[wir,zeigen,[[a,and,b],<->,[b,and,a]]]" +
+		"Nehmen wir jetzt an, dass $b und a$ Dann folgt a. Ausserdem folgt b. Also gilt nun $a und b$ Qed. \n" +
+		"Also gilt ((b&a)->(a&b))" +
+		"Damit folgt ((a&b)<->(b&a)) Qed.");
+	const expectedResult = "[[wir,zeigen,[[a,and,b],<->,[b,and,a]]]," +
 		"[=>]," +
 		"[angenommen,[a,and,b]]," +
 		"[dann,a],[ferner,gilt,b],[damit,folgt,[b,and,a]]," +
@@ -193,45 +193,35 @@ test("scan for bracket errors - test 3: )]", () => {
 	});
 });
 
-test("scan for missing Statements or missing connectors - test 1: [ <-> ]", () => {
+test("scan for missing Statements or missing connectors - test 1: [ <-> k]", () => {
 	emptyIssueList();
 	const testExpression = ["bracketLeft", "implicationRight", "bracketRight"];
 	expressionIssueDetector(testExpression, 0);
-	const issue1 = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
-	const issue2 = listAllIssues().find(i => i.code === "MISSING_STATEMENT_AT_THE_END");
-	expect(issue1).toEqual({
+	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
+	expect(issue).toEqual({
 		code: "MISSING_STATEMENT_INSIDE",
-		message: "Es fehlt mindestens ein Argument.",
+		message: "Es fehlt ein Argument.",
 		severity: "WARNING",
 		position: {
 			fromIndex: 11,
-			toIndex: 27,
-		},
-	});
-	expect(issue2).toEqual({
-		code: "MISSING_STATEMENT_AT_THE_END",
-		message: "Am Ende des Ausdrucks fehlt ein Argument. Dieser darf nicht mit einem logischen Operator enden.",
-		severity: "WARNING",
-		position: {
-			fromIndex: 39,
-			toIndex: 39,
+			toIndex: 11,
 		},
 	});
 });
 
-test("scan for missing Statements or missing connectors - test 2: [ C <-> ]]", () => {
+test("scan for missing Statements or missing connectors - test 2: [ C -> ]]", () => {
 	emptyIssueList();
 	const testExpression = ["bracketLeft", "C", "implicationRight", "bracketRight", "bracketRight"];
 	expressionIssueDetector(testExpression, 0);
-	const issue1 = listAllIssues().find(i => i.code === "MISSING_STATEMENT_AT_THE_END");
+	const issue1 = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
 	const issue2 = listAllIssues().find(i => i.code === "BRACKET_OVERCLOSING");
 	expect(issue1).toEqual({
-		code: "MISSING_STATEMENT_AT_THE_END",
-		message: "Am Ende des Ausdrucks fehlt ein Argument. Dieser darf nicht mit einem logischen Operator enden.",
+		code: "MISSING_STATEMENT_INSIDE",
+		message: "Es fehlt ein Argument.",
 		severity: "WARNING",
 		position: {
-			fromIndex: 52,
-			toIndex: 52,
+			fromIndex: 28,
+			toIndex: 28,
 		},
 	});
 	expect(issue2).toEqual({
@@ -252,11 +242,11 @@ test("scan for missing Statements or missing connectors - test 3: [ and X ]", ()
 	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
 	expect(issue).toEqual({
 		code: "MISSING_STATEMENT_INSIDE",
-		message: "Es fehlt mindestens ein Argument.",
+		message: "Es fehlt ein Argument.",
 		severity: "WARNING",
 		position: {
 			fromIndex: 11,
-			toIndex: 22,
+			toIndex: 11,
 		},
 	});
 });
@@ -340,7 +330,7 @@ test("scan for missing Statements or missing connectors - test 8: [ not not <= A
 		severity: "WARNING",
 		position: {
 			fromIndex: 7,
-			toIndex: 10,
+			toIndex: 7,
 		},
 	});
 });
@@ -355,14 +345,14 @@ test("scan for missing Statements or missing connectors - test 9: [ not not not 
 		"]",
 	];
 	expressionIssueDetector(testExpression, 0);
-	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_AT_THE_END");
+	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
 	expect(issue).toEqual({
-		code: "MISSING_STATEMENT_AT_THE_END",
-		message: "Am Ende des Ausdrucks fehlt ein Argument. Dieser darf nicht mit einem logischen Operator enden.",
+		code: "MISSING_STATEMENT_INSIDE",
+		message: "Es fehlt ein Argument.",
 		severity: "WARNING",
 		position: {
-			fromIndex: 11,
-			toIndex: 11,
+			fromIndex: 10,
+			toIndex: 10,
 		},
 	});
 });

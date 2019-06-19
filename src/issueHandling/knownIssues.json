@@ -13,11 +13,7 @@
 	},
 	"MISSING_STATEMENT_INSIDE": {
 		"severity": "WARNING",
-		"message": "Es fehlt mindestens ein Argument."
-	},
-	"MISSING_STATEMENT_AT_THE_END": {
-		"severity": "WARNING",
-		"message": "Am Ende des Ausdrucks fehlt ein Argument. Dieser darf nicht mit einem logischen Operator enden."
+		"message": "Es fehlt ein Argument."
 	},
 	"MISSING_STATEMENT_AFTER_NEGATION": {
 		"severity": "WARNING",
