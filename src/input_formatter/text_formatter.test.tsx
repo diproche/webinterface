@@ -249,7 +249,7 @@ test("scan for missing Statements or missing connectors - test 5: [ not A [ ] B 
 		message: "Es fehlen logische Operatoren in der Formel.",
 		severity: "WARNING",
 		position: {
-			fromIndex: 16,
+			fromIndex: 17,
 			toIndex: 18,
 		},
 	});
