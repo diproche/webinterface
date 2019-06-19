@@ -140,7 +140,7 @@ export function detectMissingStatementsOrConnector(expression: string[], express
 						temp++;
 					} else {
 						if (foundStatement === true) {
-							addIssue("MISSING_CONNECTOR", { fromIndex: fromPos - 1, toIndex: fromPos + temp + 1 });
+							addIssue("MISSING_CONNECTOR", { fromIndex: fromPos, toIndex: fromPos + temp + 1 });
 						}
 						foundConnector = false;
 						foundStatement = true;
