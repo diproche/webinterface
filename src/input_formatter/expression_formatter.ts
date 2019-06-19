@@ -110,35 +110,39 @@ export function detectMissingStatementsOrConnector(expression: string[], express
 	let foundStatement: boolean = false;
 	let foundNegation: boolean = false;
 	let fromPos: number = expressionPosition;
-	for (let element of expression) {
-		element = element.trim();
-		if (element.match(bracket) || element.match(Regexes.whiteSpace)) {
-			if (element.match(Regexes.bracketRight ) &&
-			foundStatement === false && (foundConnector === true || foundNegation === true)) {
-				addIssue("MISSING_STATEMENT_INSIDE", { fromIndex: fromPos, toIndex: fromPos });
+	for (const element of expression) {
+		if (/\S/.test(element)) {
+			if (element.match(bracket)) {
+				if (element.match(Regexes.bracketRight) &&
+					foundStatement === false && (foundConnector === true || foundNegation === true)) {
+					addIssue("MISSING_STATEMENT_INSIDE", { fromIndex: fromPos, toIndex: fromPos });
+				}
+				fromPos = fromPos + element.length;
+			} else if (element.match(Regexes.negation)) {
+				foundNegation = true;
+				fromPos = fromPos + element.length;
+			} else if (element.match(logicConnector)) {
+				if (foundNegation === true) {
+					addIssue("MISSING_STATEMENT_AFTER_NEGATION", { fromIndex: fromPos, toIndex: fromPos });
+				} else if (foundConnector === true || element.match(Regexes.bracketLeft)) {
+					addIssue("MISSING_STATEMENT_INSIDE", { fromIndex: fromPos, toIndex: fromPos });
+				}
+				fromPos = fromPos + element.length;
+				foundConnector = true;
+				foundStatement = false;
+				foundNegation = false;
+			} else {
+				if (foundStatement === true && foundNegation === false) {
+					addIssue("MISSING_CONNECTOR", { fromIndex: fromPos, toIndex: fromPos + element.length });
+				}
+				foundConnector = false;
+				foundStatement = true;
+				foundNegation = false;
+				fromPos = fromPos + element.length;
 			}
-			fromPos = fromPos + element.length;
-		} else if (element.match(Regexes.negation)) {
-			foundNegation = true;
-			fromPos = fromPos + element.length;
-		} else if (element.match(logicConnector)) {
-			if (foundNegation === true) {
-				addIssue("MISSING_STATEMENT_AFTER_NEGATION", { fromIndex: fromPos, toIndex: fromPos});
-			} else if (foundConnector === true || element.match(Regexes.bracketLeft)) {
-				addIssue("MISSING_STATEMENT_INSIDE", { fromIndex: fromPos, toIndex: fromPos});
-			}
-			fromPos = fromPos + element.length;
-			foundConnector = true;
-			foundStatement = false;
-			foundNegation = false;
 		} else {
-			if (foundStatement === true && foundNegation === false) {
-				addIssue("MISSING_CONNECTOR", { fromIndex: fromPos, toIndex: fromPos + element.length });
-			}
-			foundConnector = false;
-			foundStatement = true;
-			foundNegation = false;
 			fromPos = fromPos + element.length;
 		}
+
 	}
 }
