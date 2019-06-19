@@ -1,8 +1,7 @@
-import {  textFormatter } from "../../input_formatter/text_formatter";
-import { listAllIssues } from "../../issueHandling/issueMapping";
+import { textFormatter } from "../../input_formatter/text_formatter";
 import { collectInvalidWordsInIssues } from "../../vocabularyChecker/detectWrongSyntax";
 import { getDiprocheResponse } from "../proofChecker";
-import { addDiprocheIssues} from "./diprocheResponseProcessing";
+import { addDiprocheIssues } from "./diprocheResponseProcessing";
 
 export enum Mode {
 	propositionalLogic = "diproche",
@@ -28,7 +27,7 @@ export function getVocabErrors(userInput: string): void {
 }
 
 // export function getSemanticErrors(userInput: string) {
-	// Dummy input
+// Dummy input
 // }
 
 export function getSyntacticErrors(userInput: string) {
