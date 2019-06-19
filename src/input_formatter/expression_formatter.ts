@@ -21,7 +21,7 @@ export function expressionFormatter(expression: string, expressionPosition: numb
  */
 export function preFormatExpressionFromImput(expression: string): string[] {
 	const splittedExpression: string[] = expression.split(allowedExpressionToken);
-	const filtered = splittedExpression.filter(x => x !== undefined && x != null && x !== "");
+	const filtered = splittedExpression.filter(x => x !== undefined && x !== null && x !== "");
 	return filtered;
 }
 
@@ -132,17 +132,31 @@ export function detectMissingStatementsOrConnector(expression: string[], express
 				foundStatement = false;
 				foundNegation = false;
 			} else {
-				if (foundStatement === true && foundNegation === false) {
-					addIssue("MISSING_CONNECTOR", { fromIndex: fromPos, toIndex: fromPos + element.length });
+				let i;
+				let temp = 0;
+				for (i = 0; i < element.length; i++) {
+					const char = element.charAt(i);
+					if (char.match(Regexes.whiteSpace)) {
+						temp++;
+					} else {
+						if (foundStatement === true) {
+							addIssue("MISSING_CONNECTOR", { fromIndex: fromPos - 1, toIndex: fromPos + temp + 1 });
+						}
+						foundConnector = false;
+						foundStatement = true;
+						foundNegation = false;
+						fromPos = fromPos + temp + 1;
+						temp = 0;
+					}
 				}
-				foundConnector = false;
-				foundStatement = true;
-				foundNegation = false;
-				fromPos = fromPos + element.length;
+				fromPos = fromPos + temp;
 			}
 		} else {
 			fromPos = fromPos + element.length;
 		}
 
+	}
+	if (foundStatement === false && (foundConnector === true || foundNegation === true)) {
+		addIssue("MISSING_STATEMENT_INSIDE", { fromIndex: fromPos, toIndex: fromPos });
 	}
 }
