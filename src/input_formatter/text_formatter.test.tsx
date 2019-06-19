@@ -101,34 +101,6 @@ test("splitting full text into readable prolog format including formatted expres
 
 });
 
-test("splitting full text into readable prolog format including formatted expressions and paragraph marker|2: ", () => {
-	emptyIssueList();
-	const result = textFormatter(
-		"Wir zeigen" +
-		"$((a&b)<->(b&a))$" +
-		"=>" +
-		"Angenommen" +
-		"$a und b$" +
-		"Dann a. Ferner gilt b. Damit folgt $b und a$ Qed \n" +
-		"Also gilt ((a&b)->(b&a)). \n" +
-		"<=" +
-		"Nehmen wir jetzt an, dass $b und a$ Dann folgt a. Ausserdem folgt b. Also gilt nun $a und b$ Qed. \n" +
-		"Also gilt ((b&a)->(a&b))" +
-		"Damit folgt ((a&b)<->(b&a)) Qed.");
-	const expectedResult = "[[wir,zeigen,[[a,and,b],<->,[b,and,a]]]," +
-		"[=>]," +
-		"[angenommen,[a,and,b]]," +
-		"[dann,a],[ferner,gilt,b],[damit,folgt,[b,and,a]]," +
-		"[qed]," +
-		"[abs]," +
-		"[<=]," +
-		"[nehmen,wir,jetzt,an,dass,[b,and,a]],[dann,folgt,a]," +
-		"[ausserdem,folgt,b],[also,gilt,nun,[a,and,b]]," +
-		"[qed]," +
-		"[damit,gilt,[[a,and,b],<->,[b,and,a]]]]";
-	expect(result).toEqual(expectedResult);
-});
-
 test("scan for bracket errors - test 1: [][][[]]", () => {
 	emptyIssueList();
 	const bracketList = [
