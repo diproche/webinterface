@@ -33,12 +33,11 @@ export function replaceExpressionElementsIntoPrologCode(preFormattedExpression: 
 	for (let element of preFormattedExpression) {
 		element = element.trim();
 		if (element.match(allowedExpressionToken)) {
-			let newElement: string = replaceASingleExpressionElementIntoPrologCode(element);
-			newElement = newElement.trim();
-			finalFormattedExpression.push(newElement);
-		} else if (element.match(Regexes.whiteSpace)) {
-			continue;
+			element = replaceASingleExpressionElementIntoPrologCode(element).trim();
+			finalFormattedExpression.push(element);
 		} else {
+			element = element.trim();
+			element = element.replace(Regexes.allWhiteSpace, " ");
 			finalFormattedExpression.push(element);
 		}
 	}
@@ -83,13 +82,19 @@ export function detectBracketIssues(expression: string[], expressionPosition: nu
 	let bracketCount: number = 0;
 	let fromPos: number = expressionPosition;
 	let toPos: number = expressionPosition;
-
+	let isEmpty: boolean = true;
 	expression.forEach(element => {
 		toPos = fromPos + element.length;
 		if (element.match(Regexes.bracketLeft)) {
 			bracketCount++;
+			isEmpty = true;
 		} else if (element.match(Regexes.bracketRight)) {
 			bracketCount--;
+			if (isEmpty === true) {
+				addIssue("EMPTY_BRACKET", { fromIndex: fromPos, toIndex: fromPos });
+			}
+		} else {
+			isEmpty = false;
 		}
 		if (bracketCount < 0) {
 			addIssue("BRACKET_OVERCLOSING", { fromIndex: fromPos, toIndex: fromPos + element.length });
@@ -141,7 +146,7 @@ export function detectMissingStatementsOrConnector(expression: string[], express
 					if (char.match(Regexes.whiteSpace)) {
 						temp++;
 					} else {
-						if (foundStatement === true && element[i - 1].match(Regexes.whiteSpace)) {
+						if (foundStatement === true && temp > 0) {
 							addIssue("MISSING_CONNECTOR", { fromIndex: fromPos, toIndex: fromPos + temp });
 						}
 						foundConnector = false;

@@ -41,6 +41,27 @@ test("Test if the elements of a expression is detected and preformatted correctl
 	expect(result).toEqual(expectedResult);
 });
 
+test("Test if the elements of a expression is detected and preformatted correctly:", () => {
+	emptyIssueList();
+	const result = preFormatExpressionFromImput("df       test ( nicht sonne) ");
+	const expectedResult = ["df       test ", "(", " ", "nicht", " sonne", ")", " "];
+	expect(result).toEqual(expectedResult);
+});
+
+test("Test if the elements of a expression is detected and preformatted correctly:", () => {
+	emptyIssueList();
+	const result = preFormatExpressionFromImput("df       test ( nicht sonne) ");
+	const expectedResult = [
+		"df test",
+		"[",
+		"neg",
+		"sonne",
+		"]",
+	];
+	const result2 = replaceExpressionElementsIntoPrologCode(result);
+	expect(result2).toEqual(expectedResult);
+});
+
 test("replace detected expression-elements into readable prolog commands", () => {
 	emptyIssueList();
 	const result = replaceExpressionElementsIntoPrologCode([
@@ -101,21 +122,24 @@ test("splitting full text into readable prolog format including formatted expres
 
 });
 
-test("scan for bracket errors - test 1: [][][[]]", () => {
+test("scan for bracket errors - test 1: []", () => {
 	emptyIssueList();
 	const bracketList = [
 		"bracketLeft",
 		"bracketRight",
-		"bracketLeft",
-		"bracketRight",
-		"bracketLeft",
-		"bracketLeft",
-		"bracketRight",
-		"bracketRight",
+
 	];
-	detectBracketIssues(bracketList, 0);
-	const issue = listAllIssues();
-	expect(issue).toEqual([]);
+	expressionIssueDetector(bracketList, 0);
+	const issue = listAllIssues().find(i => i.code === "EMPTY_BRACKET");
+	expect(issue).toEqual({
+		code: "EMPTY_BRACKET",
+		message: "Die gesetzten Klammern enthalten keine Elemente.",
+		severity: "WARNING",
+		position: {
+			fromIndex: 11,
+			toIndex: 11,
+		},
+	});
 });
 
 test("scan for bracket errors - test 2: ][[[[[[]]", () => {
@@ -243,14 +267,14 @@ test("scan for missing Statements or missing connectors - test 5: [ not A [ ] B 
 		"bracketRight",
 	];
 	expressionIssueDetector(testExpression, 0);
-	const issue = listAllIssues().find(i => i.code === "MISSING_CONNECTOR");
+	const issue = listAllIssues().find(i => i.code === "EMPTY_BRACKET");
 	expect(issue).toEqual({
-		code: "MISSING_CONNECTOR",
-		message: "Es fehlen logische Operatoren in der Formel.",
+		code: "EMPTY_BRACKET",
+		message: "Die gesetzten Klammern enthalten keine Elemente.",
 		severity: "WARNING",
 		position: {
-			fromIndex: 17,
-			toIndex: 18,
+			fromIndex: 16,
+			toIndex: 16,
 		},
 	});
 

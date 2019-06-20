@@ -7,6 +7,10 @@
 		"severity": "WARNING",
 		"message": "Es wurden Klammern geschlossen, die nicht geöffnet wurden."
 	},
+	"EMPTY_BRACKET": {
+		"severity": "WARNING",
+		"message": "Die gesetzten Klammern enthalten keine Elemente."
+	},
 	"MISSING_CONNECTOR": {
 		"severity": "WARNING",
 		"message": "Es fehlen logische Operatoren in der Formel."
