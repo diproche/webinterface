@@ -120,6 +120,8 @@ export function detectMissingStatementsOrConnector(expression: string[], express
 				fromPos = fromPos + element.length;
 			} else if (element.match(Regexes.negation)) {
 				foundNegation = true;
+				foundConnector = false;
+				foundStatement = false;
 				fromPos = fromPos + element.length;
 			} else if (element.match(logicConnector)) {
 				if (foundNegation === true) {
@@ -136,11 +138,11 @@ export function detectMissingStatementsOrConnector(expression: string[], express
 				let temp = 0;
 				for (i = 0; i < element.length; i++) {
 					const char = element.charAt(i);
-					if (char.match(Regexes.whiteSpace || temp === 0)) {
+					if (char.match(Regexes.whiteSpace)) {
 						temp++;
 					} else {
-						if (foundStatement === true) {
-							addIssue("MISSING_CONNECTOR", { fromIndex: fromPos, toIndex: fromPos + temp + 1 });
+						if (foundStatement === true && element[i - 1].match(Regexes.whiteSpace)) {
+							addIssue("MISSING_CONNECTOR", { fromIndex: fromPos, toIndex: fromPos + temp });
 						}
 						foundConnector = false;
 						foundStatement = true;
