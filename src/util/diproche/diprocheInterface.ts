@@ -46,10 +46,9 @@ export async function getErrorsAfterDiproche(diprocheInput: string): Promise<voi
 
 // this function collects all Errors.
 export async function createErrors(userinput: string): Promise<void> {
+	getErrorsBeforeDiproche(userinput);
 
 	// Also adds Issues which are caused when progressing this function
 	const diprocheInput = textFormatter(userinput);
-	getErrorsBeforeDiproche(diprocheInput);
-
 	await getErrorsAfterDiproche(diprocheInput);
 }
