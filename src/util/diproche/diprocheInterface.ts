@@ -1,6 +1,7 @@
-import { expressionFormatter } from "../../input_formatter/expression_formatter";
-import { listAllIssues } from "../../issueHandling/issueMapping";
+import {  textFormatter } from "../../input_formatter/text_formatter";
 import { collectInvalidWordsInIssues } from "../../vocabularyChecker/detectWrongSyntax";
+import { getDiprocheResponse } from "../proofChecker";
+import { addDiprocheIssues} from "./diprocheResponseProcessing";
 
 export enum Mode {
 	propositionalLogic = "diproche",
@@ -31,7 +32,6 @@ export function getVocabErrors(userInput: string): void {
 
 export function getSyntacticErrors(userInput: string) {
 	getVocabErrors(userInput);
-	expressionFormatter(userInput);
 }
 
 export function getErrorsBeforeDiproche(userInput: string) {
@@ -39,23 +39,16 @@ export function getErrorsBeforeDiproche(userInput: string) {
 	// getSemanticErrors(userInput);
 }
 
-// export function getErrorsAfterDiproche(userInput: string) {
-	// Dummy input
-// }
-
-// this function collects all Errors.
-export function getErrors(diprocheInput: string) {
-	getErrorsBeforeDiproche(diprocheInput);
-	// getErrorsAfterDiproche(diprocheInput);
+export async function getErrorsAfterDiproche(diprocheInput: string): Promise<void> {
+	const response: string = await getDiprocheResponse(diprocheInput);
+	addDiprocheIssues(response);
 }
 
-export default function displayErrors(userInput: string) {
-	getErrors(userInput);
-	let errormessage: string = "";
-	if (listAllIssues().length > 0) {
-		for (const issue of listAllIssues()) {
-			errormessage += issue.message + "\n";
-		}
-		throw new Error(errormessage);
-	}
+// this function collects all Errors.
+export async function createErrors(userinput: string): Promise<void> {
+	getErrorsBeforeDiproche(userinput);
+
+	// Also adds Issues which are caused when progressing this function
+	const diprocheInput = textFormatter(userinput);
+	await getErrorsAfterDiproche(diprocheInput);
 }
