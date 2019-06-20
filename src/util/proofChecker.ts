@@ -1,5 +1,5 @@
 import Issue from "../issueHandling/issue";
-import {listAllIssues} from "../issueHandling/issueMapping";
+import { emptyIssueList, listAllIssues } from "../issueHandling/issueMapping";
 import { createErrors } from "./diproche/diprocheInterface";
 
 // Ordered by their degree of fatality
@@ -11,6 +11,7 @@ const severities: string[] = ["FATALERROR", "ERROR", "WARNING", "HINT"];
 	* @return {Array<Issue>} The syntatical, sementatical and technical issues for the given user input
 	*/
 export async function checkProof(userInput: string): Promise<readonly Issue[]> {
+	emptyIssueList();
 	createErrors(userInput);
 	return orderIssuesBySeverity(listAllIssues());
 }

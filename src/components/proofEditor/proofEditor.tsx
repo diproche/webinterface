@@ -1,3 +1,4 @@
+import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import Issue from "../../issueHandling/issue";
 import { checkProof } from "../../util/proofChecker";
@@ -29,7 +30,9 @@ export class ProofEditor extends React.Component<Props, State> {
 					onChange={ev => this.setState({ userInput: ev.target.value })}
 				/>
 				<div className={styles.buttons}>
-					<button onClick={this.checkInput}>
+					<button
+						className={"btn btn-success"}
+						onClick={this.checkInput}>
 						Prüfen
 					</button>
 				</div>
