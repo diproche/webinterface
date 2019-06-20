@@ -14,30 +14,52 @@ test("splitting a single sentences into List of words: ", () => {
 	expect(result).toEqual(expectedResult);
 });
 
-test("Test if the elements of a expression is detected and formatted correctly:", () => {
+test("Test if the elements of a expression is detected and preformatted correctly:", () => {
 	emptyIssueList();
 	const result = preFormatExpressionFromImput(
-		"[AUNDTest[B<==>C]->DODERNOTNOTE]",
+		"[AUNDTest[B<==>C]->DODERNOT   NOTE]",
 	);
 	const expectedResult = [
-		"bracketLeft",
+		"[",
 		"A",
-		"conjunction",
+		"UND",
 		"Test",
-		"bracketLeft",
+		"[",
 		"B",
-		"equivalence",
+		"<==>",
 		"C",
-		"bracketRight",
-		"implicationRight",
+		"]",
+		"->",
 		"D",
-		"disjunction",
-		"negation",
-		"negation",
+		"ODER",
+		"NOT",
+		"   ",
+		"NOT",
 		"E",
-		"bracketRight",
+		"]",
 	];
 	expect(result).toEqual(expectedResult);
+});
+
+test("Test if the elements of a expression is detected and preformatted correctly:", () => {
+	emptyIssueList();
+	const result = preFormatExpressionFromImput("df       test ( nicht sonne) ");
+	const expectedResult = ["df       test ", "(", " ", "nicht", " sonne", ")", " "];
+	expect(result).toEqual(expectedResult);
+});
+
+test("Test if the elements of a expression is detected and preformatted correctly:", () => {
+	emptyIssueList();
+	const result = preFormatExpressionFromImput("df       test ( nicht sonne) ");
+	const expectedResult = [
+		"df test",
+		"[",
+		"neg",
+		"sonne",
+		"]",
+	];
+	const result2 = replaceExpressionElementsIntoPrologCode(result);
+	expect(result2).toEqual(expectedResult);
 });
 
 test("replace detected expression-elements into readable prolog commands", () => {
@@ -46,7 +68,7 @@ test("replace detected expression-elements into readable prolog commands", () =>
 		"bracketLeft",
 		"A",
 		"conjunction",
-		"RANDOMTEXTHERE",
+		"TEXTHERE",
 		"bracketLeft",
 		"B",
 		"equivalence",
@@ -58,7 +80,7 @@ test("replace detected expression-elements into readable prolog commands", () =>
 		"[",
 		"A",
 		"and",
-		"RANDOMTEXTHERE",
+		"TEXTHERE",
 		"[",
 		"B",
 		"<->",
@@ -69,78 +91,55 @@ test("replace detected expression-elements into readable prolog commands", () =>
 	expect(result).toEqual(expectedResult);
 });
 
-test("splitting full text into full listFormat including expressions and paragraph marker: ", () => {
+test("expression formatter testcase", () => {
+	emptyIssueList();
+	const result: string = textFormatter("Es gilt: $((a&b)<->(b&a))$");
+	const expectedResult = "[[es,gilt:],[[[a,and,b],<->,[b,and,a]]]].";
+	expect(result).toEqual(expectedResult);
+});
+
+test("splitting full text into readable prolog format including formatted expressions and paragraph marker: ", () => {
 	emptyIssueList();
 	const result = textFormatter(
-		"Hello, this is a test! Is it Working? I               hope so. \n Paragraphs are marked with an " +
-		"empty List: \n \n \n Here is also an expression: $[A UND[B <==> ]-> D ODER NOT E]$ " +
-		"And a second one: $[5 add 12 equal 3 mal 5 plus 2]$",
-	);
-	const expectedResult = [
-		["Hello", "this", "is", "a", "test"],
-		["Is", "it", "Working"],
-		["I", "hope", "so"],
-		[],
-		["Paragraphs", "are", "marked", "with", "an", "empty", "List:"],
-		[],
-		[],
-		[],
-		["Here", "is", "also", "an", "expression:"],
-		[
-			"[",
-			"A",
-			"and",
-			"[",
-			"B",
-			"<->",
-			"]",
-			"->",
-			"D",
-			"or",
-			"neg",
-			"E",
-			"]",
-		],
-		["And", "a", "second", "one:"],
-		[
-			"[",
-			"5",
-			"+",
-			"12",
-			"=",
-			"3",
-			"*",
-			"5",
-			"+",
-			"2",
-			"]",
-		],
-	];
+		"Hello, this is a test! Is it Working? I     hope so. \n Paragraphs are marked with an " +
+		"abs List: \n \n \n Here is also an expression: $[AUNDbracketLEFTB<-->]-> D ODERNOT E]$ " +
+		"And a second one: $[5 ADD 12 equal 3 mal 5 plus 2]$");
+	const expectedResult = "[[hello,this,is,a,test],[is,it,working]," +
+		"[i,hope,so],[abs],[paragraphs,are,marked,with,an,abs,list:]," +
+		"[abs],[abs],[abs],[here,is,also,an,expression:],[[a,and,[b,<->],->," +
+		"d,or,neg,e]],[and,a,second,one:],[[5,+,12,=,3,*,5,+,2]]].";
 	expect(result).toEqual(expectedResult);
 	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
 	expect(issue).toEqual({
 		code: "MISSING_STATEMENT_INSIDE",
-		message: "Es fehlt mindestens ein Argument.",
+		message: "Es fehlt ein Argument.",
 		severity: "WARNING",
+		position: {
+			fromIndex: 150,
+			toIndex: 150,
+		},
 	});
 
 });
 
-test("scan for bracket errors - test 1: [][][[]]", () => {
+test("scan for bracket errors - test 1: []", () => {
 	emptyIssueList();
 	const bracketList = [
 		"bracketLeft",
 		"bracketRight",
-		"bracketLeft",
-		"bracketRight",
-		"bracketLeft",
-		"bracketLeft",
-		"bracketRight",
-		"bracketRight",
+
 	];
-	detectBracketIssues(bracketList);
-	const issue = listAllIssues();
-	expect(issue).toEqual([]);
+	expressionIssueDetector(bracketList, 0);
+	const issue = listAllIssues().find(i => i.code === "EMPTY_BRACKET");
+	expect(issue).toEqual({
+		code: "EMPTY_BRACKET",
+		message: "Die gesetzten Klammern enthalten keine Elemente.",
+		severity: "WARNING",
+		position: {
+			fromIndex: 11,
+			toIndex: 11,
+		},
+	});
 });
 
 test("scan for bracket errors - test 2: ][[[[[[]]", () => {
@@ -155,7 +154,7 @@ test("scan for bracket errors - test 2: ][[[[[[]]", () => {
 		"bracketRight",
 		"bracketRight",
 	];
-	detectBracketIssues(bracketList);
+	detectBracketIssues(bracketList, 0);
 	const issue1 = listAllIssues().find(i => i.code === "BRACKET_UNDERCLOSING");
 	const issue2 = listAllIssues().find(i => i.code === "BRACKET_OVERCLOSING");
 	expect(issue1).toEqual({
@@ -167,94 +166,116 @@ test("scan for bracket errors - test 2: ][[[[[[]]", () => {
 		code: "BRACKET_OVERCLOSING",
 		message: "Es wurden Klammern geschlossen, die nicht geöffnet wurden.",
 		severity: "WARNING",
+		position: {
+			fromIndex: 0,
+			toIndex: 12,
+		},
 	});
 });
 
-test("scan for bracket errors - test 3: ][", () => {
+test("scan for bracket errors - test 3: )]", () => {
 	emptyIssueList();
-	const bracketList = ["bracketRight", "bracketLeft"];
-	detectBracketIssues(bracketList);
-	const issue = listAllIssues().find(i => i.code === "BRACKET_OVERCLOSING");
+	const bracketList = ["bracketLeft", ")", "]"];
+	detectBracketIssues(bracketList, 0);
+	const issue = listAllIssues().find(i => (i.code === "BRACKET_OVERCLOSING"));
 	expect(issue).toEqual({
 		code: "BRACKET_OVERCLOSING",
 		message: "Es wurden Klammern geschlossen, die nicht geöffnet wurden.",
 		severity: "WARNING",
+		position: {
+			fromIndex: 12,
+			toIndex: 13,
+		},
 	});
 });
 
-test("scan for missing Statements or missing connectors - test 1: [ <-> ]", () => {
+test("scan for missing Statements or missing connectors - test 1: [ <-> k]", () => {
 	emptyIssueList();
 	const testExpression = ["bracketLeft", "implicationRight", "bracketRight"];
-	expressionIssueDetector(testExpression);
-	const issue1 = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
-	const issue2 = listAllIssues().find(i => i.code === "MISSING_STATEMENT_AT_THE_END");
-	expect(issue1).toEqual({
+	expressionIssueDetector(testExpression, 0);
+	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
+	expect(issue).toEqual({
 		code: "MISSING_STATEMENT_INSIDE",
-		message: "Es fehlt mindestens ein Argument.",
+		message: "Es fehlt ein Argument.",
 		severity: "WARNING",
-	});
-	expect(issue2).toEqual({
-		code: "MISSING_STATEMENT_AT_THE_END",
-		message: "Am Ende des Ausdrucks fehlt ein Argument. Dieser darf nicht mit einem logischen Operator enden.",
-		severity: "WARNING",
+		position: {
+			fromIndex: 11,
+			toIndex: 11,
+		},
 	});
 });
 
-test("scan for missing Statements or missing connectors - test 2: [ C <-> ]]", () => {
+test("scan for missing Statements or missing connectors - test 2: [ C -> ]]", () => {
 	emptyIssueList();
 	const testExpression = ["bracketLeft", "C", "implicationRight", "bracketRight", "bracketRight"];
-	expressionIssueDetector(testExpression);
-	const issue1 = listAllIssues().find(i => i.code === "MISSING_STATEMENT_AT_THE_END");
+	expressionIssueDetector(testExpression, 0);
+	const issue1 = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
 	const issue2 = listAllIssues().find(i => i.code === "BRACKET_OVERCLOSING");
 	expect(issue1).toEqual({
-		code: "MISSING_STATEMENT_AT_THE_END",
-		message: "Am Ende des Ausdrucks fehlt ein Argument. Dieser darf nicht mit einem logischen Operator enden.",
+		code: "MISSING_STATEMENT_INSIDE",
+		message: "Es fehlt ein Argument.",
 		severity: "WARNING",
+		position: {
+			fromIndex: 28,
+			toIndex: 28,
+		},
 	});
 	expect(issue2).toEqual({
 		code: "BRACKET_OVERCLOSING",
 		message: "Es wurden Klammern geschlossen, die nicht geöffnet wurden.",
 		severity: "WARNING",
+		position: {
+			fromIndex: 40,
+			toIndex: 52,
+		},
 	});
 });
 
 test("scan for missing Statements or missing connectors - test 3: [ and X ]", () => {
 	emptyIssueList();
 	const testExpression = ["bracketLeft", "conjunction", "X", "bracketRight"];
-	expressionIssueDetector(testExpression);
+	expressionIssueDetector(testExpression, 0);
 	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
 	expect(issue).toEqual({
 		code: "MISSING_STATEMENT_INSIDE",
-		message: "Es fehlt mindestens ein Argument.",
+		message: "Es fehlt ein Argument.",
 		severity: "WARNING",
+		position: {
+			fromIndex: 11,
+			toIndex: 11,
+		},
 	});
 });
 
 test("scan for missing Statements or missing connectors - test 4 [ A ]", () => {
 	emptyIssueList();
 	const testExpression = ["bracketLeft", "A", "bracketRight"];
-	expressionIssueDetector(testExpression);
+	expressionIssueDetector(testExpression, 0);
 	const issue = listAllIssues();
 	expect(issue).toEqual([]);
 });
 
-test("scan for missing Statements or missing connectors - test 5: [ not A [ ] A ]", () => {
+test("scan for missing Statements or missing connectors - test 5: [ not A [ ] B ]", () => {
 	emptyIssueList();
 	const testExpression = [
 		"bracketLeft",
 		"not",
 		"A",
-		"bracketLeft",
-		"bracketRight",
-		"A",
+		"[",
+		")",
+		"B",
 		"bracketRight",
 	];
-	expressionIssueDetector(testExpression);
-	const issue = listAllIssues().find(i => i.code === "MISSING_CONNECTOR");
+	expressionIssueDetector(testExpression, 0);
+	const issue = listAllIssues().find(i => i.code === "EMPTY_BRACKET");
 	expect(issue).toEqual({
-		code: "MISSING_CONNECTOR",
-		message: "Es fehlen logische Operatoren in der Formel.",
+		code: "EMPTY_BRACKET",
+		message: "Die gesetzten Klammern enthalten keine Elemente.",
 		severity: "WARNING",
+		position: {
+			fromIndex: 16,
+			toIndex: 16,
+		},
 	});
 
 });
@@ -268,7 +289,7 @@ test("scan for missing Statements or missing connectors - test 6: [ A <- B ]", (
 		"B",
 		"bracketRight",
 	];
-	expressionIssueDetector(testExpression);
+	expressionIssueDetector(testExpression, 0);
 	const issue = listAllIssues();
 	expect(issue).toEqual([]);
 });
@@ -283,41 +304,51 @@ test("scan for missing Statements or missing connectors - test 7: [ not not A ]"
 		"A",
 		"bracketRight",
 	];
-	expressionIssueDetector(testExpression);
+	expressionIssueDetector(testExpression, 0);
 	const issue = listAllIssues();
 	expect(issue).toEqual([]);
 });
 test("scan for missing Statements or missing connectors - test 8: [ not not <= A]", () => {
 	emptyIssueList();
 	const testExpression = [
-		"bracketLeft",
-		"negation",
-		"negation",
-		"implicationLeft",
+		"(",
+		"not",
+		"neg",
+		"<--",
 		"A",
 		"bracketRight",
 	];
-	expressionIssueDetector(testExpression);
+	expressionIssueDetector(testExpression, 0);
 	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_AFTER_NEGATION");
 	expect(issue).toEqual({
 		code: "MISSING_STATEMENT_AFTER_NEGATION",
 		message: "Nach einer Negation muss ein Argument folgen.",
 		severity: "WARNING",
+		position: {
+			fromIndex: 7,
+			toIndex: 7,
+		},
 	});
 });
 
 test("scan for missing Statements or missing connectors - test 9: [ not not not ]", () => {
 	emptyIssueList();
 	const testExpression = [
-		"negation",
-		"negation",
-		"negation",
+		"[",
+		"neg",
+		"neg",
+		"neg",
+		"]",
 	];
-	expressionIssueDetector(testExpression);
-	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_AT_THE_END");
+	expressionIssueDetector(testExpression, 0);
+	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
 	expect(issue).toEqual({
-		code: "MISSING_STATEMENT_AT_THE_END",
-		message: "Am Ende des Ausdrucks fehlt ein Argument. Dieser darf nicht mit einem logischen Operator enden.",
+		code: "MISSING_STATEMENT_INSIDE",
+		message: "Es fehlt ein Argument.",
 		severity: "WARNING",
+		position: {
+			fromIndex: 10,
+			toIndex: 10,
+		},
 	});
 });
