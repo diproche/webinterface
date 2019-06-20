@@ -136,7 +136,7 @@ export function detectMissingStatementsOrConnector(expression: string[], express
 				let temp = 0;
 				for (i = 0; i < element.length; i++) {
 					const char = element.charAt(i);
-					if (char.match(Regexes.whiteSpace)) {
+					if (char.match(Regexes.whiteSpace || temp === 0)) {
 						temp++;
 					} else {
 						if (foundStatement === true) {
