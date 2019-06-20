@@ -1,6 +1,6 @@
 import Issue from "../issueHandling/issue";
-import {listAllIssues} from "../issueHandling/issueMapping";
-import {addDiprocheIssues} from "../util/diproche/diprocheResponseProcessing";
+import { emptyIssueList, listAllIssues } from "../issueHandling/issueMapping";
+import { createErrors } from "./diproche/diprocheInterface";
 
 // Ordered by their degree of fatality
 const severities: string[] = ["FATALERROR", "ERROR", "WARNING", "HINT"];
@@ -11,15 +11,12 @@ const severities: string[] = ["FATALERROR", "ERROR", "WARNING", "HINT"];
 	* @return {Array<Issue>} The syntatical, sementatical and technical issues for the given user input
 	*/
 export async function checkProof(userInput: string): Promise<readonly Issue[]> {
-
-	// runPipeline(userinput); (or whatever will run the userinput through the checks)
-
-	addDiprocheIssues( await getDiprocheResponse(userInput) );
-
+	emptyIssueList();
+	createErrors(userInput);
 	return orderIssuesBySeverity(listAllIssues());
 }
 
-async function getDiprocheResponse(userInput: string): Promise<string> {
+export async function getDiprocheResponse(userInput: string): Promise<string> {
 
 	const body = userInput;
 
@@ -32,7 +29,6 @@ async function getDiprocheResponse(userInput: string): Promise<string> {
 	});
 
 	const responseText = await response.text();
-	console.log(responseText);
 	return responseText;
 }
 
