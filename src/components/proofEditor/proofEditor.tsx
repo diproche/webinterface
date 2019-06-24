@@ -1,4 +1,3 @@
-import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import Issue from "../../issueHandling/issue";
 import { checkProof } from "../../util/proofChecker";
@@ -40,7 +39,7 @@ export class ProofEditor extends React.Component<Props, State> {
 			<div className={styles.issuesInformation}>
 				{this.state.issues.map((issue: Issue) => {
 					return <IssueInformation
-						issue={ issue } />;
+						issue={issue} />;
 				})}
 			</div>
 		</div>;
@@ -49,6 +48,6 @@ export class ProofEditor extends React.Component<Props, State> {
 
 	private readonly checkInput = async (): Promise<void> => {
 		const issueArray: readonly Issue[] = await checkProof(this.state.userInput);
-		this.setState({issues:  issueArray});
+		this.setState({ issues: issueArray });
 	}
 }
