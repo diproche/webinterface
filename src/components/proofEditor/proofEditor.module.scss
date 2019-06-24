@@ -1,15 +1,23 @@
+
 .textInput {
 	display: block;
-	width: 90%;
+	width: 80%;
 	margin: 1rem auto 0 auto;
 }
 
 .buttons {
+	display: block;
+	background-color: rgb(7, 63, 139);
+	color: white;
+	padding: 15px 32px;
+	border: none;
+	width: 20%;
 	text-align: center;
-	margin-top: 6pt;
+	margin: 1rem auto 0 auto;
 }
 
 .IssuePositionInformation {
 	text-align: center;
 	margin: 30px;
 }
+

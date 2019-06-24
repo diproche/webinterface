@@ -2,6 +2,8 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import Issue from "../../issueHandling/issue";
 import { checkProof } from "../../util/proofChecker";
+import MainLayout from "../mainGUI/mainLayout";
+import NavBar from "../mainGUI/navBar/navBar";
 import IssueInformation from "./issueInformation";
 import styles from "./proofEditor.module.scss";
 
@@ -21,29 +23,38 @@ export class ProofEditor extends React.Component<Props, State> {
 	};
 
 	public render() {
-
+		// return SiteLayout;
 		return <div className={styles.page}>
+			<div className={MainLayout.name}></div>
+			<div className={NavBar.name}>
+				<ul>
+					<li><a className="activeElement" href="#start">Start</a></li>
+					<li><a className="activeElement" href="#einstellungen">Einstellungen</a></li>
+					<li><a className="activeElement" href="#kontakt">Kontakt</a></li>
+					<li><a className="activeElement" href="#impressum">Impressum</a></li>
+				</ul>
+			</div>
+
 			<div className={styles.proofEditor}>
 				<textarea
 					className={styles.textInput}
 					value={this.state.userInput}
 					onChange={ev => this.setState({ userInput: ev.target.value })}
 				/>
-				<div className={styles.buttons}>
-					<button
-						className={"btn btn-success"}
-						onClick={this.checkInput}>
-						Prüfen
-					</button>
-				</div>
+
 			</div>
+			<button className={styles.buttons}
+				onClick={this.checkInput}>
+				Prüfen
+				</button>
+
 			<div className={styles.issuesInformation}>
 				{this.state.issues.map((issue: Issue) => {
 					return <IssueInformation
 						issue={issue} />;
 				})}
 			</div>
-		</div>;
+		</div >;
 
 	}
 
