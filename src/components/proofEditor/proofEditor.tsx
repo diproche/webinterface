@@ -1,3 +1,4 @@
+import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import Issue from "../../issueHandling/issue";
 import { checkProof } from "../../util/proofChecker";
