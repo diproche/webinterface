@@ -20,51 +20,50 @@ export class ProofEditor extends React.Component<Props, State> {
 	public state = {
 		userInput: "",
 		issues: [],
+		name: "Aussagenlogisches Beweisen",
+		href: "#aussagenlogisches_beweisen",
 	};
 
 	public render() {
 		// return SiteLayout;
-
+		window.location.href = "#aussagenlogisches_beweisen";
 		return <div className={mainLayout.page}>
-		<div className={navBar.name}></div>
-			<ul>
-				<li><a className="activeElement1" href="#start">Start</a></li>
-				<li><a className="activeElement2" href="#einstellungen">Einstellungen</a></li>
-				<li><a className="activeElement3" href="#kontakt">Kontakt</a></li>
-				<li><a className="activeElement4" href="#impressum">Impressum</a></li>
-			</ul>
-
-
-		<div className={styles.proofEditor}>
-			<textarea
-				className={styles.textInput}
-				placeholder="Gebe hier deinen Beweis ein."
-				required={true}
-				value={this.state.userInput}
-				onChange={ev => this.setState({ userInput: ev.target.value })}/>	
-			<button className={styles.buttons}
-			onClick={this.checkInput}>
-			Prüfen
+			<div className={navBar.name}>
+				<ul>
+					<li><a className="backToMain" href="#startseite">Zurück zur Startseite</a></li>
+					<li><a className="settings" href="#einstellungen">Einstellungen</a></li>
+					<li><a className="contact" href="#kontakt">Kontakt</a></li>
+					<li><a className="impressum" href="#impressum">Impressum</a></li>
+				</ul>
+			</div>
+			<div className={styles.proofEditor}>
+				<textarea
+					className={styles.textInput}
+					placeholder="Gebe hier deinen Beweis ein."
+					required={true}
+					value={this.state.userInput}
+					onChange={ev => this.setState({ userInput: ev.target.value })} />
+				<button className={styles.buttons}
+					onClick={this.checkInput}>
+					Prüfen
 			</button>
-			<div className={styles.issuesInformation}>
-		<p>Do not forget to buy <mark>milk</mark> today.</p>
 
-<p><strong>Note:</strong> The mark tag is not supported in Internet Explorer 8 and earlier versions.</p>
-		<span className="highlightme">test</span>
-			{this.state.issues.map((issue: Issue) => {
-				var x= document.getElementsByClassName(styles.textInput);
-				var y = x[0].innerHTML.getAttributName(placeholder);
-				y[0].innerHTML = "test"; 
-				return <IssueInformation
-					issue={issue} />
-			})}
-		</div>
-	</div>
-	</div>
+				<div className={styles.issuesInformation}>
+
+					{this.state.issues.map((issue: Issue) => {
+						return <IssueInformation
+							issue={issue} />;
+
+					})}
+				</div>
+
+			</div>
+		</div>;
+
 	}
+
 	private readonly checkInput = async (): Promise<void> => {
 		const issueArray: readonly Issue[] = await checkProof(this.state.userInput);
 		this.setState({ issues: issueArray });
 	}
-
 }

@@ -1,14 +1,17 @@
 import React, { Component } from "react";
-import { ProofEditor } from "./components/GUI/proofEditor/proofEditor";
+import { MainPage } from "./components/GUI/mainPage/mainPage";
 
 class App extends Component {
 	public render() {
+		window.location.href = "#startseite";
 		return (
 			<div className="App">
-				<ProofEditor />
+			<MainPage />
 			</div>
 		);
+
 	}
+
 }
 
 export default App;

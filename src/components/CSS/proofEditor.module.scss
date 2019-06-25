@@ -4,9 +4,13 @@
 	width: 80%;
 	height: 32px;
 	margin: 1rem auto 0 auto;
-
 }
-
+.textInputFalse {
+	display: block;
+	width: 80%;
+	margin: 1rem auto 0 auto;
+	border: 2px solid red;
+}
 .buttons {
 	display: block;
 	background-color: rgb(7, 63, 139);
