@@ -23,38 +23,39 @@ export class ProofEditor extends React.Component<Props, State> {
 	};
 
 	public render() {
+
 		// return SiteLayout;
 		return <div className={styles.page}>
 			<div className={mainLayout.name}></div>
 			<div className={navBar.name}>
 				<ul>
-					<li><a className="activeElement" href="#start">Start</a></li>
-					<li><a className="activeElement" href="#einstellungen">Einstellungen</a></li>
-					<li><a className="activeElement" href="#kontakt">Kontakt</a></li>
-					<li><a className="activeElement" href="#impressum">Impressum</a></li>
+					<li><a className="activeElement1" href="#start">Start</a></li>
+					<li><a className="activeElement2" href="#einstellungen">Einstellungen</a></li>
+					<li><a className="activeElement3" href="#kontakt">Kontakt</a></li>
+					<li><a className="activeElement4" href="#impressum">Impressum</a></li>
 				</ul>
 			</div>
 
 			<div className={styles.proofEditor}>
 				<textarea
 					className={styles.textInput}
-					name="me"
 					placeholder="Gebe hier deinen Beweis ein."
-					required
+					required={true}
 					value={this.state.userInput}
 					onChange={ev => this.setState({ userInput: ev.target.value })}
 				/>
-
 			</div>
+
 			<button className={styles.buttons}
 				onClick={this.checkInput}>
 				Prüfen
-				</button>
-
+			</button>
+			
 			<div className={styles.issuesInformation}>
 				{this.state.issues.map((issue: Issue) => {
 					return <IssueInformation
 						issue={issue} />;
+
 				})}
 			</div>
 		</div >;
