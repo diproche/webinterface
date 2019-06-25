@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { ProofEditor } from "./components/proofEditor/proofEditor";
+import { ProofEditor } from "./components/GUI/proofEditor/proofEditor";
 
 class App extends Component {
 	public render() {
