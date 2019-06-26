@@ -1,12 +1,24 @@
 import React, { Component } from "react";
-import { MainPage } from "./components/GUI/mainPage/mainPage";
+import NavBar from "./components/GUI/mainPage/navBar";
+import SiteLayout from "./components/GUI/mainPage/siteLayout";
+import ProofEditor from "./components/GUI/proofEditor/proofEditor";
 
-class App extends Component {
+// tslint:disable-next-line: no-empty-interface
+export interface Props {
+}
+
+// tslint:disable-next-line: no-empty-interface
+interface State {
+}
+
+class App extends Component<Props, State> {
 	public render() {
 		window.location.href = "#startseite";
 		return (
 			<div className="App">
-			<MainPage />
+			<SiteLayout />
+			<NavBar />
+			<ProofEditor />
 			</div>
 		);
 
