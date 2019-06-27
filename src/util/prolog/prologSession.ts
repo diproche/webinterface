@@ -4,7 +4,8 @@ import { format_answer, type } from "tau-prolog/modules/core";
 import getTopologicalOrder, {Edge} from "../getTopologicalOrder";
 import {fetchAllMatchesForAGroup} from "../regExpUtils";
 import { PrologResult } from "./prologResult";
-import { removeFileExtension, removeModuleDeclarations, removeNonFunctionalities } from "./prologStringManipulation";
+// PSM ~ prologStringManipulation
+import * as PSM from "./prologStringManipulation";
 
 // RegExp group one will be the file to be imported.
 const fetchPrologImportsRegExp = /:-(?: |)use_module\(([a-zA-Z1-9]*)\) *\./g;
@@ -17,7 +18,7 @@ const fetchPrologImportsRegExp = /:-(?: |)use_module\(([a-zA-Z1-9]*)\) *\./g;
 export function importFile(relativePath: string): PrologSession {
 	const absolutePath = path.resolve(__dirname, relativePath);
 	const program = fs.readFileSync(absolutePath, "utf-8");
-	const fileName = removeFileExtension(path.basename(absolutePath));
+	const fileName = PSM.removeFileExtension(path.basename(absolutePath));
 	return new PrologSession(program, path.dirname(absolutePath), fileName);
 }
 
@@ -34,7 +35,7 @@ function resolveImports(program: string, defaultPath: string, currentFileName: s
 		let importedPrograms: string = "";
 		importList.forEach((importFileName: string) => {
 			const currentImport = fs.readFileSync(path.resolve(defaultPath, importFileName + ".pl"), "utf-8");
-			importedPrograms = importedPrograms + currentImport;
+			importedPrograms = importedPrograms + PSM.fixVariableShadowingInImport(importedPrograms + program, currentImport);
 		});
 
 		return importedPrograms + program;

@@ -7,20 +7,28 @@
 		"severity": "WARNING",
 		"message": "Es wurden Klammern geschlossen, die nicht geöffnet wurden."
 	},
+	"EMPTY_BRACKET": {
+		"severity": "WARNING",
+		"message": "Die gesetzten Klammern enthalten keine Elemente."
+	},
 	"MISSING_CONNECTOR": {
 		"severity": "WARNING",
 		"message": "Es fehlen logische Operatoren in der Formel."
 	},
 	"MISSING_STATEMENT_INSIDE": {
 		"severity": "WARNING",
-		"message": "Es fehlt mindestens ein Argumente zwischen zwei logischen Operatoren."
+		"message": "Es fehlt ein Argument."
 	},
-	"MISSING_STATEMENT_AT_THE_END": {
+	"MISSING_STATEMENT_AFTER_NEGATION": {
 		"severity": "WARNING",
-		"message": "Am Ende des Ausdrucks fehlt ein Argument. Dieser darf nicht mit einem logischen Operator enden."
+		"message": "Nach einer Negation muss ein Argument folgen."
 	},
 	"INVALID_WORD": {
 		"severity": "WARNING",
-		"message": "Die Eingabe enthält ein unerlaubtes Wort."
+		"message": "Das Wort '{word}' in der Eingabe ist nicht erlaubt."
+	},
+	"UNVERIFIED_LINE": {
+		"severity": "HINT",
+		"message": "Eine Zeile konnte nicht verfiziert werden."
 	}
 }
