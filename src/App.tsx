@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
-import Navigation from "./components/GUI/navigation/navigation";
-
-import ProofEditor from "./components/GUI/proofEditor/proofEditor";
+import MainPage from "./components/mainPage/mainPage";
+import Navigation from "./components/navigationBar/navigationBar";
+import ProofEditor from "./components/proofEditor/proofEditor";
 
 // tslint:disable-next-line: no-empty-interface
 export interface Props {
@@ -21,7 +21,7 @@ class App extends Component<Props, State> {
 				<React.Fragment>
 					<Navigation />
 					<Switch>
-						<Route exact path="/" component={Startseite} />
+						<Route exact path="/" component={MainPage} />
 						<Route exact path="/aussagenlogisches_beweise" component={ProofEditor} />
 						<Route exact path="/einstellungen" component={Einstellungen} />
 						<Route exact path="/kontakt" component={Kontakt} />
@@ -39,13 +39,6 @@ class App extends Component<Props, State> {
 // These are just demonstration pages. Please don't implement the pages here.
 // Implement them as external components which will be imported
 
-const Startseite = () => {
-	return (
-		<div>
-			<p>Startseite</p>
-		</div>
-	);
-};
 
 const Einstellungen = () => {
 	return (

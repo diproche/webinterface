@@ -1,6 +1,6 @@
 import React from "react";
-import Position from "../../../issueHandling/position";
-import styles from "../../CSS/proofEditor.module.scss";
+import Position from "../../issueHandling/position";
+import styles from "./proofEditor.module.scss";
 
 export interface Props {
 	position: Position;

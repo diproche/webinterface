@@ -22,6 +22,17 @@
 	text-align: center;
 	margin: 1rem auto 0 auto;
 }
+.buttons:hover {
+	display: block;
+	background-color:  rgba(7, 62, 139, 0.100);
+	color:  rgba(7, 62, 139, 0.900);
+	padding: 15px 32px;
+	border: double;
+	width: 20%;
+	font-size: 20px;
+	text-align: center;
+	margin: 1rem auto 0 auto;
+  }
 
 .IssuePositionInformation {
 	text-align: center;
