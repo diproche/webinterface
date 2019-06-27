@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
+
 import Navigation from "./components/GUI/navigation/navigation";
+
 import ProofEditor from "./components/GUI/proofEditor/proofEditor";
 
 class App extends Component {
@@ -11,11 +13,11 @@ class App extends Component {
 				<React.Fragment>
 					<Navigation />
 					<Switch>
-						<Route path="/" component={Startseite} exact />
-						<Route path="/aussagenlogisches_beweise" component={ProofEditor} exact />
-						<Route path="/einstellungen" component={Einstellungen} exact />
-						<Route path="/kontakt" component={Kontakt} exact />
-						<Route path="/impressum" component={Impressum} exact />
+						<Route exact path="/" component={Startseite} />
+						<Route exact path="/aussagenlogisches_beweise" component={ProofEditor} />
+						<Route exact path="/einstellungen" component={Einstellungen} />
+						<Route exact path="/kontakt" component={Kontakt} />
+						<Route exact path="/impressum" component={Impressum} />
 						<Route component={ErrorPage404} />
 					</Switch>
 				</React.Fragment>
