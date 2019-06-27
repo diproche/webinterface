@@ -16,7 +16,7 @@ class App extends Component {
 						<Route path="/einstellungen" component={Einstellungen} exact />
 						<Route path="/kontakt" component={Kontakt} exact />
 						<Route path="/impressum" component={Impressum} exact />
-						// <Route component={ErrorPage404} />
+						<Route component={ErrorPage404} />
 					</Switch>
 				</React.Fragment>
 			</BrowserRouter>
@@ -57,6 +57,14 @@ const Impressum = () => {
 	return (
 		<div>
 			<p>Impressum</p>
+		</div>
+	);
+};
+
+const ErrorPage404 = () => {
+	return (
+		<div>
+			<p>404 Page Not Found</p>
 		</div>
 	);
 };
