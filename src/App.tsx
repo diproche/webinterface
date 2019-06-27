@@ -5,7 +5,15 @@ import Navigation from "./components/GUI/navigation/navigation";
 
 import ProofEditor from "./components/GUI/proofEditor/proofEditor";
 
-class App extends Component {
+// tslint:disable-next-line: no-empty-interface
+export interface Props {
+}
+
+// tslint:disable-next-line: no-empty-interface
+interface State {
+}
+
+class App extends Component<Props, State> {
 	public render() {
 
 		return (
