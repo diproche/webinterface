@@ -39,7 +39,6 @@ class App extends Component<Props, State> {
 // These are just demonstration pages. Please don't implement the pages here.
 // Implement them as external components which will be imported
 
-
 const Einstellungen = () => {
 	return (
 		<div>
