@@ -12,8 +12,8 @@ const fetchPrologImportsRegExp = /:-(?: |)use_module\(([a-zA-Z1-9]*)\) *\./g;
 
 /**
 	* Imports a prolog file
-	* @param {string} relativePath - Relative to this very file (/src/util/prolog/prologSession.ts)
-	* @return {PrologSession} A Prolog Session running on the imported file
+	* @param relativePath - Relative to this very file (/src/util/prolog/prologSession.ts)
+	* @return A Prolog Session running on the imported file
 	*/
 export function importFile(relativePath: string): PrologSession {
 	const absolutePath = path.resolve(__dirname, relativePath);
@@ -24,10 +24,10 @@ export function importFile(relativePath: string): PrologSession {
 
 /**
 	* Resolves prolog intern imports. Files have to be in the same folder.
-	* @param {string} program - The program code to resolve imports for
-	* @param {string} defaultPath - The path in which to look for the file names
-	* @param {string} currentFileName - The name of the file which imports are being resolved
-	* @return {PrologSession} The program code with imported files at the top
+	* @param program - The program code to resolve imports for
+	* @param defaultPath - The path in which to look for the file names
+	* @param currentFileName - The name of the file which imports are being resolved
+	* @return The program code with imported files at the top
 	*/
 function resolveImports(program: string, defaultPath: string, currentFileName: string = "main"): string {
 		const dependencyGraph: Set<Edge> = getDependencyGraph(program, defaultPath, currentFileName);
@@ -43,11 +43,11 @@ function resolveImports(program: string, defaultPath: string, currentFileName: s
 
 /**
 	* Creates the dependency graph for imports of the prolog files recursively
-	* @param {string} program - The program code to look for imports
-	* @param {string} defaultPath - The path in which to look for the file names
-	* @param {string} currentFileName - The name of the file which imports are being resolved
-	* @param {Set<Edge>} currentGraph - The current graph to implement recursion
-	* @return {Set<Edge>} The full dependency graph of the imports
+	* @param program - The program code to look for imports
+	* @param defaultPath - The path in which to look for the file names
+	* @param currentFileName - The name of the file which imports are being resolved
+	* @param currentGraph - The current graph to implement recursion
+	* @return The full dependency graph of the imports
 	*/
 function getDependencyGraph(
 	program: string,
@@ -78,23 +78,23 @@ export class PrologSession {
 	public readonly session: any;
 
 	/**
-		* @param {string} program - The program code to run
-		* @param {string} defaultPath - Only needed for forwarding methode internally
-		* @param {string} fileName - Only needed for forwarding methode internally
-		* @param {number} maxSteps - The maximum amount of resolving steps to do before aborting a query
+		* @param program - The program code to run
+		* @param defaultPath - Only needed for forwarding methode internally
+		* @param fileName - Only needed for forwarding methode internally
+		* @param maxSteps - The maximum amount of resolving steps to do before aborting a query
 		*/
 	constructor(program: string, defaultPath: string = __dirname, fileName?: string, maxSteps?: number) {
-			program = removeNonFunctionalities(program);
+			program = PSM.removeNonFunctionalities(program);
 			program = resolveImports(program, defaultPath, fileName);
 
 			this.session = new type.Session(maxSteps);
-			this.session.consult((removeModuleDeclarations(program)));
+			this.session.consult((PSM.removeModuleDeclarations(program)));
 	}
 
 	/**
 		* Executes the query on the program and creates the result
-		* @param {string} query - The query to run on the given codebase
-		* @return {Promise<PrologResult>} The result for the query
+		* @param query - The query to run on the given codebase
+		* @return The result for the query
 		*/
 	public async executeQuery(query: string): Promise<PrologResult> {
 			this.session.query(query);
@@ -111,7 +111,7 @@ export class PrologSession {
 	}
 	/**
 		* Receives the answers for the query set by set
-		* @return {Promise<string>} The next result set
+		* @return The next result set
 		*/
 	private getNextAnswer(): Promise<string> {
 			return new Promise<string>((resolve) => {

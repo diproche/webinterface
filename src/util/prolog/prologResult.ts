@@ -24,9 +24,9 @@ export class PrologResult {
 
 	/**
 		* rawResults getter-Methode
-		* @return {Array<string>} The raw results
+		* @return The raw results
 		*/
-	public getRawResults(): string[] {
+	public getRawResults(): readonly string[] {
 		return this.rawResults;
 	}
 
@@ -34,7 +34,7 @@ export class PrologResult {
 		* Creates and returns curated results
 		* First call generates and saves the results to its respective attribute to then return it.
 		* Further calls only return the attribute.
-		* @return {Map<string, Array<string | boolean>>} First Level: Variable -> Array of assigned values
+		* @return First Level: Variable -> Array of assigned values
 		*/
 	public getResults(): ReadonlyMap<string, Array<string | boolean>> {
 		if (this.results !== undefined) { return this.results; }
@@ -54,7 +54,7 @@ export class PrologResult {
 
 	/**
 		* Alternative way to access the results via an array.
-		* @return {Array<Array<string>>} First Level: i-th answer set Second Level: Variable in query's order
+		* @return First Level: i-th answer set Second Level: Variable in query's order
 		*/
 	public getResultArray(): string[][] {
 		const results: string[][] = [];
@@ -67,8 +67,8 @@ export class PrologResult {
 
 	/**
 		* Receives the filled-in values for a single variable
-		* @param {string} variable - The variable to fill in
-		* @return {Array<string>} Fill in values in order of their return
+		* @param variable - The variable to fill in
+		* @return Fill in values in order of their return
 		*/
 	private getResultsFor(variable: string): string[] {
 		// Group 1 will be the content of the variable independent of the variable length.
@@ -78,8 +78,8 @@ export class PrologResult {
 
 	/**
 		* Curates and raw results so every variable has their own field and only their fill in values are given
-		* @param {string} variable - One line of a raw result
-		* @return {Array<string>} The curated result
+		* @param variable - One line of a raw result
+		* @return The curated result
 		*/
 	private rawResultsToInnerArray(source: string): string[] {
 
@@ -92,7 +92,7 @@ export class PrologResult {
 	}
 
 	/**
-		* @return {Set<string>} All variable which are assigned to in the raw results
+		* @return All variable which are assigned to in the raw results
 		*/
 	private getVariables(): Set<string> {
 		const rawVariables: string[] = fetchAllMatchesForAGroup(this.rawResults.toString(), variableNameRegExp, 2);
@@ -101,7 +101,7 @@ export class PrologResult {
 	}
 
 	/**
-		* @return {Array<boolean>} All boolean answers in the raw results (order sensitive)
+		* @return All boolean answers in the raw results (order sensitive)
 		*/
 	private getBooleans(): boolean[] {
 		const pattern = /(true|false)(,| ;|.)/g;

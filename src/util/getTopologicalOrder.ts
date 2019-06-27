@@ -5,8 +5,8 @@ export interface Edge {
 
 /**
 	* Uses the Khan Algorithm (this implementation cannot work with isolated nodes)
-	* @param {Set<Edge>} graph - A graph represented as set of edges
-	* @return {Array<string>} A topological ordering of the graph
+	* @param graph - A graph represented as set of edges
+	* @return A topological ordering of the graph
 	*/
 export default function getTopologicalOrder(inputGraph: ReadonlySet<Edge>): string[] {
 	const graph: Set<Edge> = new Set(inputGraph);
@@ -27,17 +27,13 @@ export default function getTopologicalOrder(inputGraph: ReadonlySet<Edge>): stri
 					if (edge.origin === node) { edgesToRemove.add(edge); }
 					nodesWithNoInEdge.add(edge.target);
 				});
-			// Externalized Deletion
 			edgesToRemove.forEach((edge: Edge) => graph.delete(edge));
 		});
-		// Externalized Deletion
 		nodesToRemove.forEach((toRemove: string) => nodesWithNoInEdge.delete(toRemove));
 		nodesToRemove.clear();
 	}
 
-	// If there are cycles in the graph the residual graph will be returned (which contains the cycles)
-	// This should be regarded as an error case
-	if (graph.size !== 0 ) { throw new Error("Cyclic Imports: " + graph.toString); }
+	if (graph.size !== 0 ) { throw new Error("Cyclic Imports: " + graph.toString()); }
 
 	// Returns the order if successful
 	return order;
@@ -45,8 +41,8 @@ export default function getTopologicalOrder(inputGraph: ReadonlySet<Edge>): stri
 
 /**
 	*  Gets all nodes which are mentioned in Edge.origin but not in Edge.target
-	* @param {Set<Edge>} graph - A graph represented as set of edges
-	* @return {Set<string>} Nodes with no in edges assuming no isolated nodes
+	* @param graph - A graph represented as set of edges
+	* @return Nodes with no in edges assuming no isolated nodes
 	*/
 function getNodesWithNoInEdge(graph: Set<Edge>): Set<string> {
 	const outgoing: Set<string> = new Set();
