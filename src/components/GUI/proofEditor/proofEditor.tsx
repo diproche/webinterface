@@ -1,13 +1,11 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
+import Button from "react-bootstrap/Button";
+import { Props } from "../../../App";
 import Issue from "../../../issueHandling/issue";
 import { checkProof } from "../../../util/proofChecker";
 import styles from "../../CSS/proofEditor.module.scss";
 import IssueInformation from "./issueInformation";
-
-// tslint:disable-next-line:no-empty-interface
-export interface Props {
-}
 
 interface State {
 	userInput: string;
@@ -39,7 +37,6 @@ class ProofEditor extends React.Component<Props, State> {
 
 					})}
 				</div>
-
 		</div>;
 
 	}
