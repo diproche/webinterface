@@ -69,7 +69,7 @@ function removeEmptyLines(prologProgram: string): string {
 	* @return Program code without double whitespace
 	*/
 function removeDoubleWhitespaces(prologProgram: string): string {
-	const fetchDoubleWhitespacesRegExp = /  */gm;
+	const fetchDoubleWhitespacesRegExp = /  +/gm;
 	return prologProgram.replace(fetchDoubleWhitespacesRegExp, " ");
 }
 
