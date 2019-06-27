@@ -6,7 +6,7 @@ export interface Edge {
 /**
 	* Uses the Khan Algorithm (this implementation cannot work with isolated nodes)
 	* @param {Set<Edge>} graph - A graph represented as set of edges
-	* @return {Array<string>} The topologial oder of the graph
+	* @return {Array<string>} A topological ordering of the graph
 	*/
 export default function getTopologicalOrder(inputGraph: ReadonlySet<Edge>): string[] {
 	const graph: Set<Edge> = new Set(inputGraph);
