@@ -82,6 +82,13 @@ export function removeNonFunctionalities(prologProgram: string): string {
 	return removeComments(removeEmptyLines(removeDoubleWhitespaces(prologProgram)));
 }
 
+/**
+	* Renames predicates based on imports to avoid variable name fixVariableShadowingInImport
+	* @param program - The base program's code which is importing
+	* @param importedProgram - The imported program's code
+	* @return The imported program's code with renamed predicates
+	*/
+
 export function fixVariableShadowingInImport(program: string, importedProgram: string): string {
 	const fetchImportedPredicatesRegExp = /:-[\r\t\f\v ]*module\([^,)]*,\[([^)]*)\][\r\t\f\v ]*\)[\r\t\f\v ]*/;
 
@@ -94,6 +101,13 @@ export function fixVariableShadowingInImport(program: string, importedProgram: s
 	return identifyPredicatesUniquely(program, importedProgram, importedPredicates);
 }
 
+/**
+	* Renames the predicates in the imported file except for built-in and exported predicatesToRename
+	* @param program - The base program's code which is importing
+	* @param importedProgram - The imported program's code
+	* @importedPredicates - Predicates which are declared exported by the importedProgram
+	* @result Renamed code of the importedProgram
+	*/
 function identifyPredicatesUniquely(program: string, importedProgram: string, importedPredicates?: string[]): string {
 
 	// imports shouldn't be renamed
@@ -137,6 +151,11 @@ function identifyPredicatesUniquely(program: string, importedProgram: string, im
 	return importedProgram;
 }
 
+/**
+	* Returns the predicates of a prolog code but ignores built-in predicatesToRename
+	* @param program - The program code to be searched
+	* @result A set of predicates which are not built-in predicates
+	*/
 function getNonBuiltInPredicates(program: string): Set<string> {
 	// This doesn't take comments into account so in "%predicate()" would find predicate()
 	// Finds all words before closing opening and closing brackets
