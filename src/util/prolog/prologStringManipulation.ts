@@ -2,7 +2,7 @@ import {fetchAllMatchesForAGroup} from "../regExpUtils";
 import builtInPredicates from "./builtInPredicates";
 
 /**
-	* @param path - The path to be curated
+	* @param path - The path of the prolog file to be curated
 	* @return The path without its extension (removing the last dot and everything after)
 	*/
 export function removeFileExtension(path: string): string {
