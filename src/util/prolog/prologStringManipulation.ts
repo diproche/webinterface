@@ -105,7 +105,7 @@ export function fixVariableShadowingInImport(program: string, importedProgram: s
 	* Renames the predicates in the imported file except for built-in and exported predicatesToRename
 	* @param program - The base program's code which is importing
 	* @param importedProgram - The imported program's code
-	* @importedPredicates - Predicates which are declared exported by the importedProgram
+	* @param importedPredicates - Predicates which are declared exported by the importedProgram
 	* @result Renamed code of the importedProgram
 	*/
 function identifyPredicatesUniquely(program: string, importedProgram: string, importedPredicates?: string[]): string {
