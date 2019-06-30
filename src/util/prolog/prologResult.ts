@@ -65,8 +65,8 @@ export class PrologResult {
 	}
 
 	/**
-		* Curates and raw results so every variable has their own field and only their fill in values are given
-		* @param source - One line of a raw result
+		* Removes all results overheads like "X = ". "X = helloworld ;" becomes helloworld
+		* @param source - One element of the rawResult
 		* @return The curated result
 		*/
 	private rawResultsToInnerArray(source: string): string[] {

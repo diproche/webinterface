@@ -83,7 +83,7 @@ export function removeNonFunctionalities(prologProgram: string): string {
 }
 
 /**
-	* Renames predicates based on imports to avoid variable name fixVariableShadowingInImport
+	* Renames predicates based on imports to avoid variable name shadowing
 	* @param program - The base program's code which is importing
 	* @param importedProgram - The imported program's code
 	* @return The imported program's code with renamed predicates
