@@ -14,7 +14,7 @@ export function removeFileExtension(path: string): string {
 
 /**
 	* Necessary because module declarations break tau-prolog
-	* @param path - The program code to be curated
+	* @param prologProgram - The program code to be curated
 	* @return Program code without module declarations except for library calls
 	*/
 export function removeModuleDeclarations(prologProgram: string): string {

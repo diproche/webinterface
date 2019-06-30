@@ -66,7 +66,7 @@ export class PrologResult {
 
 	/**
 		* Curates and raw results so every variable has their own field and only their fill in values are given
-		* @param variable - One line of a raw result
+		* @param source - One line of a raw result
 		* @return The curated result
 		*/
 	private rawResultsToInnerArray(source: string): string[] {
