@@ -19,14 +19,6 @@ export class PrologResult {
 	constructor(private readonly rawResults: string[]) {}
 
 	/**
-		* rawResults getter-Methode
-		* @return The raw results
-		*/
-	public getRawResults(): readonly string[] {
-		return this.rawResults;
-	}
-
-	/**
 		* Creates and returns curated results
 		* First call generates and saves the results to its respective attribute to then return it.
 		* Further calls only return the attribute.
