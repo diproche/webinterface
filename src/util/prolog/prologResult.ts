@@ -11,16 +11,12 @@ const variableNameRegExp = /(^| )([A-Z]\w*)/g;
 
 /** Handles the results for a prolog query returned by PrologSession.executeQuery() */
 export class PrologResult {
-	private readonly rawResults: string[];
 	private results: Map<string, Array<string | boolean>> | undefined;
 
 	/**
-		* Simply forwards the raw results to its respective attribute
-		* @param {Array<string>} rawResults - The string array containing the results
+		* @param rawResults - Receives the results from PrologSession.executeQuery. A field is a tau-prolog answer.
 		*/
-	constructor(rawResults: string[]) {
-		this.rawResults = rawResults;
-	}
+	constructor(private readonly rawResults: string[]) {}
 
 	/**
 		* rawResults getter-Methode
