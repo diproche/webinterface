@@ -16,7 +16,7 @@ export class PrologResult {
 	/**
 		* @param rawResults - Receives the results from PrologSession.executeQuery. A field is a tau-prolog answer.
 		*/
-	constructor(private readonly rawResults: string[]) {}
+	constructor(public readonly rawResults: string[]) {}
 
 	/**
 		* Creates and returns curated results
