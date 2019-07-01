@@ -11,15 +11,7 @@ import Impressum from "./components/impressum/impressum";
 import ErrorPage404 from "./components/errorPage404/errorPage404";
 // tslint:enable: ordered-imports
 
-// tslint:disable-next-line: no-empty-interface
-export interface Props {
-}
-
-// tslint:disable-next-line: no-empty-interface
-interface State {
-}
-
-class App extends Component<Props, State> {
+class App extends Component<{}, {}> {
 	public render() {
 
 		return (
