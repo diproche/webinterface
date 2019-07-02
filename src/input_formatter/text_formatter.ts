@@ -9,7 +9,8 @@ import { Regexes } from "./regexes";
  * formatted expressions, list of words (setences) and paragraph marker (empty Array)
  */
 export function textFormatter(input: string): string {
-	const splittedText = input.split(Regexes.inputSeparator);
+	let splittedText = input.split(Regexes.inputSeparator);
+	splittedText = splittedText.filter(x => x !== undefined && x !== null && x !== "");
 	const formattedText: string[][] = [];
 	let position: number = 0;
 	for (const element of splittedText) {
