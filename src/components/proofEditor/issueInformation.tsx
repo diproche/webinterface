@@ -1,7 +1,6 @@
 import React from "react";
 import Issue from "../../issueHandling/issue";
 import IssuePositionInformation from "./issuePositionInformation";
-
 import styles from "./proofEditor.module.scss";
 
 export interface Props {
@@ -15,11 +14,11 @@ export class IssueInformation extends React.Component<Props> {
 		let displayedPosition: any = "";
 		const position = this.props.issue.position;
 		if (position) {
-			displayedPosition = <IssuePositionInformation position={ position! } />;
+			displayedPosition = <IssuePositionInformation position={position!} />;
 		}
 
 		return <div className={styles.IssuePositionInformation}>
-				{this.props.issue.message} {displayedPosition}
+			{this.props.issue.message} {displayedPosition}
 		</div>;
 
 	}
