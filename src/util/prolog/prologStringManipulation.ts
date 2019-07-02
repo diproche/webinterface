@@ -1,57 +1,95 @@
 import {fetchAllMatchesForAGroup} from "../regExpUtils";
 import builtInPredicates from "./builtInPredicates";
 
-export function removeFileExtension(path: string) {
-	const fetchFileExtension = /(.*)\.[^\.]*/;
-
+/**
+	* @param path - The path of the prolog file to be curated
+	* @return The path without its extension (removing the last dot and everything after)
+	*/
+export function removeFileExtension(path: string): string {
+	const fetchFileExtension = /(.+)\.[^\.]*/;
 	const fetch: string[] | null = fetchFileExtension.exec(path);
 	if (fetch === null) { return ""; }
 	return fetch[1];
 }
 
-export function removeModuleDeclarations(prologProgram: string) {
-	const fetchModuleDeclaration = /:-( |)module\([^)]*\) *\.[\r\t\f\v ]*\n?/g;
-
+const fetchModuleDeclaration = /:-( |)module\([^)]*\) *\.[\r\t\f\v ]*\n?/g;
+/**
+	* Necessary because module declarations break tau-prolog
+	* @param prologProgram - The program code to be curated
+	* @return Program code without module declarations except for library calls
+	*/
+export function removeModuleDeclarations(prologProgram: string): string {
 	return prologProgram.replace(fetchModuleDeclaration, "");
 }
 
-function removeFullLineComments(prologProgram: string) {
-	const fetchFullLineCommentsRegExp = /^[\r\t\f\v ]*%[^\n]*\n/gm;
-
+const fetchFullLineCommentsRegExp = /^[\r\t\f\v ]*%[^\n]*\n/gm;
+/**
+	* To reduce code
+	* @param path - The program code to be curated
+	* @return Program code without prolog comments that span a whole line including the line
+	*/
+function removeFullLineComments(prologProgram: string): string {
 	return prologProgram.replace(fetchFullLineCommentsRegExp, "");
 }
 
-function removePartialLineComments(prologProgram: string) {
-	const fetchPartialLineCommentsRegExp = /(^[^\n%]+)%[^\n\r]*(\r?\n)/gm;
-
+const fetchPartialLineCommentsRegExp = /(^[^\n%]+)%[^\n\r]*(\r?\n)/gm;
+/**
+	* To reduce code
+	* @param path - The program code to be curated
+	* @return Program code without prolog comments at the end of line
+	*/
+function removePartialLineComments(prologProgram: string): string {
 	// group2 fetches the end-of-line (EOL) standard in the file to fit both: Windows and UNIX
 	// https://www.networkworld.com/article/3107972/windows-vs-unix-those-pesky-line-terminators.html
 	return prologProgram.replace(fetchPartialLineCommentsRegExp, (_, group1, group2) => group1.trimRight() + group2);
 }
 
-export function removeComments(prologProgram: string) {
-
- return removeFullLineComments(removePartialLineComments(prologProgram));
+/**
+	* To reduce code
+	* @param path - The program code to be curated
+	* @return Program code without prolog comments and the lines of full line comments
+	*/
+export function removeComments(prologProgram: string): string {
+	return removeFullLineComments(removePartialLineComments(prologProgram));
 }
 
-function removeEmptyLines(prologProgram: string) {
-	const fetchEmptyLinesRegExp = /\n(?:\s)*\n/gm;
-
+const fetchEmptyLinesRegExp = /\n(?:\s)*\n/gm;
+/**
+	* To reduce code
+	* @param path - The program code to be curated
+	* @return Program code without empty lines and lines with only whitespace characters
+	*/
+function removeEmptyLines(prologProgram: string): string {
 	return prologProgram.replace(fetchEmptyLinesRegExp, "\n");
 }
 
-function removeDoubleWhitespaces(prologProgram: string) {
-	const fetchDoubleWhitespacesRegExp = /  */gm;
-
+const fetchDoubleWhitespacesRegExp = /  +/gm;
+/**
+	* To reduce code
+	* @param path - The program code to be curated
+	* @return Program code without double whitespace
+	*/
+function removeDoubleWhitespaces(prologProgram: string): string {
 	return prologProgram.replace(fetchDoubleWhitespacesRegExp, " ");
 }
 
-export function removeNonFunctionalities(prologProgram: string) {
+/**
+	* To reduce code
+	* @param path - The program code to be curated
+	* @return Program code without parts that don't affect the behavior of the program
+	*/
+export function removeNonFunctionalities(prologProgram: string): string {
 	return removeComments(removeEmptyLines(removeDoubleWhitespaces(prologProgram)));
 }
 
+const fetchImportedPredicatesRegExp = /:-[\r\t\f\v ]*module\([^,)]*,\[([^)]*)\][\r\t\f\v ]*\)[\r\t\f\v ]*/;
+/**
+	* Renames predicates based on imports to avoid variable name shadowing
+	* @param program - The base program's code which is importing
+	* @param importedProgram - The imported program's code
+	* @return The imported program's code with renamed predicates
+	*/
 export function fixVariableShadowingInImport(program: string, importedProgram: string): string {
-	const fetchImportedPredicatesRegExp = /:-[\r\t\f\v ]*module\([^,)]*,\[([^)]*)\][\r\t\f\v ]*\)[\r\t\f\v ]*/;
 
 	const useModuleSecondParam: string[] | null = fetchImportedPredicatesRegExp.exec(importedProgram);
 	if (useModuleSecondParam == null) {
@@ -62,6 +100,13 @@ export function fixVariableShadowingInImport(program: string, importedProgram: s
 	return identifyPredicatesUniquely(program, importedProgram, importedPredicates);
 }
 
+/**
+	* Renames the predicates in the imported file except for built-in and exported predicatesToRename
+	* @param program - The base program's code which is importing
+	* @param importedProgram - The imported program's code
+	* @param importedPredicates - Predicates which are declared exported by the importedProgram
+	* @result Renamed code of the importedProgram
+	*/
 function identifyPredicatesUniquely(program: string, importedProgram: string, importedPredicates?: string[]): string {
 
 	// imports shouldn't be renamed
@@ -105,6 +150,11 @@ function identifyPredicatesUniquely(program: string, importedProgram: string, im
 	return importedProgram;
 }
 
+/**
+	* Returns the predicates of a prolog code but ignores built-in predicatesToRename
+	* @param program - The program code to be searched
+	* @result A set of predicates which are not built-in predicates
+	*/
 function getNonBuiltInPredicates(program: string): Set<string> {
 	// This doesn't take comments into account so in "%predicate()" would find predicate()
 	// Finds all words before closing opening and closing brackets

@@ -8,75 +8,75 @@ import * as assets from "./testAssets";
 describe("Tau-Prolog Behavior", () => {
 	test("Evaluates Facts Correctly (True Queries)", async () => {
 		const session = assets.evenNumbersFacts;
-		const results = (await session.executeQuery("even(2).")).getRawResults();
+		const results = (await session.executeQuery("even(2).")).rawResults;
 
 		expect(results).toStrictEqual(["true ;", "false."]);
 	});
 
 	test("Evaluates Facts Correctly (False Queries)", async () => {
 		const session = assets.evenNumbersFacts;
-		const results = (await session.executeQuery("even(3).")).getRawResults();
+		const results = (await session.executeQuery("even(3).")).rawResults;
 
 		expect(results).toStrictEqual(["false."]);
 	});
 
 	test("Evaluates Equalities Correctly (True Queries)", async () => {
 		const session = assets.emptyCode;
-		const results = (await session.executeQuery("2 = 2.")).getRawResults();
+		const results = (await session.executeQuery("2 = 2.")).rawResults;
 
 		expect(results).toStrictEqual(["true ;", "false."]);
 	});
 
 	test("Evaluates Equalities Correctly (False Queries)", async () => {
 		const session = assets.emptyCode;
-		const results = (await session.executeQuery("2 = 3.")).getRawResults();
+		const results = (await session.executeQuery("2 = 3.")).rawResults;
 
 		expect(results).toStrictEqual(["false."]);
 	});
 
 	test("Evaluates Transitiv Equalities Correctly (False Query)", async () => {
 		const session = assets.emptyCode;
-		const results = (await session.executeQuery("X = 2, X = 3.")).getRawResults();
+		const results = (await session.executeQuery("X = 2, X = 3.")).rawResults;
 
 		expect(results).toStrictEqual(["false."]);
 	});
 
 	test("Does Not Resolve Operators with =", async () => {
 		const session = assets.emptyCode;
-		const results = (await session.executeQuery("X = 2 + 3.")).getRawResults();
+		const results = (await session.executeQuery("X = 2 + 3.")).rawResults;
 
 		expect(results).toStrictEqual(["X = '+'(2, 3) ;", "false."]);
 	});
 
 	test("Resolves Operators with the 'is'", async () => {
 		const session = assets.emptyCode;
-		const results = (await session.executeQuery("X is 2 + 3.")).getRawResults();
+		const results = (await session.executeQuery("X is 2 + 3.")).rawResults;
 
 		expect(results).toStrictEqual(["X = 5 ;", "false."]);
 	});
 
 	test("Assigns Values To One Variable Correctly", async () => {
 		const session = assets.evenNumbersFacts;
-		const results = (await session.executeQuery("even(X).")).getRawResults();
+		const results = (await session.executeQuery("even(X).")).rawResults;
 
 		expect(results).toStrictEqual(["X = 2 ;", "X = 4 ;", "X = 6 ;", "X = 8 ;", "false."]);
 	});
 
 	test("Assigns Values To Two Variables Correctly", async () => {
 		const session = assets.likingFacts;
-		const results = (await session.executeQuery("likes(X, Y).")).getRawResults();
+		const results = (await session.executeQuery("likes(X, Y).")).rawResults;
 		expect(results).toStrictEqual(["X = lisa, Y = bob ;", "X = frank, Y = lisa ;", "false."]);
 	});
 
 	test("Evaluates Expression with the Cut-Operator Correctly", async () => {
 		const session = assets.max;
-		const results = (await session.executeQuery("max(2, 5, X).")).getRawResults();
+		const results = (await session.executeQuery("max(2, 5, X).")).rawResults;
 		expect(results).toStrictEqual(["X = 5 ;", "false."]);
 	});
 
 	test("The write/1 function returns true", async () => {
 		const session = assets.emptyCode;
-		const results = (await session.executeQuery("write('hello').")).getRawResults();
+		const results = (await session.executeQuery("write('hello').")).rawResults;
 
 		expect(results).toStrictEqual(["true ;", "false."]);
 	});
@@ -128,28 +128,28 @@ describe("PrologResult.getResultArray()", () => {
 describe("PrologSession.importFile()", () => {
 	test("Can Import a File That Doesn't Import Any Modules", async () => {
 		const session = importFile("./testImports/family.pl");
-		const results = (await session.executeQuery("parent(X, daugther).")).getRawResults();
+		const results = (await session.executeQuery("parent(X, daugther).")).rawResults;
 
 		expect(results).toStrictEqual(["X = dad ;", "X = mom ;", "false."]);
 	});
 
 	test("Can Import a File Which Imports a Module", async () => {
 		const session = importFile("./testImports/importFamily.pl");
-		const results = (await session.executeQuery("parent(X, daugther).")).getRawResults();
+		const results = (await session.executeQuery("parent(X, daugther).")).rawResults;
 
 		expect(results).toStrictEqual(["X = dad ;", "X = mom ;", "false."]);
 	});
 
 	test("Can Import a File Which Imports Two Modules", async () => {
 		const session = importFile("./testImports/importFamilyAndEvenNumbers.pl");
-		const results = (await session.executeQuery("parent(X, daugther), even(Y).")).getRawResults();
+		const results = (await session.executeQuery("parent(X, daugther), even(Y).")).rawResults;
 
 		expect(results).toStrictEqual(["X = dad, Y = 2 ;", "X = mom, Y = 2 ;", "false."]);
 	});
 
 	test("Can Import a File Which Imports Files Recursively", async () => {
 		const session = importFile("./testImports/recursiveImport.pl");
-		const results = (await session.executeQuery("parent(X, daugther), even(Y).")).getRawResults();
+		const results = (await session.executeQuery("parent(X, daugther), even(Y).")).rawResults;
 
 		expect(results).toStrictEqual(["X = dad, Y = 2 ;", "X = mom, Y = 2 ;", "false."]);
 	});
