@@ -19,7 +19,7 @@ export function collectInvalidWordsInIssues(text: string) {
 	const invalidWords = collectAllInvalidWords(text);
 	const positions: Position[] = [];
 	for (const word of invalidWords) {
-		if (!(allowedWords.includes(word))) {
+		if (!(allowedWords.includes(word.toLowerCase()))) {
 			const temp: Position = {
 				fromIndex: text.indexOf(word),
 				toIndex: (text.indexOf(word) + word.length),
@@ -44,7 +44,7 @@ export function getInvalidWords(text: string): string[] {
  */
 export function collectAllInvalidWords(text: string): string[] {
 	const words = text.match(anyWord) || [];
-	return words.filter(word => !(allowedWords.includes(word)));
+	return words.filter(word => !(allowedWords.includes(word.toLowerCase())));
 }
 
 function removeDuplicates<T>(invalidWords: T[]): T[] {
