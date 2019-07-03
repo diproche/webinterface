@@ -7,15 +7,17 @@ import {
 } from "./expression_formatter";
 import { sentenceIntoWordList, textFormatter } from "./text_formatter";
 
-test("splitting a single sentences into List of words: ", () => {
+beforeEach(() => {
 	emptyIssueList();
+});
+
+test("splitting a single sentences into List of words: ", () => {
 	const result = sentenceIntoWordList("Hello, this is a test");
 	const expectedResult = ["Hello", "this", "is", "a", "test"];
 	expect(result).toEqual(expectedResult);
 });
 
 test("Test if the elements of a expression is detected and preformatted correctly:", () => {
-	emptyIssueList();
 	const result = preFormatExpressionFromImput(
 		"[AUNDTest[B<==>C]->DODERNOT   NOTE]",
 	);
@@ -42,14 +44,12 @@ test("Test if the elements of a expression is detected and preformatted correctl
 });
 
 test("Test if the elements of a expression is detected and preformatted correctly:", () => {
-	emptyIssueList();
 	const result = preFormatExpressionFromImput("df       test ( nicht sonne) ");
 	const expectedResult = ["df       test ", "(", " ", "nicht", " sonne", ")", " "];
 	expect(result).toEqual(expectedResult);
 });
 
 test("Test if the elements of a expression is detected and preformatted correctly:", () => {
-	emptyIssueList();
 	const result = preFormatExpressionFromImput("df       test ( nicht sonne) ");
 	const expectedResult = [
 		"df test",
@@ -63,7 +63,6 @@ test("Test if the elements of a expression is detected and preformatted correctl
 });
 
 test("replace detected expression-elements into readable prolog commands", () => {
-	emptyIssueList();
 	const result = replaceExpressionElementsIntoPrologCode([
 		"bracketLeft",
 		"A",
@@ -92,21 +91,18 @@ test("replace detected expression-elements into readable prolog commands", () =>
 });
 
 test("expression formatter testcase", () => {
-	emptyIssueList();
 	const result: string = textFormatter("Just another test $a .and a$.. test $test2$$test3$");
 	const expectedResult = "[[just,another,test],[a .,and,a],[test],[test2],[test3]].";
 	expect(result).toEqual(expectedResult);
 });
 
 test("expression formatter testcase", () => {
-	emptyIssueList();
 	const result: string = textFormatter("Es gilt: $((a&b)<->(b&a))$");
 	const expectedResult = "[[es,gilt],[[[a,and,b],<->,[b,and,a]]]].";
 	expect(result).toEqual(expectedResult);
 });
 
 test("splitting full text into readable prolog format including formatted expressions and paragraph marker: ", () => {
-	emptyIssueList();
 	const result = textFormatter(
 		"Hello, this is a test! Is it Working? I     hope so. \n Paragraphs are marked with an " +
 		"abs List: \n \n \n Here is also an expression: $[AUNDbracketLEFTB<-->]-> D ODERNOT E]$ " +
@@ -130,7 +126,6 @@ test("splitting full text into readable prolog format including formatted expres
 });
 
 test("scan for bracket errors - test 1: []", () => {
-	emptyIssueList();
 	const bracketList = [
 		"bracketLeft",
 		"bracketRight",
@@ -150,7 +145,6 @@ test("scan for bracket errors - test 1: []", () => {
 });
 
 test("scan for bracket errors - test 2: ][[[[[[]]", () => {
-	emptyIssueList();
 	const bracketList = [
 		"bracketRight",
 		"bracketLeft",
@@ -181,7 +175,6 @@ test("scan for bracket errors - test 2: ][[[[[[]]", () => {
 });
 
 test("scan for bracket errors - test 3: )]", () => {
-	emptyIssueList();
 	const bracketList = ["bracketLeft", ")", "]"];
 	detectBracketIssues(bracketList, 0);
 	const issue = listAllIssues().find(i => (i.code === "BRACKET_OVERCLOSING"));
@@ -197,7 +190,6 @@ test("scan for bracket errors - test 3: )]", () => {
 });
 
 test("scan for missing Statements or missing connectors - test 1: [ <-> k]", () => {
-	emptyIssueList();
 	const testExpression = ["bracketLeft", "implicationRight", "bracketRight"];
 	expressionIssueDetector(testExpression, 0);
 	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
@@ -213,7 +205,6 @@ test("scan for missing Statements or missing connectors - test 1: [ <-> k]", () 
 });
 
 test("scan for missing Statements or missing connectors - test 2: [ C -> ]]", () => {
-	emptyIssueList();
 	const testExpression = ["bracketLeft", "C", "implicationRight", "bracketRight", "bracketRight"];
 	expressionIssueDetector(testExpression, 0);
 	const issue1 = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
@@ -239,7 +230,6 @@ test("scan for missing Statements or missing connectors - test 2: [ C -> ]]", ()
 });
 
 test("scan for missing Statements or missing connectors - test 3: [ and X ]", () => {
-	emptyIssueList();
 	const testExpression = ["bracketLeft", "conjunction", "X", "bracketRight"];
 	expressionIssueDetector(testExpression, 0);
 	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
@@ -255,7 +245,6 @@ test("scan for missing Statements or missing connectors - test 3: [ and X ]", ()
 });
 
 test("scan for missing Statements or missing connectors - test 4 [ A ]", () => {
-	emptyIssueList();
 	const testExpression = ["bracketLeft", "A", "bracketRight"];
 	expressionIssueDetector(testExpression, 0);
 	const issue = listAllIssues();
@@ -263,7 +252,6 @@ test("scan for missing Statements or missing connectors - test 4 [ A ]", () => {
 });
 
 test("scan for missing Statements or missing connectors - test 5: [ not A [ ] B ]", () => {
-	emptyIssueList();
 	const testExpression = [
 		"bracketLeft",
 		"not",
@@ -288,7 +276,6 @@ test("scan for missing Statements or missing connectors - test 5: [ not A [ ] B 
 });
 
 test("scan for missing Statements or missing connectors - test 6: [ A <- B ]", () => {
-	emptyIssueList();
 	const testExpression = [
 		"bracketLeft",
 		"A",
@@ -302,7 +289,7 @@ test("scan for missing Statements or missing connectors - test 6: [ A <- B ]", (
 });
 
 test("scan for missing Statements or missing connectors - test 7: [ not not A ]", () => {
-	emptyIssueList();
+
 	const testExpression = [
 		"bracketLeft",
 		"negation",
@@ -316,7 +303,6 @@ test("scan for missing Statements or missing connectors - test 7: [ not not A ]"
 	expect(issue).toEqual([]);
 });
 test("scan for missing Statements or missing connectors - test 8: [ not not <= A]", () => {
-	emptyIssueList();
 	const testExpression = [
 		"(",
 		"not",
@@ -339,7 +325,6 @@ test("scan for missing Statements or missing connectors - test 8: [ not not <= A
 });
 
 test("scan for missing Statements or missing connectors - test 9: [ not not not ]", () => {
-	emptyIssueList();
 	const testExpression = [
 		"[",
 		"neg",
