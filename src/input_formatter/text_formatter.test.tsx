@@ -92,13 +92,13 @@ test("replace detected expression-elements into readable prolog commands", () =>
 
 test("expression formatter testcase", () => {
 	const result: string = textFormatter("Just another test $a .and a$.. test $test2$$test3$");
-	const expectedResult = "[[just,another,test],[a .,and,a],[test],[test2],[test3]].";
+	const expectedResult = "[[just,another,test],[a .,and,a],[test],[test2],[test3]]";
 	expect(result).toEqual(expectedResult);
 });
 
 test("expression formatter testcase", () => {
 	const result: string = textFormatter("Es gilt: $((a&b)<->(b&a))$");
-	const expectedResult = "[[es,gilt],[[[a,and,b],<->,[b,and,a]]]].";
+	const expectedResult = "[[es,gilt],[[[a,and,b],<->,[b,and,a]]]]";
 	expect(result).toEqual(expectedResult);
 });
 
@@ -110,7 +110,7 @@ test("splitting full text into readable prolog format including formatted expres
 	const expectedResult = "[[hello,this,is,a,test],[is,it,working]," +
 		"[i,hope,so],[abs],[paragraphs,are,marked,with,an,abs,list]," +
 		"[abs],[abs],[abs],[here,is,also,an,expression],[[a,and,[b,<->],->," +
-		"d,or,neg,e]],[and,a,second,one],[[5,+,12,=,3,*,5,+,2]]].";
+		"d,or,neg,e]],[and,a,second,one],[[5,+,12,=,3,*,5,+,2]]]";
 	expect(result).toEqual(expectedResult);
 	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
 	expect(issue).toEqual({
