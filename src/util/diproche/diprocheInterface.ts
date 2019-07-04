@@ -10,32 +10,22 @@ export enum Mode {
 }
 
 /**
- * Since the user input most likely lacks the correct predicate,
- * it needs to be added. For easier maintainability in case
- * of an expanding predicate list, the corresponding predicate is
- * added with respect to the current @param mode. This can, for
- * example correspond to the concept of "Spielwiese". The user should
- * be able to just stay inside a mode and not have to add this mode
- * himself. Hence, the mode needs to be read out from the browser.
- */
+	* Adds the predicate which will be used by diproche
+	* @param userInput - The proof in natural language entered by the user
+	* @param mode - The mathematical field to be analyzed
+	*/
 export function addPredicate(userInput: string, mode: Mode) {
 	return mode + "(" + userInput + ").";
 }
 
-export function getVocabErrors(userInput: string): void {
-	collectInvalidWordsInIssues(userInput);
-}
-
-// export function getSemanticErrors(userInput: string) {
-// Dummy input
-// }
-
-export function getSyntacticErrors(userInput: string) {
-	getVocabErrors(userInput);
-}
-
+/**
+	* Creates all issues without running it through diproche
+	* When calling this function don't call issueHandling.textFormatter() again as it will duplicate issues
+	* @param userInput The proof in natural language
+	*/
 export function getErrorsBeforeDiproche(userInput: string) {
-	getSyntacticErrors(userInput);
+	collectInvalidWordsInIssues(userInput);
+	textFormatter(userInput);
 	// getSemanticErrors(userInput);
 }
 
@@ -45,10 +35,10 @@ export async function getErrorsAfterDiproche(diprocheInput: string): Promise<voi
 }
 
 // this function collects all Errors.
-export async function createErrors(userinput: string): Promise<void> {
-	getErrorsBeforeDiproche(userinput);
+export async function createErrors(userInput: string): Promise<void> {
+	collectInvalidWordsInIssues(userInput);
 
 	// Also adds Issues which are caused when progressing this function
-	const diprocheInput = textFormatter(userinput);
+	const diprocheInput = textFormatter(userInput);
 	await getErrorsAfterDiproche(diprocheInput);
 }
