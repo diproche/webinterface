@@ -1,16 +1,18 @@
-
 .textInput {
 	display: block;
 	width: 80%;
-	height: 32px;
+	border-bottom: 1pt rgba(7, 62, 139, 0.900) solid;
 	margin: 1rem auto 0 auto;
+	
 }
+
 .textInputFalse {
 	display: block;
 	width: 80%;
 	margin: 1rem auto 0 auto;
 	border: 2px solid red;
 }
+
 .buttons {
 	display: block;
 	background-color: rgba(7, 62, 139, 0.900);
@@ -23,6 +25,7 @@
 	text-align: center;
 	margin: 1rem auto 0 auto;
 }
+
 .buttons:hover {
 	display: block;
 	background-color:  rgba(7, 62, 139, 0.100);

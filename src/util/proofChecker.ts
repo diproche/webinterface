@@ -1,9 +1,16 @@
 import Issue from "../issueHandling/issue";
 import { emptyIssueList, listAllIssues } from "../issueHandling/issueMapping";
-import { createErrors } from "./diproche/diprocheInterface";
+import { createErrors, getErrorsBeforeDiproche } from "./diproche/diprocheInterface";
 
 // Ordered by their degree of fatality
 const severities: string[] = ["FATALERROR", "ERROR", "WARNING", "HINT"];
+
+export function checkProofWithoutDiproche(userInput: string): readonly Issue[] {
+	emptyIssueList();
+	getErrorsBeforeDiproche(userInput);
+	return listAllIssues();
+
+}
 
 /**
 	* Checks the userinput and returns the Issues it caused
