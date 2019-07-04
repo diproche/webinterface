@@ -9,15 +9,6 @@ export enum Mode {
 	test = "teste",
 }
 
-/**
- * Since the user input most likely lacks the correct predicate,
- * it needs to be added. For easier maintainability in case
- * of an expanding predicate list, the corresponding predicate is
- * added with respect to the current @param mode. This can, for
- * example correspond to the concept of "Spielwiese". The user should
- * be able to just stay inside a mode and not have to add this mode
- * himself. Hence, the mode needs to be read out from the browser.
- */
 export function addPredicate(userInput: string, mode: Mode) {
 	return mode + "(" + userInput + ").";
 }
@@ -25,10 +16,6 @@ export function addPredicate(userInput: string, mode: Mode) {
 export function getVocabErrors(userInput: string): void {
 	collectInvalidWordsInIssues(userInput);
 }
-
-// export function getSemanticErrors(userInput: string) {
-// Dummy input
-// }
 
 export function getSyntacticErrors(userInput: string) {
 	getVocabErrors(userInput);
@@ -49,6 +36,6 @@ export async function createErrors(userinput: string): Promise<void> {
 	getErrorsBeforeDiproche(userinput);
 
 	// Also adds Issues which are caused when progressing this function
-	const diprocheInput = textFormatter(userinput);
+	const diprocheInput = textFormatter(userinput) + ".";
 	await getErrorsAfterDiproche(diprocheInput);
 }
