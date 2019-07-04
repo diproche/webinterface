@@ -20,14 +20,28 @@ export function collectInvalidWordsInIssues(text: string) {
 	const positions: Position[] = [];
 	for (const word of invalidWords) {
 		if (!(allowedWords.includes(word.toLowerCase()))) {
-			const temp: Position = {
-				fromIndex: text.indexOf(word),
-				toIndex: (text.indexOf(word) + word.length),
-			};
-			positions.push(temp);
-			addIssue("INVALID_WORD", temp, {word});
+			const allPositionsOfInvalidWord = getPositionsOfInvalidWord(word, text);
+			for (const pos of allPositionsOfInvalidWord) {
+				positions.push(pos);
+				addIssue("INVALID_WORD", pos, {word});
+			}
 		}
 	}
+}
+
+export function getPositionsOfInvalidWord(invalidWord: string, text: string): Position[] {
+	let tempText = text;
+	const result: Position[] = [];
+	let offSet = 0;
+	while (tempText.includes(invalidWord)) {
+		const tempPos: Position = {
+			fromIndex: tempText.indexOf(invalidWord) + offSet,
+			toIndex: tempText.indexOf(invalidWord) + invalidWord.length + offSet};
+		result.push(tempPos);
+		offSet = offSet + text.indexOf(invalidWord) + invalidWord.length;
+		tempText = tempText.substring(tempText.indexOf(invalidWord) + invalidWord.length, tempText.length);
+	}
+	return result;
 }
 
 /**
