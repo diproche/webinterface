@@ -21,7 +21,7 @@ export function expressionFormatter(expression: string, expressionPosition: numb
  */
 export function preFormatExpressionFromImput(expression: string): string[] {
 	const splittedExpression: string[] = expression.split(allowedExpressionToken);
-	const filtered = splittedExpression.filter(x => x !== undefined && x !== null && x !== "");
+	const filtered = splittedExpression.filter(x => x);
 	return filtered;
 }
 
@@ -41,7 +41,7 @@ export function replaceExpressionElementsIntoPrologCode(preFormattedExpression: 
 			finalFormattedExpression.push(element);
 		}
 	}
-	const filtered = finalFormattedExpression.filter(x => x !== "");
+	const filtered = finalFormattedExpression.filter(x => x);
 	return filtered;
 }
 

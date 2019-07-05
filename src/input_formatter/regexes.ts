@@ -1,7 +1,5 @@
 export const Regexes = {
-	// inputSeparator: new RegExp(/(\!|\?|\.|\n)+/, "ig"),
-	inputSeparator: new RegExp(/(\!|\?|\.|\n|\$[^$]*\$)+/, "ig"),
-	// expressionMarker: new RegExp(/(\$[^$]*\$)+/, "ig"),
+	inputSeparator: new RegExp(/(\$[^$]*[\$]|\!|\.|\?|\n|\:)/, "ig"),
 	expressionMarker: new RegExp(/\$/, "ig"),
 	endProofMarker: new RegExp(/qed/, "ig"),
 	wordSeparator: new RegExp(/[ ,]+/, "ig"),
