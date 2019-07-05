@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import MainPage from "./components/mainPage/mainPage";
 import Navigation from "./components/navigationBar/navigationBar";
-import ProofEditor from "./components/proofEditor/proofEditor";
+import PropositionalLogic from "./components/propositionalLogic/propositionalLogic";
 
 // tslint:disable-next-line: no-empty-interface
 export interface Props {
@@ -22,10 +22,9 @@ class App extends Component<Props, State> {
 					<Navigation />
 					<Switch>
 						<Route exact path="/" component={MainPage} />
-						<Route exact path="/aussagenlogisches_beweise" component={ProofEditor} />
+						<Route exact path="/aussagenlogisches_beweisen" component={PropositionalLogic} />
 						<Route exact path="/einstellungen" component={Einstellungen} />
 						<Route exact path="/kontakt" component={Kontakt} />
-						<Route exact path="/impressum" component={Impressum} />
 						<Route component={ErrorPage404} />
 					</Switch>
 				</React.Fragment>
@@ -51,14 +50,6 @@ const Kontakt = () => {
 	return (
 		<div>
 			<p>Kontakt</p>
-		</div>
-	);
-};
-
-const Impressum = () => {
-	return (
-		<div>
-			<p>Impressum</p>
 		</div>
 	);
 };
