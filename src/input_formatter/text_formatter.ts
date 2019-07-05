@@ -9,7 +9,8 @@ import { Regexes } from "./regexes";
  * formatted expressions, list of words (setences) and paragraph marker (empty Array)
  */
 export function textFormatter(input: string): string {
-	const splittedText = input.split(Regexes.inputSeparator);
+	let splittedText = input.split(Regexes.inputSeparator);
+	splittedText = splittedText.filter(x => x);
 	const formattedText: string[][] = [];
 	let position: number = 0;
 	for (const element of splittedText) {
@@ -71,7 +72,7 @@ export function formattedTextIntoString(formattedText: string[][]): string {
 	if (output.match(Regexes.wordEndsWithComma)) {
 		output = output.slice(0, output.length - 1);
 	}
-	output = output + "].";
+	output = output + "]";
 
 	return output;
 }
