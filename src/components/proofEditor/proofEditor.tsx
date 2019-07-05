@@ -3,9 +3,13 @@ import React from "react";
 import ContentEditable from "react-contenteditable";
 import { Props } from "../../App";
 import Issue from "../../issueHandling/issue";
+import addStringIgnoringHTML from "../../util/addStringIgnoringHTML";
 import { checkProof, checkProofWithoutDiproche } from "../../util/proofChecker";
 import IssueInformation from "./issueInformation";
 import styles from "./proofEditor.module.scss";
+
+// proofEditorHTML is the value with HTML which is being rendered
+// proofEditorText is the value ignoring the rendered HTML
 
 interface State {
 	proofEditorHTML: string;
@@ -14,13 +18,14 @@ interface State {
 
 class ProofEditor extends React.Component<Props, State> {
 	public state = {
-		proofEditorHTML: "Gebe hier <mark>deinen</mark> Beweis ein.",
+		proofEditorHTML: "Gebe hier den Beweis ein.",
 		issues: [],
 	};
 
 	private proofEditor = React.createRef<HTMLDivElement>();
 
 	public render() {
+
 		return <div className={styles.proofEditor}>
 			<ContentEditable
 				className={styles.textInput}
@@ -46,7 +51,20 @@ class ProofEditor extends React.Component<Props, State> {
 	private inputChangeHandler(event: any): void {
 		const proofEditorText = this.getInputText();
 		const issues = checkProofWithoutDiproche(proofEditorText);
-		const proofEditorHTML: string = event.target.value;
+		let proofEditorHTML: string = event.target.value;
+
+		const issueFromIndeces: number[] = [];
+		const issueToIndeces: number[] = [];
+		issues.forEach((issue: Issue) => {
+			if (issue.position) {
+				issueFromIndeces.push(issue.position.fromIndex);
+				issueToIndeces.push(issue.position.toIndex);
+			}
+		});
+
+		proofEditorHTML = addStringIgnoringHTML(this.state.proofEditorHTML, "<mark>", issueFromIndeces);
+		proofEditorHTML = addStringIgnoringHTML(proofEditorHTML, "</mark>", issueToIndeces);
+
 		this.setState({proofEditorHTML, issues});
 		}
 
