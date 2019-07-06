@@ -16,13 +16,11 @@ const allowedWords = json;
 export interface Position { fromIndex: number; toIndex: number; }
 
 export function collectInvalidWordsInIssues(text: string) {
-	const invalidWords = collectAllInvalidWords(text);
-	const positions: Position[] = [];
+	const invalidWords = getInvalidWords(text);
 	for (const word of invalidWords) {
 		if (!(allowedWords.includes(word.toLowerCase()))) {
 			const allPositionsOfInvalidWord = getPositionsOfInvalidWord(word, text);
 			for (const pos of allPositionsOfInvalidWord) {
-				positions.push(pos);
 				addIssue("INVALID_WORD", pos, {word});
 			}
 		}
@@ -30,18 +28,19 @@ export function collectInvalidWordsInIssues(text: string) {
 }
 
 export function getPositionsOfInvalidWord(invalidWord: string, text: string): Position[] {
-	let tempText = text;
 	const result: Position[] = [];
-	let offSet = 0;
-	while (tempText.includes(invalidWord)) {
-		const tempPos: Position = {
-			fromIndex: tempText.indexOf(invalidWord) + offSet,
-			toIndex: tempText.indexOf(invalidWord) + invalidWord.length + offSet};
-		result.push(tempPos);
-		offSet = offSet + text.indexOf(invalidWord) + invalidWord.length;
-		tempText = tempText.substring(tempText.indexOf(invalidWord) + invalidWord.length, tempText.length);
+	let offSet: number = 0;
+
+	let foundIndex: number;
+	while ((foundIndex = text.indexOf(invalidWord, offSet)) !== -1) {
+	console.log(foundIndex);
+	offSet = foundIndex + 1;
+	result.push({
+			fromIndex: foundIndex,
+			toIndex: foundIndex + invalidWord.length,
+		});
 	}
-	return result;
+ return result;
 }
 
 /**
