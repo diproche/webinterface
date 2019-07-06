@@ -16,18 +16,31 @@ const allowedWords = json;
 export interface Position { fromIndex: number; toIndex: number; }
 
 export function collectInvalidWordsInIssues(text: string) {
-	const invalidWords = collectAllInvalidWords(text);
-	const positions: Position[] = [];
+	const invalidWords = getInvalidWords(text);
 	for (const word of invalidWords) {
 		if (!(allowedWords.includes(word.toLowerCase()))) {
-			const temp: Position = {
-				fromIndex: text.indexOf(word),
-				toIndex: (text.indexOf(word) + word.length),
-			};
-			positions.push(temp);
-			addIssue("INVALID_WORD", temp, {word});
+			const allPositionsOfInvalidWord = getPositionsOfInvalidWord(word, text);
+			for (const pos of allPositionsOfInvalidWord) {
+				addIssue("INVALID_WORD", pos, {word});
+			}
 		}
 	}
+}
+
+export function getPositionsOfInvalidWord(invalidWord: string, text: string): Position[] {
+	const result: Position[] = [];
+	let offSet: number = 0;
+
+	let foundIndex: number;
+	while ((foundIndex = text.indexOf(invalidWord, offSet)) !== -1) {
+	console.log(foundIndex);
+	offSet = foundIndex + 1;
+	result.push({
+			fromIndex: foundIndex,
+			toIndex: foundIndex + invalidWord.length,
+		});
+	}
+ return result;
 }
 
 /**
