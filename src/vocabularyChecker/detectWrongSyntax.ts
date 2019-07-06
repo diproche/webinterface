@@ -15,6 +15,11 @@ export const anyWord = new RegExp(/\b\w+\b/g);
 const allowedWords = json;
 export interface Position { fromIndex: number; toIndex: number; }
 
+/**
+ * @param text the user input
+ * Scans the text for words that are not allowed and adds an issue
+ * for every occurence of every such word.
+ */
 export function collectInvalidWordsInIssues(text: string) {
 	const invalidWords = getInvalidWords(text);
 	for (const word of invalidWords) {
@@ -27,10 +32,16 @@ export function collectInvalidWordsInIssues(text: string) {
 	}
 }
 
+/**
+ * @param invalidWord
+ * @param text proposed proof by the user.
+ * Scans the text and collects all occurences of @param invalidWord
+ * in an Position-Array.
+ */
+
 export function getPositionsOfInvalidWord(invalidWord: string, text: string): Position[] {
 	const result: Position[] = [];
 	let offSet: number = 0;
-
 	let foundIndex: number;
 	while ((foundIndex = text.indexOf(invalidWord, offSet)) !== -1) {
 	console.log(foundIndex);
