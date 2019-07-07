@@ -14,7 +14,16 @@
 			2
 		],
 		"no-conditional-assignment": false,
-		"arrow-parens": false
+		"arrow-parens": false,
+		"no-redundant-jsdoc": true,
+		"completed-docs": [
+		  true,
+		  {
+		    "functions": {"visibilities": ["exported"]},
+		    "methods": {"privacies": ["public", "protected"]}
+		  }
+		],
+		"file-name-casing": [true, "camel-case"]
 	},
 	"rulesDirectory": [],
 	"linterOptions": {
