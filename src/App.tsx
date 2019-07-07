@@ -1,19 +1,17 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
+// tslint:disable: ordered-imports
 import MainPage from "./components/mainPage/mainPage";
 import Navigation from "./components/navigationBar/navigationBar";
 import ProofEditor from "./components/proofEditor/proofEditor";
+import Einstellungen from "./components/einstellungen/einstellungen";
+import Kontakt from "./components/kontakt/kontakt";
+import Impressum from "./components/impressum/impressum";
+import ErrorPage404 from "./components/errorPage404/errorPage404";
+// tslint:enable: ordered-imports
 
-// tslint:disable-next-line: no-empty-interface
-export interface Props {
-}
-
-// tslint:disable-next-line: no-empty-interface
-interface State {
-}
-
-class App extends Component<Props, State> {
+class App extends Component<{}, {}> {
 	public render() {
 
 		return (
@@ -35,40 +33,5 @@ class App extends Component<Props, State> {
 	}
 
 }
-
-// These are just demonstration pages. Please don't implement the pages here.
-// Implement them as external components which will be imported
-
-const Einstellungen = () => {
-	return (
-		<div>
-			<p>Einstellungen</p>
-		</div>
-	);
-};
-
-const Kontakt = () => {
-	return (
-		<div>
-			<p>Kontakt</p>
-		</div>
-	);
-};
-
-const Impressum = () => {
-	return (
-		<div>
-			<p>Impressum</p>
-		</div>
-	);
-};
-
-const ErrorPage404 = () => {
-	return (
-		<div>
-			<p>404 Page Not Found</p>
-		</div>
-	);
-};
 
 export default App;
