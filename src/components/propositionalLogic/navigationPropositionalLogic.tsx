@@ -1,6 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import styles from "./navigationPropositionalLogic.module.scss";
+import styles from "./propositionalLogic.module.scss";
 
 const NavigationPropositionalLogic = () => {
 
