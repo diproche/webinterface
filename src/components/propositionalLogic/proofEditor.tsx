@@ -1,6 +1,5 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
-import { Props } from "../../App";
 import Issue from "../../issueHandling/issue";
 import { checkProof } from "../../util/proofChecker";
 import IssueInformation from "./issueInformation";
@@ -11,7 +10,7 @@ interface State {
 	issues: readonly Issue[];
 }
 
-class ProofEditor extends React.Component<Props, State> {
+class ProofEditor extends React.Component<{}, State> {
 	public state = {
 		userInput: "",
 		issues: [],

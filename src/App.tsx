@@ -1,19 +1,21 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
+// tslint:disable: ordered-imports
 import MainPage from "./components/mainPage/mainPage";
 import Navigation from "./components/navigationBar/navigationBar";
+<<<<<<< HEAD
 import PropositionalLogic from "./components/propositionalLogic/propositionalLogic";
+=======
+import ProofEditor from "./components/proofEditor/proofEditor";
+import Einstellungen from "./components/einstellungen/einstellungen";
+import Kontakt from "./components/kontakt/kontakt";
+import Impressum from "./components/impressum/impressum";
+import ErrorPage404 from "./components/errorPage404/errorPage404";
+// tslint:enable: ordered-imports
+>>>>>>> master
 
-// tslint:disable-next-line: no-empty-interface
-export interface Props {
-}
-
-// tslint:disable-next-line: no-empty-interface
-interface State {
-}
-
-class App extends Component<Props, State> {
+class App extends Component<{}, {}> {
 	public render() {
 
 		return (
@@ -35,6 +37,7 @@ class App extends Component<Props, State> {
 
 }
 
+<<<<<<< HEAD
 // These are just demonstration pages. Please don't implement the pages here.
 // Implement them as external components which will be imported
 
@@ -62,4 +65,6 @@ const ErrorPage404 = () => {
 	);
 };
 
+=======
+>>>>>>> master
 export default App;
