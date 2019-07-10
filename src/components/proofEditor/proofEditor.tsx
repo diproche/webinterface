@@ -1,7 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import ContentEditable from "react-contenteditable";
-import { Props } from "../../App";
 import Issue from "../../issueHandling/issue";
 import addStringIgnoringHTML from "../../util/addStringIgnoringHTML";
 import { checkProof, checkProofWithoutDiproche } from "../../util/proofChecker";
@@ -16,7 +15,7 @@ interface State {
 	issues: readonly Issue[];
 }
 
-class ProofEditor extends React.Component<Props, State> {
+class ProofEditor extends React.Component<{}, State> {
 	public state = {
 		proofEditorHTML: "Gebe hier den Beweis ein.",
 		issues: [],
