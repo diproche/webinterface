@@ -11,6 +11,7 @@ const NavigationPropositionalLogic = () => {
 			<li><NavLink to="/aussagenlogisches_beweisen/beispiele">Beispiele</NavLink></li>
 			<li><NavLink to="/aussagenlogisches_beweisen/uebungen">Übungsaufgaben</NavLink></li>
 			<li><NavLink to="/aussagenlogisches_beweisen/sandbox">Freies Beweisen</NavLink></li>
+			<li><NavLink to="/aussagenlogisches_beweisen/wiki">Wiki</NavLink></li>
 		</ul>
 	</div >);
 };

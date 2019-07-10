@@ -12,6 +12,7 @@ import ExercisesPropositionalLogic from "./components/propositionalLogic/exercis
 import FreeProverPropositionalLogic from "./components/propositionalLogic/freeProver";
 import NavigationPropositionalLogic from "./components/propositionalLogic/navigationPropositionalLogic";
 import TutorialPropositionalLogic from "./components/propositionalLogic/tutorial";
+import WikiPropositionalLogic from "./components/propositionalLogic/wiki";
 
 class App extends Component<{}, {}> {
 	public render() {
@@ -35,6 +36,7 @@ class App extends Component<{}, {}> {
 						<Route exact path="/aussagenlogisches_beweisen/beispiele" component={ExamplesPropositionalLogic} />
 						<Route exact path="/aussagenlogisches_beweisen/uebungen" component={ExercisesPropositionalLogic} />
 						<Route exact path="/aussagenlogisches_beweisen/sandbox" component={FreeProverPropositionalLogic} />
+						<Route exact path="/aussagenlogisches_beweisen/wiki" component={WikiPropositionalLogic} />
 					</Switch>
 				</React.Fragment>
 			</BrowserRouter>
