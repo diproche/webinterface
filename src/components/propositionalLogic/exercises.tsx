@@ -1,5 +1,6 @@
 import React from "react";
 
+import { Exercise, generateRandomExercise } from "./exerciseGenerator";
 import styles from "./propositionalLogic.module.scss";
 
 class ExercisesPropositionalLogic extends React.Component {
@@ -14,23 +15,21 @@ class ExercisesPropositionalLogic extends React.Component {
 				onClick={this.checkInput}>
 				Zufallsgenerator
 	</button>
-			<p id="solve"></p>
+			<p id="exerciseDescription"></p>
+			<p id="exerciseContent"></p>
 		</div>;
 
 	}
 	private checkInput = async (): Promise<void> => {
-		const myComponent = document.getElementById("solve");
-		const exerciseClass: number = exerciseRandomClassGenerator();
-		if (myComponent !== null) {
-			myComponent.innerHTML = exerciseClass.toString();
+		const exerciseDiscription = document.getElementById("exerciseDescription");
+		const exerciseContent = document.getElementById("exerciseContent");
+		const randomExercise: Exercise = generateRandomExercise();
+		if (exerciseDiscription !== null && exerciseContent !== null) {
+			exerciseDiscription.innerHTML = randomExercise.exerciseDiscription;
+			exerciseContent.innerHTML = randomExercise.exerciseContent;
 		}
 	}
 
 }
 
 export default ExercisesPropositionalLogic;
-
-function exerciseRandomClassGenerator(): number {
-	const exerciseClass: number = Math.floor(Math.random() * 10);
-	return exerciseClass;
-}
