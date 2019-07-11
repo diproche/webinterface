@@ -19,8 +19,7 @@
 		"completed-docs": [
 		  true,
 		  {
-		    "functions": {"visibilities": ["exported"]},
-		    "methods": {"privacies": ["public", "protected"]}
+		    "functions": {"visibilities": ["exported"]}
 		  }
 		],
 		"file-name-casing": [true, "camel-case"]
