@@ -62,6 +62,7 @@ export function addIssueToIssueList(issue: Issue) {
 }
 
 /**
+ * list all the found issues
  * @return all found issues
  */
 export function listAllIssues(): ReadonlyArray<Issue> {
