@@ -1,6 +1,12 @@
 import React, { Component } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
+import ExamplesBooleanAlgebra from "./components/booleanAlgebra/examples";
+import ExercisesBooleanAlgebra from "./components/booleanAlgebra/exercises";
+import FreeProverBooleanAlgebra from "./components/booleanAlgebra/freeProver";
+import NavigationBooleanAlgebra from "./components/booleanAlgebra/navigationBooleanAlgebra";
+import TutorialBooleanAlgebra from "./components/booleanAlgebra/tutorial";
+import WikiBooleanAlgebra from "./components/booleanAlgebra/wiki";
 import Einstellungen from "./components/einstellungen/einstellungen";
 import ErrorPage404 from "./components/errorPage404/errorPage404";
 import Impressum from "./components/impressum/impressum";
@@ -24,6 +30,7 @@ class App extends Component<{}, {}> {
 					<Switch>
 						<Route exact path="/" component={MainPage} />
 						<Route path="/aussagenlogisches_beweisen" component={NavigationPropositionalLogic} />
+						<Route path="/boolesche_algebra" component={NavigationBooleanAlgebra} />
 						<Route exact path="/einstellungen" component={Einstellungen} />
 						<Route exact path="/kontakt" component={Kontakt} />
 						<Route exact path="/impressum" component={Impressum} />
@@ -37,6 +44,15 @@ class App extends Component<{}, {}> {
 						<Route exact path="/aussagenlogisches_beweisen/uebungen" component={ExercisesPropositionalLogic} />
 						<Route exact path="/aussagenlogisches_beweisen/sandbox" component={FreeProverPropositionalLogic} />
 						<Route exact path="/aussagenlogisches_beweisen/wiki" component={WikiPropositionalLogic} />
+					</Switch>
+				</React.Fragment>
+				<React.Fragment>
+					<Switch>
+						<Route exact path="/boolesche_algebra/tutorial" component={TutorialBooleanAlgebra} />
+						<Route exact path="/boolesche_algebra/beispiele" component={ExamplesBooleanAlgebra} />
+						<Route exact path="/boolesche_algebra/uebungen" component={ExercisesBooleanAlgebra} />
+						<Route exact path="/boolesche_algebra/sandbox" component={FreeProverBooleanAlgebra} />
+						<Route exact path="/boolesche_algebra/wiki" component={WikiBooleanAlgebra} />
 					</Switch>
 				</React.Fragment>
 			</BrowserRouter>

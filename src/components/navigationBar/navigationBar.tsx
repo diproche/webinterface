@@ -11,8 +11,8 @@ const Navigation = () => {
 				<a className={styles.dropdownButton}>Spielwiese</a>
 				<div className={styles.dropdownContent}>
 					<NavLink to="/aussagenlogisches_beweisen">Aussagenlogisches Beweisen</NavLink>
-					<NavLink to="/notRdyYet">coming soon</NavLink>
-					<NavLink to="/notRdyYet2">coming soon too</NavLink>
+					<NavLink to="/boolesche_algebra">Boolesche Algebra</NavLink>
+					<NavLink to="/coming_soon">coming soon</NavLink>
 				</div>
 			</li>
 			<li><NavLink to="/einstellungen">Einstellungen</NavLink></li>
