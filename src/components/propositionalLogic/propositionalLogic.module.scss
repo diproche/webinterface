@@ -1,0 +1,134 @@
+
+
+.sidebar {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	width: 15%;
+	position: fixed;
+	color: white;
+	background-color: rgba(7, 62, 139, 0.900);
+	box-shadow: 0px 0px 40px 0px rgba(7, 62, 139, 0.500);
+	text-decoration: none;
+	height: 100%;
+	overflow: auto;
+	width:160px;
+}
+
+ .sidebarHeadline {
+	color: rgba(7, 62, 139, 0.900);
+	background-color: rgb(204, 218, 255);
+	text-align: center;
+	height: 50px;
+	font-style: normal; 
+	font-weight: 700;
+	left: 50px;
+	min-width: 160px;
+
+ }
+  
+  li {
+	float: left;
+  }
+  
+  li a, .dropdownButton {
+	display: inline-block;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+	font-style: normal; 
+	font-weight: 700;
+	min-width: 160px;
+  }
+  
+  li a:hover, .dropdown:hover .dropdownButton:hover {
+	background-color: rgba(255, 255, 255, 0.850);
+	color: rgba(7, 62, 139, 0.900);
+	display: block;
+	text-decoration: none;
+  }
+  
+
+  li.dropdown {
+	display: inline-block;
+  }
+ 
+
+  .dropdownContent {
+	display: none;
+	position: absolute;
+	background-color: white;
+	min-width: 160px;
+	box-shadow: 0px 10px 20px 0px rgba(7, 62, 139, 0.500);
+	z-index: 1;
+  }
+  
+  .dropdownContent a {
+	color: black;
+	padding: 12px 16px;
+	text-decoration: none;
+	display: block;
+	text-align: left;
+  }
+  
+  .dropdownContent a:hover {
+	  background-color:rgba(7, 62, 139, 0.150);
+	  color:rgba(7, 62, 139, 0.900);
+	}
+  
+  .dropdown:hover .dropdownContent {
+	display: block;
+  }
+
+  .site {
+	position: absolute;
+	left: 160px;
+	width: 100%;
+	padding: 20px;
+  }
+
+//styles for Buttons 
+  .buttons {
+	display: block;
+	background-color: rgba(7, 62, 139, 0.900);
+	color: white;
+	padding: 15px 32px;
+	border: none;
+	width: 20%;
+	box-shadow: 0px 2px 4px 0px rgba(7, 62, 139, 0.500);
+	font-size: 20px;
+	text-align: center;
+	margin: 1rem auto 0 auto;
+}
+.buttons:hover {
+	display: block;
+	background-color:  rgba(7, 62, 139, 0.100);
+	color:  rgba(7, 62, 139, 0.900);
+	padding: 15px 32px;
+	width: 20%;
+	box-shadow: 0px 10px 20px 0px rgba(7, 62, 139, 0.500);
+	font-size: 20px;
+	text-align: center;
+	margin: 1rem auto 0 auto;
+  }
+
+
+// styles for the proofEditor
+.textInput {
+	display: block;
+	width: 80%;
+	height: 32px;
+	margin: 1rem auto 0 auto;
+}
+.textInputFalse {
+	display: block;
+	width: 80%;
+	margin: 1rem auto 0 auto;
+	border: 2px solid red;
+}
+.IssuePositionInformation {
+	text-align: center;
+	margin: 30px;
+}
