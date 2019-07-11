@@ -15,9 +15,9 @@ export function expressionFormatter(expression: string, expressionPosition: numb
 }
 
 /**
+ * seperate the written expression into a array structure
  * @param expression written by user
- * @return a preformatted expression where some different
- * input styles for logical vocabulary gets formatted into one single style
+ * @return the formatted expression
  */
 export function preFormatExpressionFromImput(expression: string): string[] {
 	const splittedExpression: string[] = expression.split(allowedExpressionToken);
@@ -26,6 +26,9 @@ export function preFormatExpressionFromImput(expression: string): string[] {
 }
 
 /**
+ * format the different
+ * input styles for logical vocabulary into one single style supported by SWI prolog
+ * @param the expression that could still including different input styles
  * @return finalExpression where expression elements got replaced with readable prolog code elements
  */
 export function replaceExpressionElementsIntoPrologCode(preFormattedExpression: string[]): string[] {
@@ -47,7 +50,7 @@ export function replaceExpressionElementsIntoPrologCode(preFormattedExpression: 
 
 /**
  * helper function for replaceExpressionElementsIntoPrologCode
- * @return finalExpressionElement
+ * @return a formatted expression element
  */
 export function replaceASingleExpressionElementIntoPrologCode(preformattedExpressionElement: string): string {
 	const finalExpression: string = preformattedExpressionElement;
@@ -70,13 +73,21 @@ export function replaceASingleExpressionElementIntoPrologCode(preformattedExpres
 		;
 }
 
+/**
+ * This function just calls all the other function with the abilaty to detect wrong user input.
+ * @param the pre formatted expression
+ * @param expressionPosition where to match issueCodes with the right position
+ */
 export function expressionIssueDetector(preFormattedExpression: string[], expressionPosition: number) {
 	detectBracketIssues(preFormattedExpression, expressionPosition);
 	detectMissingStatementsOrConnector(preFormattedExpression, expressionPosition);
 }
 
 /**
- * Check the expression for an equal amount of opened and closed brackets.; it can detect wrong input
+ * Check the expression for an equal amount of opened find closed brackets.
+ * It can detect wrong user input and push issueCodes if it's needed.
+ * @param the pre formatted expression
+ * @param expressionPosition where to match issueCodes with the right position
  */
 export function detectBracketIssues(expression: string[], expressionPosition: number) {
 	let bracketCount: number = 0;
@@ -108,7 +119,10 @@ export function detectBracketIssues(expression: string[], expressionPosition: nu
 }
 
 /**
- * check the expression for correctness that no logic operators or statements is forgotten; it can detect wrong input
+ * Check the expression for correctness that no logic operators or statements is forgotten.
+ * It can detect wrong user input and push issueCodes if it's needed.
+ * @param the pre formatted expression
+ * @param expressionPosition where to match issueCodes with the right position
  */
 export function detectMissingStatementsOrConnector(expression: string[], expressionPosition: number) {
 	let foundConnector: boolean = true;
