@@ -1,4 +1,4 @@
-import { textFormatter } from "../../input_formatter/text_formatter";
+import { textFormatter } from "../../inputFormatter/textFormatter";
 import { collectInvalidWordsInIssues } from "../../vocabularyChecker/detectWrongSyntax";
 import { getDiprocheResponse } from "../proofChecker";
 import { addDiprocheIssues } from "./diprocheResponseProcessing";

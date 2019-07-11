@@ -1,4 +1,4 @@
-import { expressionFormatter } from "./expression_formatter";
+import { expressionFormatter } from "./expressionFormatter";
 import { Regexes } from "./regexes";
 
 /**
@@ -47,6 +47,11 @@ export function sentenceIntoWordList(input: string): string[] {
 	return listOfWords;
 }
 
+/**
+ * format the text into a SWI-prolog readable string. Each Element gets seperated with a comma
+ * @param formattedText including formatted expressions
+ * @return the final string
+ */
 export function formattedTextIntoString(formattedText: string[][]): string {
 	let output = "[";
 	formattedText.forEach(element => {
