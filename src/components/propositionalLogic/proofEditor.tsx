@@ -1,17 +1,16 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
-import { Props } from "../../App";
 import Issue from "../../issueHandling/issue";
 import { checkProof } from "../../util/proofChecker";
 import IssueInformation from "./issueInformation";
-import styles from "./proofEditor.module.scss";
+import styles from "./propositionalLogic.module.scss";
 
 interface State {
 	userInput: string;
 	issues: readonly Issue[];
 }
 
-class ProofEditor extends React.Component<Props, State> {
+class ProofEditor extends React.Component<{}, State> {
 	public state = {
 		userInput: "",
 		issues: [],
