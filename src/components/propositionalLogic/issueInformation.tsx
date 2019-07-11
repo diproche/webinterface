@@ -2,7 +2,7 @@ import React from "react";
 import shortid from "shortid";
 import Issue from "../../issueHandling/issue";
 import IssuePositionInformation from "./issuePositionInformation";
-import styles from "./proofEditor.module.scss";
+import styles from "./propositionalLogic.module.scss";
 
 export interface Props {
 	issue: Issue;

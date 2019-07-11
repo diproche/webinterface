@@ -3,7 +3,7 @@ import React from "react";
 import Issue from "../../issueHandling/issue";
 import { checkProof } from "../../util/proofChecker";
 import IssueInformation from "./issueInformation";
-import styles from "./proofEditor.module.scss";
+import styles from "./propositionalLogic.module.scss";
 
 interface State {
 	userInput: string;
