@@ -88,3 +88,47 @@
 	width: 100%;
 	padding: 20px;
   }
+
+//styles for Buttons 
+  .buttons {
+	display: block;
+	background-color: rgba(7, 62, 139, 0.900);
+	color: white;
+	padding: 15px 32px;
+	border: none;
+	width: 20%;
+	box-shadow: 0px 2px 4px 0px rgba(7, 62, 139, 0.500);
+	font-size: 20px;
+	text-align: center;
+	margin: 1rem auto 0 auto;
+}
+.buttons:hover {
+	display: block;
+	background-color:  rgba(7, 62, 139, 0.100);
+	color:  rgba(7, 62, 139, 0.900);
+	padding: 15px 32px;
+	width: 20%;
+	box-shadow: 0px 10px 20px 0px rgba(7, 62, 139, 0.500);
+	font-size: 20px;
+	text-align: center;
+	margin: 1rem auto 0 auto;
+  }
+
+
+// styles for the proofEditor
+.textInput {
+	display: block;
+	width: 80%;
+	height: 32px;
+	margin: 1rem auto 0 auto;
+}
+.textInputFalse {
+	display: block;
+	width: 80%;
+	margin: 1rem auto 0 auto;
+	border: 2px solid red;
+}
+.IssuePositionInformation {
+	text-align: center;
+	margin: 30px;
+}
