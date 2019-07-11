@@ -20,11 +20,17 @@ class ExercisesPropositionalLogic extends React.Component {
 	}
 	private checkInput = async (): Promise<void> => {
 		const myComponent = document.getElementById("solve");
+		const exerciseClass: number = exerciseRandomClassGenerator();
 		if (myComponent !== null) {
-			myComponent.innerHTML = Math.random().toString();
+			myComponent.innerHTML = exerciseClass.toString();
 		}
 	}
 
 }
 
 export default ExercisesPropositionalLogic;
+
+function exerciseRandomClassGenerator(): number {
+	const exerciseClass: number = Math.floor(Math.random() * 10);
+	return exerciseClass;
+}
