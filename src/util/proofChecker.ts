@@ -17,7 +17,7 @@ export async function checkProof(userInput: string): Promise<readonly Issue[]> {
 }
 
 /**
-	* Receives the diproche reponse for a given input
+	* Receives the diproche response for a given input
 	* @param userInput - The user input as a list which should end with a "."
 	* @return The diproche reponse
 	*/
