@@ -74,7 +74,7 @@ export function replaceASingleExpressionElementIntoPrologCode(preformattedExpres
 }
 
 /**
- * This function just calls all the other function with the abilaty to detect wrong user input.
+ * This function just calls all the other function with the ability to detect wrong user input.
  * @param the pre formatted expression
  * @param expressionPosition where to match issueCodes with the right position
  */
