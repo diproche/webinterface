@@ -28,7 +28,7 @@ export function preFormatExpressionFromImput(expression: string): string[] {
 /**
  * format the different
  * input styles for logical vocabulary into one single style supported by SWI prolog
- * @param the expression that could still including different input styles
+ * @param the expression that could still include different input styles
  * @return finalExpression where expression elements got replaced with readable prolog code elements
  */
 export function replaceExpressionElementsIntoPrologCode(preFormattedExpression: string[]): string[] {
