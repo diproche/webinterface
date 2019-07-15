@@ -1,6 +1,6 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
-import Issue from "../../issueHandling/issue";
+import Issue from "../../util/issueHandling/issue";
 import { checkProof } from "../../util/proofChecker";
 import IssueInformation from "./issueInformation";
 import styles from "./propositionalLogic.module.scss";
