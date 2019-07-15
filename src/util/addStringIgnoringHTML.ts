@@ -18,7 +18,7 @@ function addStringIgnoringHTML(
 		position = [position];
 	}
 
-	// Smalles numbers first
+	// Smallest numbers first
 	const sortedPositionArray = position.sort((p1, p2) => p1 - p2);
 
 	let currentActualIndex: number = 0;
