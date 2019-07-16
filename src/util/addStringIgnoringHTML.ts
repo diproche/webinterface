@@ -9,46 +9,85 @@
 function addStringIgnoringHTML(
 	basisString: string,
 	stringToAdd: string,
-	position: number | number[],
+	initialPosition: number | number[],
 	doubleUp: boolean = false,
 ): string {
-	let copiedBasisString = basisString;
-
-	if (!Array.isArray(position)) {
-		position = [position];
+	if (stringToAdd === "") {
+		return basisString;
 	}
+
+	let copiedBasisString = basisString;
+	let position: number[];
+
+	if (!Array.isArray(initialPosition)) {
+		position = [initialPosition];
+	} else {
+		position = initialPosition;
+	}
+
+	checkErrorCases(position, basisString);
 
 	// Smallest numbers first
 	const sortedPositionArray = position.sort((p1, p2) => p1 - p2);
 
-	let currentActualIndex: number = 0;
-	let currentHTMLIgnoringIndex: number = 0;
+	// Will be sorted through the way it is generated. Smaller index first
+	const htmlTags: Array<[number, string]> = [];
 
-	sortedPositionArray.forEach((currentlySearchedPosition: number) => {
-		while (currentHTMLIgnoringIndex < currentlySearchedPosition) {
-			if (copiedBasisString.charAt(currentActualIndex) === "<") {
-				currentActualIndex++;
-				while (copiedBasisString.charAt(currentActualIndex) !== ">") {
-					currentActualIndex++;
-				}
-				currentActualIndex++;
-			} else {
-				currentActualIndex++;
-				currentHTMLIgnoringIndex++;
-		 	}
+	let matches: RegExpExecArray | null;
+	while (matches = htmlRegExp.exec(copiedBasisString)) {
+		htmlTags.push([matches.index, matches[0]]);
+	}
+
+	let firstTag: [number, string] | undefined;
+
+	while ( firstTag = htmlTags.shift() ) {
+		// The while loop will catch undefined as firstTag value
+		const spanishInquisition: boolean = !firstTag;
+		if (spanishInquisition) {
+			throw new Error("Unexpected Spanish Inquisition.");
 		}
 
-		// Preventing the doubling up of strings if specified
-		if (doubleUp || copiedBasisString.substr(currentActualIndex, stringToAdd.length) !== stringToAdd) {
-			copiedBasisString =
-				copiedBasisString.slice(0, currentActualIndex)
-				+ stringToAdd
-				+ copiedBasisString.slice(currentActualIndex);
-		}
+		sortedPositionArray.map((indexForInsertion: number) => {
+			if (firstTag![0] > indexForInsertion) {
+				return indexForInsertion;
+			}
+
+			return indexForInsertion + firstTag![1].length;
+		});
+	}
+
+	sortedPositionArray.map((indexForInsertion: number) => {
+			const previousInsertions: number[] = sortedPositionArray.filter((index: number) => index < indexForInsertion);
+			return indexForInsertion + (previousInsertions.length * stringToAdd.length);
+	});
+
+	sortedPositionArray.forEach((indexForInsertion: number) => {
+			// Preventing the doubling up of strings if specified
+			if (doubleUp || copiedBasisString.substr(indexForInsertion, stringToAdd.length) !== stringToAdd) {
+				copiedBasisString = insertAt(indexForInsertion, copiedBasisString, stringToAdd);
+			}
 	});
 
 	return copiedBasisString;
 
 }
+
+function checkErrorCases(positions: number[], basisString: string) {
+	positions.forEach((singlePosition: number) =>  {
+		if (singlePosition < 0 || singlePosition > basisString.length + 1) {
+			throw new Error("Index Out Of Bound");
+		}
+	});
+}
+
+function insertAt(indexForInsertion: number, basisString: string, stringToAdd: string): string {
+	const stringCopy: string = basisString;
+	return stringCopy.substr(0, indexForInsertion)
+		+ stringToAdd
+		+ stringCopy.substr(indexForInsertion);
+}
+
+// Based on https://haacked.com/archive/2004/10/25/usingregularexpressionstomatchhtml.aspx/
+const htmlRegExp = /<\/?\w+(?:(?:\s+\w+(?:\s*=\s*(?:".*?"|'.*?'|\[\^'">\s\]+))?)+\s*|\s*)\/?>/ig;
 
 export default addStringIgnoringHTML;
