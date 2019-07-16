@@ -16,12 +16,12 @@ import NavigationBooleanAlgebra from "./booleanAlgebra/navigationBooleanAlgebra"
 import TutorialBooleanAlgebra from "./booleanAlgebra/tutorial";
 import WikiBooleanAlgebra from "./booleanAlgebra/wiki";
 
-import ExamplesPropositionalLogic from "./components/propositionalLogic/examplePage/examplePage";
-import ExercisesPropositionalLogic from "./components/propositionalLogic/exercises";
-import FreeProverPropositionalLogic from "./components/propositionalLogic/freeProver";
-import NavigationPropositionalLogic from "./components/propositionalLogic/navigationPropositionalLogic";
-import TutorialPropositionalLogic from "./components/propositionalLogic/tutorial";
-import WikiPropositionalLogic from "./components/propositionalLogic/wiki";
+import ExamplesPropositionalLogic from "./propositionalLogic/examplePage/examplePage";
+import ExercisesPropositionalLogic from "./propositionalLogic/exercises";
+import FreeProverPropositionalLogic from "./propositionalLogic/freeProver";
+import NavigationPropositionalLogic from "./propositionalLogic/navigationPropositionalLogic";
+import TutorialPropositionalLogic from "./propositionalLogic/tutorial";
+import WikiPropositionalLogic from "./propositionalLogic/wiki";
 // tslint:enable: ordered-imports
 
 class App extends Component<{}, {}> {
