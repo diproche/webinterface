@@ -21,6 +21,7 @@ class ExamplesPropositionalLogic extends React.Component {
 				<p id="exampleContent"></p>
 			</div>
 			<ProofEditor />
+			<div></div>
 		</div >;
 
 	}
