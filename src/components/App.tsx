@@ -2,19 +2,19 @@ import React, { Component } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 // tslint:disable: ordered-imports
-import MainPage from "./components/mainPage/mainPage";
-import Navigation from "./components/navigationBar/navigationBar";
-import Einstellungen from "./components/einstellungen/einstellungen";
-import Kontakt from "./components/kontakt/kontakt";
-import Impressum from "./components/impressum/impressum";
-import ErrorPage404 from "./components/errorPage404/errorPage404";
+import MainPage from "./mainPage/mainPage";
+import Navigation from "./navigationBar/navigationBar";
+import Einstellungen from "./settings/settings";
+import Kontakt from "./contact/contact";
+import Impressum from "./impressum/impressum";
+import ErrorPage404 from "./errorPage404/errorPage404";
 
-import ExamplesBooleanAlgebra from "./components/booleanAlgebra/examples";
-import ExercisesBooleanAlgebra from "./components/booleanAlgebra/exercises";
-import FreeProverBooleanAlgebra from "./components/booleanAlgebra/freeProver";
-import NavigationBooleanAlgebra from "./components/booleanAlgebra/navigationBooleanAlgebra";
-import TutorialBooleanAlgebra from "./components/booleanAlgebra/tutorial";
-import WikiBooleanAlgebra from "./components/booleanAlgebra/wiki";
+import ExamplesBooleanAlgebra from "./booleanAlgebra/examples";
+import ExercisesBooleanAlgebra from "./booleanAlgebra/exercises";
+import FreeProverBooleanAlgebra from "./booleanAlgebra/freeProver";
+import NavigationBooleanAlgebra from "./booleanAlgebra/navigationBooleanAlgebra";
+import TutorialBooleanAlgebra from "./booleanAlgebra/tutorial";
+import WikiBooleanAlgebra from "./booleanAlgebra/wiki";
 
 import ExamplesPropositionalLogic from "./components/propositionalLogic/examplePage/examplePage";
 import ExercisesPropositionalLogic from "./components/propositionalLogic/exercises";

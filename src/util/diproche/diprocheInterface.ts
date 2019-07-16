@@ -1,6 +1,6 @@
-import { textFormatter } from "../../input_formatter/text_formatter";
-import { collectInvalidWordsInIssues } from "../../vocabularyChecker/detectWrongSyntax";
+import { textFormatter } from "../input_formatter/text_formatter";
 import { getDiprocheResponse } from "../proofChecker";
+import { collectInvalidWordsInIssues } from "../vocabularyChecker/detectWrongSyntax";
 import { addDiprocheIssues } from "./diprocheResponseProcessing";
 
 export enum Mode {

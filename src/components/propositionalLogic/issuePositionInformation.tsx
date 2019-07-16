@@ -1,5 +1,6 @@
 import React from "react";
-import Position from "../../issueHandling/position";
+import Position from "../../util/issueHandling/position";
+
 import styles from "./propositionalLogic.module.scss";
 
 export interface Props {
