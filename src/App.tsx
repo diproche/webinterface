@@ -16,7 +16,7 @@ import NavigationBooleanAlgebra from "./components/booleanAlgebra/navigationBool
 import TutorialBooleanAlgebra from "./components/booleanAlgebra/tutorial";
 import WikiBooleanAlgebra from "./components/booleanAlgebra/wiki";
 
-import ExamplesPropositionalLogic from "./components/propositionalLogic/examples";
+import ExamplesPropositionalLogic from "./components/propositionalLogic/examplePage/examplePage";
 import ExercisesPropositionalLogic from "./components/propositionalLogic/exercises";
 import FreeProverPropositionalLogic from "./components/propositionalLogic/freeProver";
 import NavigationPropositionalLogic from "./components/propositionalLogic/navigationPropositionalLogic";

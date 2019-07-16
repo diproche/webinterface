@@ -1,8 +1,8 @@
 import React from "react";
 
 import ProofEditor from "../proofEditor";
+import styles from "../propositionalLogic.module.scss";
 import { Example, generateRandomExample } from "./exampleCollection";
-import styles from "./propositionalLogic.module.scss";
 
 class ExamplesPropositionalLogic extends React.Component {
 
