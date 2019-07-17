@@ -42,9 +42,6 @@ function generateExampleContent(exampleClassNumber: number): string {
 	return test;
 }
 
-
-
-
 /*
 const example = {"
 Wir zeigen (a UND [b ODER c]) <-> ([a UND b] ODER [a UND c]).

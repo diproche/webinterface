@@ -17,17 +17,15 @@ class ExamplesPropositionalLogic extends React.Component {
 				<button className={styles.buttons}
 					onClick={this.button}>
 					Nächstes Beispiel
+
 					</button>
 
 				<p id="exampleDescription"></p>
 					<div className={ProofEditor.name}>
 					</div>
 					<p id="exampleContent"></p>
-
 			</div>
-			<div className="test">
 			<ProofEditor/>
-			</div>
 			<div>{lyrics}</div>
 		</div >;
 
@@ -36,11 +34,9 @@ class ExamplesPropositionalLogic extends React.Component {
 		const exampleDiscription = document.getElementById("exampleDescription");
 		const exampleContent = document.getElementById("exampleContent");
 		const randomExample: Example = generateRandomExample();
-		const test = document.getElementsByClassName("test");
-		const modifiedPE: ProofEditor = new ProofEditor("TEST", []);
-		if (exampleDiscription !== null && exampleContent !== null && test !== null) {
+		if (exampleDiscription !== null && exampleContent !== null) {
 			exampleDiscription.innerHTML = randomExample.exampleDiscription;
-			test.item = modifiedPE;
+			exampleContent.innerHTML = randomExample.exampleContent;
 		}
 	}
 

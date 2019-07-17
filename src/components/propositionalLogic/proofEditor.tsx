@@ -5,7 +5,7 @@ import { checkProof } from "../../util/proofChecker";
 import IssueInformation from "./issueInformation";
 import styles from "./propositionalLogic.module.scss";
 
-const textboxPlaceHolder = "Gebe hier deinen Beweis ein..."
+const textboxPlaceHolder = "Gebe hier deinen Beweis ein...";
 
 interface State {
 	userInput: string;
@@ -48,4 +48,3 @@ class ProofEditor extends React.Component<{}, State> {
 }
 
 export default ProofEditor;
-
