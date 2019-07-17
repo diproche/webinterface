@@ -5,6 +5,8 @@ import { checkProof } from "../../util/proofChecker";
 import IssueInformation from "./issueInformation";
 import styles from "./propositionalLogic.module.scss";
 
+const textboxPlaceHolder = "Gebe hier deinen Beweis ein..."
+
 interface State {
 	userInput: string;
 	issues: readonly Issue[];
@@ -20,7 +22,7 @@ class ProofEditor extends React.Component<{}, State> {
 		return <div className={styles.proofEditor}>
 			<textarea
 				className={styles.textInput}
-				placeholder="Gebe hier deinen Beweis ein."
+				placeholder={textboxPlaceHolder}
 				required={true}
 				value={this.state.userInput}
 				onChange={ev => this.setState({ userInput: ev.target.value })} />
@@ -46,3 +48,4 @@ class ProofEditor extends React.Component<{}, State> {
 }
 
 export default ProofEditor;
+

@@ -4,6 +4,8 @@ import ProofEditor from "../proofEditor";
 import styles from "../propositionalLogic.module.scss";
 import { Example, generateRandomExample } from "./exampleCollection";
 
+const lyrics = "placeholder";
+
 class ExamplesPropositionalLogic extends React.Component {
 
 	public render() {
@@ -13,25 +15,32 @@ class ExamplesPropositionalLogic extends React.Component {
 				 oder festes schema)</p>
 				<p>Click the button to display a random example.</p>
 				<button className={styles.buttons}
-					onClick={this.checkInput}>
-					Zufallsgenerator
+					onClick={this.button}>
+					Nächstes Beispiel
 					</button>
 
 				<p id="exampleDescription"></p>
-				<p id="exampleContent"></p>
+					<div className={ProofEditor.name}>
+					</div>
+					<p id="exampleContent"></p>
+
 			</div>
-			<ProofEditor />
-			<div></div>
+			<div className="test">
+			<ProofEditor/>
+			</div>
+			<div>{lyrics}</div>
 		</div >;
 
 	}
-	private checkInput = async (): Promise<void> => {
+	private button = async (): Promise<void> => {
 		const exampleDiscription = document.getElementById("exampleDescription");
 		const exampleContent = document.getElementById("exampleContent");
 		const randomExample: Example = generateRandomExample();
-		if (exampleDiscription !== null && exampleContent !== null) {
+		const test = document.getElementsByClassName("test");
+		const modifiedPE: ProofEditor = new ProofEditor("TEST", []);
+		if (exampleDiscription !== null && exampleContent !== null && test !== null) {
 			exampleDiscription.innerHTML = randomExample.exampleDiscription;
-			exampleContent.innerHTML = randomExample.exampleContent;
+			test.item = modifiedPE;
 		}
 	}
 
