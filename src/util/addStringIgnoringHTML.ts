@@ -56,7 +56,7 @@ function addStringIgnoringHTML(
 	}
 
 	// Increasing the positions of the other indeces for previous insertions
-	sortedPositionArray.map((indexForInsertion: number) => {
+	sortedPositionArray = sortedPositionArray.map((indexForInsertion: number) => {
 			const previousInsertions: number[] = sortedPositionArray.filter((index: number) => index < indexForInsertion);
 			return indexForInsertion + (previousInsertions.length * stringToAdd.length);
 	});
