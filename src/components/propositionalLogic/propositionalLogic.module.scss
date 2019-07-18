@@ -85,7 +85,7 @@
   .site {
 	position: absolute;
 	left: 160px;
-	width: 100%;
+	width: calc(100% - 100px);
 	padding: 20px;
   }
 
@@ -120,12 +120,12 @@
 	display: block;
 	width: 80%;
 	height: 32px;
-	margin: 1rem auto 0 auto;
+	margin: left;
 }
 .textInputFalse {
 	display: block;
 	width: 80%;
-	margin: 1rem auto 0 auto;
+	margin: left;
 	border: 2px solid red;
 }
 .IssuePositionInformation {
