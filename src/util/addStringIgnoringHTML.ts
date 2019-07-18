@@ -30,7 +30,7 @@ function addStringIgnoringHTML(
 	// Smallest numbers first
 	const sortedPositionArray = position.sort((p1, p2) => p1 - p2);
 
-	// Will be sorted through the way it is generated. Smaller index first
+	// Will be in the order of the index number. Smaller index first
 	const htmlTags: Array<[number, string]> = [];
 
 	let matches: RegExpExecArray | null;
@@ -41,7 +41,7 @@ function addStringIgnoringHTML(
 	let firstTag: [number, string] | undefined;
 
 	while ( firstTag = htmlTags.shift() ) {
-		// The while loop will catch undefined as firstTag value
+
 		const spanishInquisition: boolean = !firstTag;
 		if (spanishInquisition) {
 			throw new Error("Unexpected Spanish Inquisition.");
@@ -56,11 +56,13 @@ function addStringIgnoringHTML(
 		});
 	}
 
+	// Increasing the positions of the other indeces for previous insertions
 	sortedPositionArray.map((indexForInsertion: number) => {
 			const previousInsertions: number[] = sortedPositionArray.filter((index: number) => index < indexForInsertion);
 			return indexForInsertion + (previousInsertions.length * stringToAdd.length);
 	});
 
+	// Inserting the stringToAdd at the specified and adjusted positions
 	sortedPositionArray.forEach((indexForInsertion: number) => {
 			// Preventing the doubling up of strings if specified
 			if (doubleUp || copiedBasisString.substr(indexForInsertion, stringToAdd.length) !== stringToAdd) {
