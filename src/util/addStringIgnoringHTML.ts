@@ -28,7 +28,7 @@ function addStringIgnoringHTML(
 	checkErrorCases(position, basisString);
 
 	// Smallest numbers first
-	const sortedPositionArray = position.sort((p1, p2) => p1 - p2);
+	let sortedPositionArray = position.sort((p1, p2) => p1 - p2);
 
 	// Will be in the order of the index number. Smaller index first
 	const htmlTags: Array<[number, string]> = [];
@@ -41,14 +41,13 @@ function addStringIgnoringHTML(
 	let firstTag: [number, string] | undefined;
 
 	while ( firstTag = htmlTags.shift() ) {
-
 		const spanishInquisition: boolean = !firstTag;
 		if (spanishInquisition) {
 			throw new Error("Unexpected Spanish Inquisition.");
 		}
 
-		sortedPositionArray.map((indexForInsertion: number) => {
-			if (firstTag![0] > indexForInsertion) {
+		sortedPositionArray = sortedPositionArray.map((indexForInsertion: number) => {
+			if (firstTag![0] >= indexForInsertion) {
 				return indexForInsertion;
 			}
 
