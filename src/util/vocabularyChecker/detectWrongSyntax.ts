@@ -2,7 +2,7 @@ import Issue from "../issueHandling/issue";
 import { addIssue } from "../issueHandling/issueMapping";
 import issueJson from "../issueHandling/knownIssues.json";
 import json from "./allowedVocab.json";
-import uniqueValues from "./Iterators";
+import uniqueValues from "./iterators";
 
 /**
  * Regular expression that looks for any and all words. A word is defined as some sequence of
@@ -15,10 +15,14 @@ export const anyWord = new RegExp(/\b\w+\b/g);
 const allowedWords = json;
 export interface Position { fromIndex: number; toIndex: number; }
 
-export function collectInvalidWordsInIssues(text: string) {
+/**
+ * Adds an Issue for every invalid word.
+ * @param text the userinput
+ */
+export function collectInvalidWordsInIssues(text: string): void {
 	const invalidWords = getInvalidWords(text);
 	for (const word of invalidWords) {
-		if (!(allowedWords.includes(word.toLowerCase()))) {
+		if ((!(allowedWords.includes(word.toLowerCase())))) {
 			const allPositionsOfInvalidWord = getPositionsOfInvalidWord(word, text);
 			for (const pos of allPositionsOfInvalidWord) {
 				addIssue("INVALID_WORD", pos, {word});
@@ -27,12 +31,18 @@ export function collectInvalidWordsInIssues(text: string) {
 	}
 }
 
-export function getPositionsOfInvalidWord(invalidWord: string, text: string): Position[] {
+/**
+ * Creates a Array of each occurence of a given word in a text.
+ * @param invalidWord - A word that is not listed in allowedVocab.json
+ * @param text - the userinput
+ */
+function getPositionsOfInvalidWord(invalidWord: string, text: string): Position[] {
 	const result: Position[] = [];
 	let offSet: number = 0;
 
 	let foundIndex: number;
-	while ((foundIndex = text.indexOf(invalidWord, offSet)) !== -1) {
+	text = " " + text + " ";
+	while ((foundIndex = text.indexOf(" " + invalidWord + " ", offSet)) !== -1) {
 	console.log(foundIndex);
 	offSet = foundIndex + 1;
 	result.push({
@@ -44,8 +54,7 @@ export function getPositionsOfInvalidWord(invalidWord: string, text: string): Po
 }
 
 /**
- * Bundling the functionalities of @function collectAllInvalidWords and
- * @function removeDuplicates.
+ * Bundling the functionalities of @function collectAllInvalidWords and @function removeDuplicates.
  * @returns a Stringarray containing exactly one copy of each wrong word in a text.
  */
 export function getInvalidWords(text: string): string[] {
@@ -53,9 +62,10 @@ export function getInvalidWords(text: string): string[] {
 }
 
 /**
- * @returns a Stringarray containing every occurrence of each wrong word in a text.
+ * Collects all words that are invalid.
+ * @param text - the userinput
  */
-export function collectAllInvalidWords(text: string): string[] {
+function collectAllInvalidWords(text: string): string[] {
 	const words = text.match(anyWord) || [];
 	return words.filter(word => !(allowedWords.includes(word.toLowerCase())));
 }
@@ -72,10 +82,15 @@ export function logMultipleWords(words: string[], positions: Position[]): Issue[
 	return words.map(word => logMultipleOccurences(word, positions));
 }
 
-export function logMultipleOccurences(word: string, position: Position[]): Issue[] {
+function logMultipleOccurences(word: string, position: Position[]): Issue[] {
 	return position.map(pos => logSingleWord(word, pos));
 }
 
+/**
+ * Creates an Issue of one word.
+ * @param word - a word that is invalid
+ * @param position - the position of the word
+ */
 export function logSingleWord(word: string, position: Position): Issue {
 	return {
 		message: `${word} von Stelle ${position.fromIndex} bis ${position.toIndex} ist ein unerlaubtes Wort! \n`,
