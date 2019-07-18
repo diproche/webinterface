@@ -22,7 +22,7 @@ export interface Position { fromIndex: number; toIndex: number; }
 export function collectInvalidWordsInIssues(text: string): void {
 	const invalidWords = getInvalidWords(text);
 	for (const word of invalidWords) {
-		if (!(allowedWords.includes(word.toLowerCase()))) {
+		if ((!(allowedWords.includes(word.toLowerCase())))) {
 			const allPositionsOfInvalidWord = getPositionsOfInvalidWord(word, text);
 			for (const pos of allPositionsOfInvalidWord) {
 				addIssue("INVALID_WORD", pos, {word});
@@ -41,7 +41,8 @@ function getPositionsOfInvalidWord(invalidWord: string, text: string): Position[
 	let offSet: number = 0;
 
 	let foundIndex: number;
-	while ((foundIndex = text.indexOf(invalidWord, offSet)) !== -1) {
+	text = " " + text + " ";
+	while ((foundIndex = text.indexOf(" " + invalidWord + " ", offSet)) !== -1) {
 	console.log(foundIndex);
 	offSet = foundIndex + 1;
 	result.push({
