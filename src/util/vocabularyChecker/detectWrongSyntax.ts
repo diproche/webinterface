@@ -54,7 +54,7 @@ function getPositionsOfInvalidWord(invalidWord: string, text: string): Position[
 }
 
 /**
- * Bundling the functionalities of @function collectAllInvalidWords and @function removeDuplicates.
+ * Bundling the functionalities of collectAllInvalidWords and removeDuplicates.
  * @returns a Stringarray containing exactly one copy of each wrong word in a text.
  */
 export function getInvalidWords(text: string): string[] {
