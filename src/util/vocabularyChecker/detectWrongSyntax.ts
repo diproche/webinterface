@@ -17,12 +17,12 @@ export interface Position { fromIndex: number; toIndex: number; }
 
 /**
  * Adds an Issue for every invalid word.
- * @param text the userinput
+ * @param text the user-input
  */
 export function collectInvalidWordsInIssues(text: string): void {
 	const invalidWords = getInvalidWords(text);
 	for (const word of invalidWords) {
-		if ((!(allowedWords.includes(word.toLowerCase())))) {
+		if (!(allowedWords.includes(word.toLowerCase()))) {
 			const allPositionsOfInvalidWord = getPositionsOfInvalidWord(word, text);
 			for (const pos of allPositionsOfInvalidWord) {
 				addIssue("INVALID_WORD", pos, {word});
