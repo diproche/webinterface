@@ -139,13 +139,25 @@ table {
 	width: 100%;
   }
   
-  th, td {
+  th {
 	padding: 8px;
 	text-align: left;
 	border-bottom: 1px solid #ddd;
   }
+
+  td {
+	padding: 8px;
+	text-align: left;
+	border-bottom: 1px solid #ddd;
+  }
+
+ .element {
+	color: rgb(255, 255, 255);
+ }
   
-  tr:hover {background-color:#fc0000;
+ td.element:hover {
+	  background-color:#b0b8fc;
+	  color: rgb(0, 0, 0);
 }
 
 
