@@ -17,15 +17,15 @@ class ExamplesPropositionalLogic extends React.Component {
 					</tr>
 					<tr>
 						<td>Es seien a, b und c Aussagen.</td>
-						<td>Vorraussetzung </td>
+						<td className={styles.element}> Allgemeine Vorraussetzung</td>
 					</tr>
 					<tr>
 						<td>Angenommen a ->(b -> c).</td>
-						<td>Vorraussetzung </td>
+						<td className={styles.element}>Vorraussetzung: Die Prämisse a -> (b -> c) ist wahr. </td>
 					</tr>
 					<tr>
 						<td>Angenommen ferner es gilt (a und b).</td>
-						<td>Vorraussetzung </td>
+						<td className={styles.element}>Vorraussetzung: (a und b) ist wahr.</td>
 					</tr>
 					<tr>
 						<td>Dann folgt a.</td>
