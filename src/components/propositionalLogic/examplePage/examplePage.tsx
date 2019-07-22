@@ -18,11 +18,88 @@ class ExamplesPropositionalLogic extends React.Component {
 
 			</div>
 			<div className={styles.proofEditor}>
-			<p id="exampleDescription"></p>
+				<p id="exampleDescription">Beispiel Nummer 1</p>
+				<table id="exampleDescription">
+
+					<tr>
+						<th>Aufgabenstellung</th>
+						<td>Erklärung</td>
+
+					</tr>
+					<tr>
+						<td>Es seien a, b und c Aussagen.</td>
+						<td></td>
+
+					</tr>
+					<tr>
+						<td>Angenommen a ->(b -> c)</td>
+						<td></td>
+
+					</tr>
+					<tr>
+						<td>Angenommen ferner es gilt (a und b)</td>
+						<td></td>
+					</tr>
+					<tr>
+						<th>Beweis</th>
+						<th></th>
+					</tr>
+					<tr>
+						<td>Dann folgt a.</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Ausserdem folgt b.</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Damit gilt (b -> c).</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td>Ferner folgt c.</td>
+						<td></td>
+					</tr>
+					<tr>
+						<th>Ziel</th>
+						<th></th>
+					</tr>
+					<tr>
+						<td>Also gilt $a -> (b -> c) -> (a und b) -> c$.</td>
+						<td>Dies soll bewiesen werden!</td>
+					</tr>
+					<tr id="exampleDescription">
+						<td ></td>
+						<td>Griffin</td>
+
+					</tr>
+					<tr>
+						<td><p id="exampleContent"></p></td>
+						<td><button className={styles.buttons}
+							onClick={this.button}>
+							BING
+					</button>
+						</td>
+						<td><button className={styles.buttons}
+							onClick={this.button}>
+							BING
+					</button>
+						</td>
+
+					</tr>
+					<tr>
+						<td><p id="exampleConclusion">TEST</p></td>
+						<td>Swanson</td>
+
+					</tr>
+
+				</table>
+				<p id="exampleDescription"></p>
 				<p id="exampleContent"></p>
-			<p id="exampleConclusion"></p>
+				<p id="exampleConclusion"></p>
+
 			</div>
-		</div>;
+		</div >;
 	}
 
 	private button = async (): Promise<void> => {

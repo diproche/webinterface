@@ -85,7 +85,7 @@
   .site {
 	position: absolute;
 	left: 160px;
-	width: calc(100% - 100px);
+	width: calc(100% - 160px);
 	padding: 20px;
   }
 
@@ -132,3 +132,22 @@
 	text-align: center;
 	margin: 30px;
 }
+
+//table styles for example page
+table {
+	border-collapse: collapse;
+	width: 100%;
+  }
+  
+  th, td {
+	padding: 8px;
+	text-align: left;
+	border-bottom: 1px solid #ddd;
+  }
+  
+  tr:hover {background-color:#fc0000;
+}
+
+
+.ersterContainer, .zweiterContainer 
+{ display:none; }
