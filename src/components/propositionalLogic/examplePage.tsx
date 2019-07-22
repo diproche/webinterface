@@ -6,14 +6,22 @@ class ExamplesPropositionalLogic extends React.Component {
 	public render() {
 		return <div className={styles.site}>
 			<div className={styles.proofEditor}>
-				<table>
+				<p><button className={styles.buttons}
+					onClick={this.showElement}>
+					Beispiel 1
+						</button></p>
+				<table className={styles.toggleTable} id="toggleTable">
 					<tr>
-						<th>Beispiel 1:</th>
+						<th>Eingabe</th>
 						<th>Erklärung</th>
 					</tr>
 					<tr>
 						<td>Zu zeigen: a -> (b -> c) -> (a und b) -> c.</td>
 						<td>Dies soll bewiesen werden. </td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
 					</tr>
 					<tr>
 						<td>Es seien a, b und c Aussagen.</td>
@@ -45,13 +53,25 @@ class ExamplesPropositionalLogic extends React.Component {
 						<td className={styles.element}> Die Konlusion c gilt, da die Prämissen a, sowie (a und b) beide gelten. </td>
 					</tr>
 					<tr>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
 						<td>Also gilt a -> (b -> c) -> (a und b) -> c.</td>
 						<td>qed </td>
 					</tr>
 				</table>
+
 			</div>
 
 		</div >;
+	}
+
+	private showElement = async (): Promise<void> => {
+		const myComponent = document.getElementById("toggleTable");
+		if (myComponent !== null) {
+			myComponent.style.display = "block";
+		}
 	}
 }
 

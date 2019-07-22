@@ -100,7 +100,7 @@
 	box-shadow: 0px 2px 4px 0px rgba(7, 62, 139, 0.500);
 	font-size: 20px;
 	text-align: center;
-	margin: 1rem auto 0 auto;
+	margin: left;
 }
 .buttons:hover {
 	display: block;
@@ -111,7 +111,7 @@
 	box-shadow: 0px 10px 20px 0px rgba(7, 62, 139, 0.500);
 	font-size: 20px;
 	text-align: center;
-	margin: 1rem auto 0 auto;
+	margin: left;
   }
 
 
@@ -138,6 +138,10 @@ table {
 	border-collapse: collapse;
 	width: 100%;
   }
+
+.toggleTable {
+	display: none;
+}
   
   th {
 	padding: 8px;
@@ -162,7 +166,3 @@ table {
 	  background-color:#b0b8fc;
 	  color: rgb(0, 0, 0);
 }
-
-
-.ersterContainer, .zweiterContainer 
-{ display:none; }
