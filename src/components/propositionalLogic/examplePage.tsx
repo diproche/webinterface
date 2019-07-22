@@ -6,10 +6,9 @@ class ExamplesPropositionalLogic extends React.Component {
 	public render() {
 		return <div className={styles.site}>
 			<div className={styles.proofEditor}>
-				<p>Beispiel 1:</p>
 				<table>
 					<tr>
-						<th>Aufgabenstellung</th>
+						<th>Beispiel 1:</th>
 						<th>Erklärung</th>
 					</tr>
 					<tr>
