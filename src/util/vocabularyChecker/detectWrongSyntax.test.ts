@@ -125,10 +125,11 @@ describe("CollectAllInvalidWordsInIssues", () => {
 		]);
 	});
 
-	it("Creates a correct Issue-array for a word consisting only of a Whitespace", () => {
+	it("Empties the issue-list correctly", () => {
 		emptyIssueList();
 		expect(listAllIssues()).toEqual([]);
 	});
+
 	it("Creates a correct Issue-array for two copies of the same wrong word", () => {
 		collectInvalidWordsInIssues("Sonne und Sonne");
 		expect(listAllIssues()).toEqual([
