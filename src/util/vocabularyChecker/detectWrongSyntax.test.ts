@@ -125,8 +125,56 @@ describe("CollectAllInvalidWordsInIssues", () => {
 		]);
 	});
 
-	it("Creates a correct Issue-array for a word consisting only of a Whitespace", () => {
+	it("Empties the issue-list correctly", () => {
 		emptyIssueList();
 		expect(listAllIssues()).toEqual([]);
+	});
+
+	it("Creates a correct Issue-array for two copies of the same wrong word", () => {
+		collectInvalidWordsInIssues("Sonne und Sonne");
+		expect(listAllIssues()).toEqual([
+			{
+				code: "INVALID_WORD",
+				message: "Das Wort 'Sonne' in der Eingabe ist nicht erlaubt.",
+				position: {
+					fromIndex: 0,
+					toIndex: 5,
+				},
+				severity: issueJson.INVALID_WORD.severity,
+			},
+			{
+				code: "INVALID_WORD",
+				message: "Das Wort 'Sonne' in der Eingabe ist nicht erlaubt.",
+				position: {
+					fromIndex: 10,
+					toIndex: 15,
+				},
+				severity: issueJson.INVALID_WORD.severity,
+			},
+		]);
+		emptyIssueList();
+	});
+	it("Does not create unneccessary issues when a wrong word is a substring of another wrong word", () => {
+		collectInvalidWordsInIssues("ff ffff");
+		expect(listAllIssues()).toEqual([
+			{
+				code: "INVALID_WORD",
+				message: "Das Wort 'ff' in der Eingabe ist nicht erlaubt.",
+				position: {
+					fromIndex: 0,
+					toIndex: 2,
+				},
+				severity: issueJson.INVALID_WORD.severity,
+			},
+			{
+				code: "INVALID_WORD",
+				message: "Das Wort 'ffff' in der Eingabe ist nicht erlaubt.",
+				position: {
+					fromIndex: 3,
+					toIndex: 7,
+				},
+				severity: issueJson.INVALID_WORD.severity,
+			},
+		]);
 	});
 });
