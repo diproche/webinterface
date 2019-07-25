@@ -13,11 +13,11 @@ class ExamplesPropositionalLogic extends React.Component {
 				<table className={styles.toggleTable} id="toggleTable">
 					<tr>
 						<th>Eingabe</th>
-						<th>Erklärung</th>
+						<th>Erklärung (mit der Maus drüberfahren zum anzeigen)</th>
 					</tr>
 					<tr>
-						<td>Zu zeigen: a -> (b -> c) -> (a und b) -> c.</td>
-						<td>Dies soll bewiesen werden. </td>
+						<th>Zu zeigen: a -> (b -> c) -> (a und b) -> c.</th>
+						<th>Dies soll bewiesen werden. </th>
 					</tr>
 					<tr>
 						<td></td>
@@ -28,11 +28,11 @@ class ExamplesPropositionalLogic extends React.Component {
 						<td className={styles.element}> Allgemeine Vorraussetzung</td>
 					</tr>
 					<tr>
-						<td>Angenommen a ->(b -> c).</td>
+						<td>Angenommen $a ->(b -> c)$.</td>
 						<td className={styles.element}>Vorraussetzung: Die Prämisse a -> (b -> c) ist wahr. </td>
 					</tr>
 					<tr>
-						<td>Angenommen ferner es gilt (a und b).</td>
+						<td>Angenommen ferner es gilt $(a und b)$.</td>
 						<td className={styles.element}>Vorraussetzung: (a und b) ist wahr.</td>
 					</tr>
 					<tr>
@@ -44,7 +44,7 @@ class ExamplesPropositionalLogic extends React.Component {
 						<td className={styles.element}>b folgt, da (a und b) nur dann wahr ist, wenn b wahr ist. </td>
 					</tr>
 					<tr>
-						<td>Damit gilt (b -> c).</td>
+						<td>Damit gilt $(b -> c)$.</td>
 						<td className={styles.element}> Die Konlusion (b -> c) gilt, da die Prämissen a,
 						sowie (a und b) beide gelten.</td>
 					</tr>
@@ -57,7 +57,7 @@ class ExamplesPropositionalLogic extends React.Component {
 						<td></td>
 					</tr>
 					<tr>
-						<td>Also gilt a -> (b -> c) -> (a und b) -> c.</td>
+						<td>Also gilt $a -> (b -> c) -> (a und b) -> c$.</td>
 						<td>qed </td>
 					</tr>
 				</table>
