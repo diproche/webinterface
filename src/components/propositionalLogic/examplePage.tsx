@@ -16,7 +16,7 @@ class ExamplesPropositionalLogic extends React.Component {
 						<th>Erklärung (mit der Maus drüberfahren zum anzeigen)</th>
 					</tr>
 					<tr>
-						<th>Zu zeigen: a -> (b -> c) -> (a und b) -> c.</th>
+						<th>Wir zeigen: a -> (b -> c) -> (a und b) -> c.</th>
 						<th>Dies soll bewiesen werden. </th>
 					</tr>
 					<tr>
