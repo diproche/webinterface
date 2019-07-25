@@ -34,7 +34,6 @@ export function textFormatter(input: string): string {
 			if (formattedSentence.match(Regexes.wordEndsWithComma)) {
 				formattedSentence = formattedSentence.slice(0, formattedSentence.length - 1);
 			}
-			//formattedSentence = formattedSentence + "eeeeee";
 			formattedText.push([formattedSentence]);
 		} else if (element.match(Regexes.wordMarker)) {
 			const ListOfWords: string = sentenceIntoWordList(element.trim());
