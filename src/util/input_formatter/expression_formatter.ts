@@ -7,11 +7,27 @@ import { allowedExpressionToken, bracket, logicConnector, Regexes } from "./rege
  * @return a formatted expression as string[];
  * each element of the expression gets formatted into prolog readable code
  */
-export function expressionFormatter(expression: string, expressionPosition: number): string[] {
+export function expressionFormatter(expression: string, expressionPosition: number): string {
 	const preFormattedExpression: string[] = preFormatExpressionFromImput(expression);
 	expressionIssueDetector(preFormattedExpression, expressionPosition);
 	const finalFormattedExpression: string[] = replaceExpressionElementsIntoPrologCode(preFormattedExpression);
-	return finalFormattedExpression;
+	let finalFormattedExpressionString = "[";
+	finalFormattedExpression.forEach(element => {
+		if (element.match(Regexes.bracketLeft)) {
+			finalFormattedExpressionString = finalFormattedExpressionString + element;
+		} else if (element.match(Regexes.bracketRight)) {
+			finalFormattedExpressionString = finalFormattedExpressionString.slice(0, finalFormattedExpressionString.length - 1);
+			finalFormattedExpressionString = finalFormattedExpressionString + element + ",";
+		} else {
+			finalFormattedExpressionString = finalFormattedExpressionString + element + ",";
+		}
+
+	});
+	if (finalFormattedExpressionString.match(Regexes.wordEndsWithComma)) {
+		finalFormattedExpressionString = finalFormattedExpressionString.slice(0, finalFormattedExpressionString.length - 1);
+	}
+	finalFormattedExpressionString = finalFormattedExpressionString + "]";
+	return finalFormattedExpressionString;
 }
 
 /**
