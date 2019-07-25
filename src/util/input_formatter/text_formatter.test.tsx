@@ -36,7 +36,7 @@ test("Test if the elements of a expression is detected and preformatted correctl
 		"[ausserdem,folgt,b]," +
 		"[damit,gilt,[[b,->,c]]]," +
 		"[ferner,folgt,c]," +
-		"[also,gilt,[a,->,[b,->,c],->,[a,and,b],->,c]]].";
+		"[also,gilt,[a,->,[b,->,c],->,[a,and,b],->,c]]]";
 	expect(result).toEqual(expectedResult);
 });
 
