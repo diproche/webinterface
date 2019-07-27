@@ -21,16 +21,18 @@ class ProofEditor extends React.Component<{}, State> {
 		issues: [],
 	};
 
-	private proofEditor = React.createRef<HTMLDivElement>();
+	private innerProofEditor = React.createRef<HTMLDivElement>();
+	private outerProofEditor = React.createRef<ContentEditable>();
 
 	public render() {
 
 		return <div className={styles.proofEditor}>
 			<ContentEditable
 				className={styles.textInput}
-				innerRef={this.proofEditor}
+				ref={this.outerProofEditor}
+				innerRef={this.innerProofEditor}
 				html={this.state.proofEditorHTML}
-				onChange={(event: any) => this.inputChangeHandler(event)}
+				onKeyDown={(event: React.KeyboardEvent<ContentEditable>) => this.keyPressHandler(event)}
 			/>
 			<button className={styles.buttons}
 				onClick={this.checkInput}>
@@ -40,17 +42,22 @@ class ProofEditor extends React.Component<{}, State> {
 				{this.state.issues.map((issue: Issue) => {
 					return <IssueInformation
 						issue={issue} />;
-
 				})}
 			</div>
 		</div>;
 
 	}
 
-	private inputChangeHandler(event: any): void {
+	private keyPressHandler(event: React.KeyboardEvent<ContentEditable>): void {
+
+		if (event.key !== " ") {
+			return;
+		}
+
 		const proofEditorText = this.getInputText();
 		const issues = checkProofWithoutDiproche(proofEditorText);
-		let proofEditorHTML: string = event.target.value;
+		const outerProofEditor: ContentEditable = this.outerProofEditor.current!;
+		let proofEditorHTML: string = outerProofEditor.lastHtml;
 
 		const issueFromIndeces: number[] = [];
 		const issueToIndeces: number[] = [];
@@ -61,8 +68,8 @@ class ProofEditor extends React.Component<{}, State> {
 			}
 		});
 
-		proofEditorHTML = addStringIgnoringHTML(this.state.proofEditorHTML, "<mark>", issueFromIndeces);
-		proofEditorHTML = addStringIgnoringHTML(proofEditorHTML, "</mark>", issueToIndeces);
+		proofEditorHTML = addStringIgnoringHTML(proofEditorHTML, "<mark>", issueFromIndeces, false);
+		proofEditorHTML = addStringIgnoringHTML(proofEditorHTML, "</mark>", issueToIndeces, false);
 
 		this.setState({proofEditorHTML, issues});
 		}
@@ -74,7 +81,7 @@ class ProofEditor extends React.Component<{}, State> {
 	}
 
 	private getInputText(): string {
-		const proofEditorRef = this.proofEditor.current;
+		const proofEditorRef = this.innerProofEditor.current;
 		if (!proofEditorRef) {
 			return "";
 		}
