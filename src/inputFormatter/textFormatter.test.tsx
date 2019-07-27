@@ -1,4 +1,4 @@
-import { emptyIssueList, listAllIssues } from "../issueHandling/issueMapping";
+import { emptyIssueList, listAllIssues } from "../util/issueHandling/issueMapping";
 import {
 	detectBracketIssues,
 	expressionIssueDetector,
