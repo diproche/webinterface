@@ -17,7 +17,7 @@ export interface Position { fromIndex: number; toIndex: number; }
 
 /**
  * Adds an Issue for every invalid word.
- * @param text the userinput
+ * @param text the user-input
  */
 export function collectInvalidWordsInIssues(text: string): void {
 	const invalidWords = getInvalidWords(text);
@@ -41,7 +41,8 @@ function getPositionsOfInvalidWord(invalidWord: string, text: string): Position[
 	let offSet: number = 0;
 
 	let foundIndex: number;
-	while ((foundIndex = text.indexOf(invalidWord, offSet)) !== -1) {
+	text = " " + text + " ";
+	while ((foundIndex = text.indexOf(" " + invalidWord + " ", offSet)) !== -1) {
 	console.log(foundIndex);
 	offSet = foundIndex + 1;
 	result.push({
@@ -53,7 +54,7 @@ function getPositionsOfInvalidWord(invalidWord: string, text: string): Position[
 }
 
 /**
- * Bundling the functionalities of @function collectAllInvalidWords and @function removeDuplicates.
+ * Bundling the functionalities of collectAllInvalidWords and removeDuplicates.
  * @returns a Stringarray containing exactly one copy of each wrong word in a text.
  */
 export function getInvalidWords(text: string): string[] {

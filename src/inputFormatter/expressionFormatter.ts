@@ -1,4 +1,4 @@
-import { addIssue } from "../issueHandling/issueMapping";
+import { addIssue } from "../util/issueHandling/issueMapping";
 import { allowedExpressionToken, bracket, logicConnector, Regexes } from "./regexes";
 
 /**

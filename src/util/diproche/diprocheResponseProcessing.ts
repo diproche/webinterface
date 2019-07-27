@@ -1,5 +1,5 @@
 import * as _ from "lodash";
-import {addIssue} from "../../issueHandling/issueMapping";
+import { addIssue } from "../issueHandling/issueMapping";
 
 /**
  * collects the response from Diproche
@@ -31,7 +31,7 @@ function convertErrorListStringToJSArray(listAsString: string): number[][] {
 
 		const innerArray: string[] | undefined = innerString.split(",");
 
-		if ( !innerArray || _.isEqual(innerArray, new Array("")) ) {
+		if (!innerArray || _.isEqual(innerArray, new Array(""))) {
 			jsArray.push(new Array());
 		} else {
 			innerArray.forEach((element: string) => jsArray.push([parseInt(element, 10)]));
@@ -44,10 +44,10 @@ function convertErrorListStringToJSArray(listAsString: string): number[][] {
 function getErrorList(diprocheResponse: string): string {
 	const fetchErrorListRegExp = /List of Lists with unverified Input: ([^$]*)/;
 	const ErrorList: RegExpExecArray | null = fetchErrorListRegExp.exec(diprocheResponse);
- if (ErrorList) {
-	return ErrorList[1];
- }
+	if (ErrorList) {
+		return ErrorList[1];
+	}
 
- throw new Error("No error list found in the reponse from diproche.");
+	throw new Error("No error list found in the reponse from diproche.");
 
 }

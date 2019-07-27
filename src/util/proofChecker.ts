@@ -1,6 +1,6 @@
-import Issue from "../issueHandling/issue";
-import { emptyIssueList, listAllIssues } from "../issueHandling/issueMapping";
 import { createErrors } from "./diproche/diprocheInterface";
+import Issue from "./issueHandling/issue";
+import { emptyIssueList, listAllIssues } from "./issueHandling/issueMapping";
 
 // Ordered by their degree of fatality
 const severities: string[] = ["FATALERROR", "ERROR", "WARNING", "HINT"];
