@@ -3,5 +3,5 @@
  * @param values - some iterable in which duplicates should be removed
  */
 export default function uniqueValues<T>(values: Iterable<T>): Iterable<T> {
-		return new Set(values);
-	}
+    return new Set(values);
+}
