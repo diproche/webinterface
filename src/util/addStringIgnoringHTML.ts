@@ -41,11 +41,6 @@ function addStringIgnoringHTML(
 	let firstTag: [number, string] | undefined;
 
 	while ( firstTag = htmlTags.shift() ) {
-		const spanishInquisition: boolean = !firstTag;
-		if (spanishInquisition) {
-			throw new Error("Unexpected Spanish Inquisition.");
-		}
-
 		sortedPositionArray = sortedPositionArray.map((indexForInsertion: number) => {
 			if (firstTag![0] >= indexForInsertion) {
 				return indexForInsertion;
