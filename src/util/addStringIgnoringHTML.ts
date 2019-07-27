@@ -55,6 +55,29 @@ function addStringIgnoringHTML(
 		});
 	}
 
+	// If being inserted before an opening tag it will move it after the opening tag
+	sortedPositionArray = sortedPositionArray.map((indexForInsertion: number) => {
+		const stringAfterPosition: string = copiedBasisString.substr(indexForInsertion);
+		const htmlTagArray: string[] | null = stringAfterPosition.match(openingHTMLTagRegExp);
+		if (!htmlTagArray) {
+			return indexForInsertion;
+		}
+		// Adding the length of the tag to make the position go after the tag
+		return indexForInsertion + htmlTagArray[0].length;
+
+	});
+
+	// If being inserted after an ending tag it will move it in front of the ending tags
+	sortedPositionArray = sortedPositionArray.map((indexForInsertion: number) => {
+		const stringBeforePosition: string = copiedBasisString.substr(0, indexForInsertion);
+		const htmlTagArray: string[] | null = stringBeforePosition.match(endingHTMLTagRegExp);
+		if (!htmlTagArray) {
+			return indexForInsertion;
+		}
+		// Adding the length of the tag to make the position go after the tag
+		return indexForInsertion - htmlTagArray[0].length;
+	});
+
 	// Increasing the positions of the other indeces for previous insertions
 	sortedPositionArray = sortedPositionArray.map((indexForInsertion: number) => {
 			const previousInsertions: number[] = sortedPositionArray.filter((index: number) => index < indexForInsertion);
@@ -90,5 +113,6 @@ function insertAt(indexForInsertion: number, basisString: string, stringToAdd: s
 
 // Based on https://haacked.com/archive/2004/10/25/usingregularexpressionstomatchhtml.aspx/
 const htmlRegExp = /<\/?\w+(?:(?:\s+\w+(?:\s*=\s*(?:".*?"|'.*?'|\[\^'">\s\]+))?)+\s*|\s*)\/?>/ig;
-
+const openingHTMLTagRegExp = /^<\w+(?:(?:\s+\w+(?:\s*=\s*(?:".*?"|'.*?'|\[\^'">\s\]+))?)+\s*|\s*)>/i;
+const endingHTMLTagRegExp = /<\/\w+(?:(?:\s+\w+(?:\s*=\s*(?:".*?"|'.*?'|\[\^'">\s\]+))?)+\s*|\s*)>$/i;
 export default addStringIgnoringHTML;

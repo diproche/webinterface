@@ -60,18 +60,18 @@ describe("Limit Cases", () => {
 		expect(stringWithInsertion).toStrictEqual("This is a test");
 	});
 
-	test("If The Position Is At A Closing HTML Tag It Inserts Outside The HTML Tag", () => {
+	test("If The Position Is At A Closing HTML Tag It Inserts Inside The HTML Tag", () => {
 		const basisString: string = "This is <b>a</b>";
 		const stringToAdd: string = " test";
-		const stringWithInsertion: string = addStringIgnoringHTML(basisString, stringToAdd, basisString.length);
-		expect(stringWithInsertion).toStrictEqual("This is <b>a</b> test");
+		const stringWithInsertion: string = addStringIgnoringHTML(basisString, stringToAdd, 9);
+		expect(stringWithInsertion).toStrictEqual("This is <b>a test</b>");
 	});
 
 	test("If The Position Is At A Opening HTML Tag It Inserts Inside The HTML Tag", () => {
 		const basisString: string = "This <b>a</b> test";
 		const stringToAdd: string = "is ";
 		const stringWithInsertion: string = addStringIgnoringHTML(basisString, stringToAdd, 5);
-		expect(stringWithInsertion).toStrictEqual("This is <b>a</b> test");
+		expect(stringWithInsertion).toStrictEqual("This <b>is a</b> test");
 	});
 
 	test("< Doesn't Break It", () => {
@@ -89,6 +89,7 @@ describe("Limit Cases", () => {
 	});
 });
 
+// Change later should be basisString without tags
 describe("Error Cases", () => {
 	test("Position Is Larger than basisString.length", () => {
 		const basisString: string = "Four";
