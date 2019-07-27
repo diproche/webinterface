@@ -5,7 +5,7 @@ import {
 	preFormatExpressionFromImput,
 	replaceExpressionElementsIntoPrologCode,
 } from "./expressionFormatter";
-import { sentenceIntoWordList, textFormatter } from "./text_formatter";
+import { sentenceIntoWordList, textFormatter } from "./textFormatter";
 
 beforeEach(() => {
 	emptyIssueList();
