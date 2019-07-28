@@ -13,7 +13,30 @@ beforeEach(() => {
 
 test("splitting a single sentences into List of words: ", () => {
 	const result = sentenceIntoWordList("Hello, this is a test");
-	const expectedResult = ["Hello", "this", "is", "a", "test"];
+	const expectedResult = "Hello,this,is,a,test";
+	expect(result).toEqual(expectedResult);
+});
+
+test("Test if the elements of a expression is detected and preformatted correctly:", () => {
+	const result = textFormatter(
+		"Es seien a, b und c Aussagen." +
+		"Angenommen $a ->(b -> c)$." +
+		"Angenommen ferner es gilt $(a und b)$." +
+		"Dann folgt a." +
+		"Ausserdem folgt b." +
+		"Damit gilt $(b -> c)$." +
+		"Ferner folgt c." +
+		"Also gilt $a -> (b -> c) -> (a und b) -> c$.",
+	);
+	const expectedResult =
+		"[[es,seien,a,b,und,c,aussagen]," +
+		"[angenommen,[a,->,[b,->,c]]]," +
+		"[angenommen,ferner,es,gilt,[[a,and,b]]]," +
+		"[dann,folgt,a]," +
+		"[ausserdem,folgt,b]," +
+		"[damit,gilt,[[b,->,c]]]," +
+		"[ferner,folgt,c]," +
+		"[also,gilt,[a,->,[b,->,c],->,[a,and,b],->,c]]]";
 	expect(result).toEqual(expectedResult);
 });
 
@@ -91,26 +114,26 @@ test("replace detected expression-elements into readable prolog commands", () =>
 });
 
 test("expression formatter testcase", () => {
-	const result: string = textFormatter("Just another test $a .and a$.. test $test2$$test3$");
-	const expectedResult = "[[just,another,test],[a .,and,a],[test],[test2],[test3]]";
+	const result: string = textFormatter("Just another test $(a and a)$. test $test2$.$test3$.");
+	const expectedResult = "[[just,another,test,[[a,and,a]]],[test,[test2]],[[test3]]]";
 	expect(result).toEqual(expectedResult);
 });
 
 test("expression formatter testcase", () => {
-	const result: string = textFormatter("Es gilt: $((a&b)<->(b&a))$");
-	const expectedResult = "[[es,gilt],[[[a,and,b],<->,[b,and,a]]]]";
+	const result: string = textFormatter("Es gilt $((a&b)<->(b&a))$");
+	const expectedResult = "[[es,gilt,[[[a,and,b],<->,[b,and,a]]]]]";
 	expect(result).toEqual(expectedResult);
 });
 
 test("splitting full text into readable prolog format including formatted expressions and paragraph marker: ", () => {
 	const result = textFormatter(
-		"Hello, this is a test! Is it Working? I     hope so. \n Paragraphs are marked with an " +
-		"abs List: \n \n \n Here is also an expression: $[AUNDbracketLEFTB<-->]-> D ODERNOT E]$ " +
-		"And a second one: $[5 ADD 12 equal 3 mal 5 plus 2]$");
-	const expectedResult = "[[hello,this,is,a,test],[is,it,working]," +
+		"Hello, this is a test! => Is it Working? <= I     hope so. \n Paragraphs are marked with an " +
+		"abs List \n \n \n Here is also an expression $[AUNDbracketLEFTB<-->]-> D ODERNOT E]$. " +
+		"And a second one $[5 ADD 12 equal 3 mal 5 plus 2]$");
+	const expectedResult = "[[hello,this,is,a,test],[=>],[is,it,working],[<=]," +
 		"[i,hope,so],[abs],[paragraphs,are,marked,with,an,abs,list]," +
-		"[abs],[abs],[abs],[here,is,also,an,expression],[[a,and,[b,<->],->," +
-		"d,or,neg,e]],[and,a,second,one],[[5,+,12,=,3,*,5,+,2]]]";
+		"[abs],[abs],[abs],[here,is,also,an,expression,[[a,and,[b,<->],->," +
+		"d,or,neg,e]]],[and,a,second,one,[[5,+,12,=,3,*,5,+,2]]]]";
 	expect(result).toEqual(expectedResult);
 	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
 	expect(issue).toEqual({
@@ -118,8 +141,8 @@ test("splitting full text into readable prolog format including formatted expres
 		message: "Es fehlt ein Argument.",
 		severity: "WARNING",
 		position: {
-			fromIndex: 150,
-			toIndex: 150,
+			fromIndex: 126,
+			toIndex: 126,
 		},
 	});
 
