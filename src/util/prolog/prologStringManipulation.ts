@@ -2,6 +2,7 @@ import {fetchAllMatchesForAGroup} from "../regExpUtils";
 import builtInPredicates from "./builtInPredicates";
 
 /**
+	* Removes the file extension in a string
 	* @param path - The path of the prolog file to be curated
 	* @return The path without its extension (removing the last dot and everything after)
 	*/

@@ -15,9 +15,9 @@ export function expressionFormatter(expression: string, expressionPosition: numb
 }
 
 /**
- * @param expression written by user
- * @return a preformatted expression where some different
+ *  * Returns a preformatted expression where some different
  * input styles for logical vocabulary gets formatted into one single style
+ * @param expression written by user
  */
 export function preFormatExpressionFromImput(expression: string): string[] {
 	const splittedExpression: string[] = expression.split(allowedExpressionToken);
@@ -26,7 +26,7 @@ export function preFormatExpressionFromImput(expression: string): string[] {
 }
 
 /**
- * @return finalExpression where expression elements got replaced with readable prolog code elements
+ * Returns finalExpression where expression elements got replaced with readable prolog code elements
  */
 export function replaceExpressionElementsIntoPrologCode(preFormattedExpression: string[]): string[] {
 	const finalFormattedExpression: string[] = [];
@@ -70,6 +70,9 @@ export function replaceASingleExpressionElementIntoPrologCode(preformattedExpres
 		;
 }
 
+/**
+ * Detects issues with an expression
+ */
 export function expressionIssueDetector(preFormattedExpression: string[], expressionPosition: number) {
 	detectBracketIssues(preFormattedExpression, expressionPosition);
 	detectMissingStatementsOrConnector(preFormattedExpression, expressionPosition);
