@@ -1,4 +1,4 @@
-import { expressionFormatter } from "./expression_formatter";
+import { expressionFormatter } from "./expressionFormatter";
 import { Regexes } from "./regexes";
 
 /**
@@ -71,6 +71,9 @@ export function sentenceIntoWordList(input: string): string {
 	return listOfWordsString;
 }
 
+/**
+ * Returns a string which consists of the formatted text.
+ */
 export function formattedTextIntoString(formattedText: string[][]): string {
 	let output = "[";
 	formattedText.forEach(element => {

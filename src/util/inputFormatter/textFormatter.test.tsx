@@ -4,8 +4,8 @@ import {
 	expressionIssueDetector,
 	preFormatExpressionFromImput,
 	replaceExpressionElementsIntoPrologCode,
-} from "./expression_formatter";
-import { sentenceIntoWordList, textFormatter } from "./text_formatter";
+} from "./expressionFormatter";
+import { sentenceIntoWordList, textFormatter } from "./textFormatter";
 
 beforeEach(() => {
 	emptyIssueList();
