@@ -1,6 +1,10 @@
 import * as _ from "lodash";
 import { addIssue } from "../issueHandling/issueMapping";
 
+/**
+ * collects the response from Diproche
+ * @param diprocheResponse - a string containing the response from diproche within prolog
+ */
 export function addDiprocheIssues(diprocheResponse: string): void {
 	const errorList = convertErrorListStringToJSArray(getErrorList(diprocheResponse));
 	errorList[0].forEach((unverifiedLine: number) => {
