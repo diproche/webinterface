@@ -8,7 +8,11 @@
 		"@types/shortid": "0.0.29",
 		"bootstrap": "^4.3.1",
 		"jquery": "^3.4.1",
+<<<<<<< HEAD
 		"lodash": "^4.17.14",
+=======
+		"lodash": "^4.17.15",
+>>>>>>> master
 		"node-sass": "^4.12.0",
 		"react": "^16.8.6",
 		"react-bootstrap": "^1.0.0-beta.9",
