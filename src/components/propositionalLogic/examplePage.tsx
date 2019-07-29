@@ -26,7 +26,7 @@ class ExamplesPropositionalLogic extends React.Component<{}, State> {
 
 	public render() {
 		return <div className={styles.site}>
-			<table className={styles.toggleTable}>
+			<table>
 				<tbody>
 					<tr>
 						<th>Eingabe</th>
@@ -83,7 +83,7 @@ class ExamplesPropositionalLogic extends React.Component<{}, State> {
 		if (!this.state.proofPart[index][2]) {
 			const copy: Array<[string, string, boolean]> = this.state.proofPart;
 			copy[index][2] = true;
-			this.setState({proofPart: copy});
+			this.setState({ proofPart: copy });
 		}
 
 	}

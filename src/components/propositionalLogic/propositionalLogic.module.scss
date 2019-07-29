@@ -139,9 +139,6 @@ table {
 	width: 100%;
   }
 
-.toggleTable {
-}
-
   th {
 	padding: 8px;
 	text-align: left;
@@ -158,8 +155,14 @@ table {
 
 .clickToChange:hover {
 	cursor: pointer;
+	background-color:#b0b8fc;
 }
 
 .alreadyClicked:hover {
 	cursor: default;
+	background-color:rgb(106, 119, 236);
+}
+
+.alreadyClicked {
+	background-color:#8590f1;
 }
