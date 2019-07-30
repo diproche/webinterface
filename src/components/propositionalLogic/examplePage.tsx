@@ -1,5 +1,5 @@
 import React from "react";
-import exercises from "./example.json"
+import exercises from "./example.json";
 import styles from "./propositionalLogic.module.scss";
 
 const exampleProofList: Array<Array<[string, string, boolean]>> = [
