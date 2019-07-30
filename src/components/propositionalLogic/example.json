@@ -1,6 +1,6 @@
 {
     "example1": [
-        ["Aufgabe: Zeige a -> (b -> c) -> (a und b) -> c", "", true],
+        ["Aufgabe: Zeige a -> (b -> c) -> (a und b) -> c.", "", true],
         ["Wir zeigen: a -> (b -> c) -> (a und b) -> c.", "Dies soll bewiesen werden.", false],
 		["Es seien a, b und c Aussagen.", "Allgemeine Vorraussetzung", false],
 		["Angenommen $a ->(b -> c)$.", "Vorraussetzung: Die Prämisse a -> (b -> c) ist wahr.", false],
@@ -12,8 +12,39 @@
 		["Also gilt $a -> (b -> c) -> (a und b) -> c$.", "qed", false]
     ],
     "example2": [
-             
+        ["Aufgabe: Zeige (a ->  (a -> b) ) -> b.", "", true],
+        ["Wir zeigen: (a ->  (a -> b) ) -> b", "Dies soll bewiesen werden.", false],
+        ["Es seien a und b Aussagen.", "Allgemeine Voraussetzung", false],
+        ["Angenommen $a$.", "Voraussetzung: Die Prämisse a ist wahr.", false],
+        ["Angenommen ferner, es gilt $(a -> b)$", "Voraussetzung: (a -> b) ist wahr.", false],
+        ["Dann folgt b.", "Da nun alle Voraussetzungen von b erfüllt sind, ist b wahr.", false],
+        ["Also gilt (a ->  (a -> b) ) -> b.", "qed", false]
+    ],
+    "example3": [
+        ["Aufgabe: Zeige a ->  (a oder b).", "", true],
+        ["Wir zeigen: a ->  (a oder b)", "Dies soll bewiesen werden.", false],
+        ["Es seien a und b Aussagen.", "Allgemeine Voraussetzung", false],
+        ["Angenommen $a$.", "Voraussetzung: Die Prämisse a ist wahr.", false],
+        ["Dann folgt (a oder b)", "Wenn a wahr ist, ist auch (a oder b) wahr", false],
+        ["Also gilt (a ->  (a oder b) )", "qed", false]
+    ],
+    "example4": [
+        ["Aufgabe: Zeige (a und b) ->  (a -> b).", "", true],
+        ["Wir zeigen: (a und b) ->  (a -> b)", "Dies soll bewiesen werden.", false],
+        ["Es seien a und b Aussagen.", "Allgemeine Voraussetzung", false],
+        ["Angenommen $a und b$.", "Voraussetzung: Die Prämisse (a und b) ist wahr.", false],
+        ["Dann folgt a", "Wenn (a und b) wahr ist, ist auch a wahr", false],
+        ["Dann folgt auch b", "Wenn (a und b) wahr ist, ist auch b wahr", false],
+        ["Dann folgt a -> b", "Da die Prämisse und die Konklusion wahr sind, ist auch die ganze Implikation wahr.", false],
+        ["Also gilt (a und b) ->  (a -> b).", "qed", false]
+    ],
+    "example5": [
+        ["Aufgabe: Zeige (neg b und neg a) ->  (a -> b).", "", true],
+        ["Wir zeigen: (neg b und neg a) ->  (a -> b)", "Dies soll bewiesen werden.", false],
+        ["Es seien a und b Aussagen.", "Allgemeine Voraussetzung", false],
+        ["Angenommen $(neg b und neg a)$.", "Voraussetzung: Die Prämisse (neg b und neg a) ist wahr.", false],
+        ["Dann folgt neg a", "Wenn (neg a und neg b) wahr ist, ist auch neg a wahr", false],
+        ["Dann folgt a -> b", "Da die Prämisse falsch ist, ist die ganze Implikation wahr.", false],
+        ["Also gilt (neg b und neg a) ->  (a -> b).", "qed", false]
     ]
-
-
 }

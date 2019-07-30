@@ -16,41 +16,41 @@ const exampleProofList: Array<Array<[string, string, boolean]>> = [
 		[exercises.example1[9][0].toString(), exercises.example1[9][1].toString(), false],
 		],
 	[
-		["test1", "test1", false]],
+		[exercises.example2[0][0].toString(), exercises.example2[0][1].toString(), true],
+		[exercises.example2[1][0].toString(), exercises.example2[1][1].toString(), false],
+		[exercises.example2[2][0].toString(), exercises.example2[2][1].toString(), false],
+		[exercises.example2[3][0].toString(), exercises.example2[3][1].toString(), false],
+		[exercises.example2[4][0].toString(), exercises.example2[4][1].toString(), false],
+		[exercises.example2[5][0].toString(), exercises.example2[5][1].toString(), false],
+		[exercises.example2[6][0].toString(), exercises.example2[6][1].toString(), false],
+		],
 	[
-		["test2", "test2", false],
-		["test2", "test2", false]],
+		[exercises.example3[0][0].toString(), exercises.example3[0][1].toString(), true],
+		[exercises.example3[1][0].toString(), exercises.example3[1][1].toString(), false],
+		[exercises.example3[2][0].toString(), exercises.example3[2][1].toString(), false],
+		[exercises.example3[3][0].toString(), exercises.example3[3][1].toString(), false],
+		[exercises.example3[4][0].toString(), exercises.example3[4][1].toString(), false],
+		[exercises.example3[5][0].toString(), exercises.example3[5][1].toString(), false],
+		],
 	[
-		["test3", "test3", false],
-		["test3", "test3", false],
-		["test3", "test3", false]],
+		[exercises.example4[0][0].toString(), exercises.example4[0][1].toString(), true],
+		[exercises.example4[1][0].toString(), exercises.example4[1][1].toString(), false],
+		[exercises.example4[2][0].toString(), exercises.example4[2][1].toString(), false],
+		[exercises.example4[3][0].toString(), exercises.example4[3][1].toString(), false],
+		[exercises.example4[4][0].toString(), exercises.example4[4][1].toString(), false],
+		[exercises.example4[5][0].toString(), exercises.example4[5][1].toString(), false],
+		[exercises.example4[6][0].toString(), exercises.example4[6][1].toString(), false],
+		[exercises.example4[7][0].toString(), exercises.example4[7][1].toString(), false],
+		],
 	[
-		["test4", "test4", false],
-		["test4", "test4", false],
-		["test4", "test4", false],
-		["test4", "test4", false]],
-	[
-		["test5", "test5", false],
-		["test5", "test5", false],
-		["test5", "test5", false],
-		["test5", "test5", false],
-		["test5", "test5", false]],
-	[
-		["test6", "test6", false],
-		["test6", "test6", false],
-		["test6", "test6", false],
-		["test6", "test6", false],
-		["test6", "test6", false],
-		["test6", "test6", false]],
-	[
-		["test7", "test7", false],
-		["test7", "test7", false],
-		["test7", "test7", false],
-		["test7", "test7", false],
-		["test7", "test7", false],
-		["test7", "test7", false],
-		["test7", "test7", false],
-		["test7", "test7", false]],
+		[exercises.example5[0][0].toString(), exercises.example5[0][1].toString(), true],
+		[exercises.example5[1][0].toString(), exercises.example5[1][1].toString(), false],
+		[exercises.example5[2][0].toString(), exercises.example5[2][1].toString(), false],
+		[exercises.example5[3][0].toString(), exercises.example5[3][1].toString(), false],
+		[exercises.example5[4][0].toString(), exercises.example5[4][1].toString(), false],
+		[exercises.example5[5][0].toString(), exercises.example5[5][1].toString(), false],
+		[exercises.example5[6][0].toString(), exercises.example5[6][1].toString(), false],
+		],
 ];
 let exampleNumber = Math.floor(Math.random() * exampleProofList.length);
 
@@ -72,7 +72,7 @@ class ExamplesPropositionalLogic extends React.Component<{}, State> {
 		return <div className={styles.site}>
 			<button className={styles.buttons}
 				onClick={this.showAnotherExample}>
-				Zeige mir anderes Beispiel!
+				Zeige mir ein anderes Beispiel!
 			</button>
 			<table className={styles.example} id="solve">
 				{this.renderProof(exampleNumber, false)}
