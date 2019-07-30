@@ -1,18 +1,20 @@
 import React from "react";
-
+import exercises from "./example.json"
 import styles from "./propositionalLogic.module.scss";
 
 const exampleProofList: Array<Array<[string, string, boolean]>> = [
 	[
-		["Wir zeigen: a -> (b -> c) -> (a und b) -> c.", "Dies soll bewiesen werden.", false],
-		["Es seien a, b und c Aussagen.", "Allgemeine Vorraussetzung", false],
-		["Angenommen $a ->(b -> c)$.", "Vorraussetzung: Die Prämisse a -> (b -> c) ist wahr.", false],
-		["Angenommen ferner es gilt $(a und b)$.", "Vorraussetzung: (a und b) ist wahr.", false],
-		["Dann folgt a.", "a folgt, da (a und b) nur dann wahr ist, wenn a wahr ist.", false],
-		["Ausserdem folgt b.", "b folgt, da (a und b) nur dann wahr ist, wenn b wahr ist.", false],
-		["Damit gilt $(b -> c)$.", "Die Konlusion (b -> c) gilt, da die Prämissen a,sowie (a und b) beide gelten.", false],
-		["Ferner folgt c.", "Die Konlusion c gilt, da die Prämissen a, sowie (a und b) beide gelten.", false],
-		["Also gilt $a -> (b -> c) -> (a und b) -> c$.", "qed", false]],
+		[exercises.example1[0][0].toString(), exercises.example1[0][1].toString(), true],
+		[exercises.example1[1][0].toString(), exercises.example1[1][1].toString(), false],
+		[exercises.example1[2][0].toString(), exercises.example1[2][1].toString(), false],
+		[exercises.example1[3][0].toString(), exercises.example1[3][1].toString(), false],
+		[exercises.example1[4][0].toString(), exercises.example1[4][1].toString(), false],
+		[exercises.example1[5][0].toString(), exercises.example1[5][1].toString(), false],
+		[exercises.example1[6][0].toString(), exercises.example1[6][1].toString(), false],
+		[exercises.example1[7][0].toString(), exercises.example1[7][1].toString(), false],
+		[exercises.example1[8][0].toString(), exercises.example1[8][1].toString(), false],
+		[exercises.example1[9][0].toString(), exercises.example1[9][1].toString(), false],
+		],
 	[
 		["test1", "test1", false]],
 	[
@@ -49,7 +51,6 @@ const exampleProofList: Array<Array<[string, string, boolean]>> = [
 		["test7", "test7", false],
 		["test7", "test7", false],
 		["test7", "test7", false]],
-
 ];
 let exampleNumber = Math.floor(Math.random() * exampleProofList.length);
 

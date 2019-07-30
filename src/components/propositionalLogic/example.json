@@ -1,0 +1,19 @@
+{
+    "example1": [
+        ["Aufgabe: Zeige a -> (b -> c) -> (a und b) -> c", "", true],
+        ["Wir zeigen: a -> (b -> c) -> (a und b) -> c.", "Dies soll bewiesen werden.", false],
+		["Es seien a, b und c Aussagen.", "Allgemeine Vorraussetzung", false],
+		["Angenommen $a ->(b -> c)$.", "Vorraussetzung: Die Prämisse a -> (b -> c) ist wahr.", false],
+		["Angenommen ferner es gilt $(a und b)$.", "Vorraussetzung: (a und b) ist wahr.", false],
+		["Dann folgt a.", "a folgt, da (a und b) nur dann wahr ist, wenn a wahr ist.", false],
+		["Ausserdem folgt b.", "b folgt, da (a und b) nur dann wahr ist, wenn b wahr ist.", false],
+		["Damit gilt $(b -> c)$.", "Die Konlusion (b -> c) gilt, da die Prämissen a,sowie (a und b) beide gelten.", false],
+		["Ferner folgt c.", "Die Konlusion c gilt, da die Prämissen a, sowie (a und b) beide gelten.", false],
+		["Also gilt $a -> (b -> c) -> (a und b) -> c$.", "qed", false]
+    ],
+    "example2": [
+             
+    ]
+
+
+}
