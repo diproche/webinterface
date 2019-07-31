@@ -1,0 +1,20 @@
+{
+  "examples":[
+    [
+      ["Wir zeigen: a -> (b -> c) -> (a und b) -> c.", "Dies soll bewiesen werden."],
+      ["Es seien a, b und c Aussagen.", "Allgemeine Vorraussetzung"],
+      ["Angenommen $a ->(b -> c)$.", "Vorraussetzung: Die Prämisse a -> (b -> c) ist wahr."],
+      ["Angenommen ferner es gilt $(a und b)$.", "Vorraussetzung: (a und b) ist wahr."],
+      ["Dann folgt a.", "a folgt, da (a und b) nur dann wahr ist, wenn a wahr ist."],
+      ["Ausserdem folgt b.", "b folgt, da (a und b) nur dann wahr ist, wenn b wahr ist."],
+      ["Damit gilt $(b -> c)$.", "Die Konlusion (b -> c) gilt, da die Prämissen a,sowie (a und b) beide gelten."],
+      ["Ferner folgt c.", "Die Konlusion c gilt, da die Prämissen a, sowie (a und b) beide gelten."],
+      ["Also gilt $a -> (b -> c) -> (a und b) -> c$.", "qed"]
+    ],
+
+    [
+      ["Bitte diesen Teil mit einem sinnvollem Beispiel füllen", "Ja hier steht auch was"],
+      ["Das wäre eine zweite Zeile", "und ein zweiter Hinweis"]
+    ]
+  ]
+}
