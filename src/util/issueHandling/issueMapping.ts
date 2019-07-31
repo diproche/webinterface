@@ -46,6 +46,9 @@ function insertReplacementsForPlaceholders(message: string, replacements: Replac
 
 let foundIssues: Issue[] = [];
 
+/**
+ * empty the list of issues
+ */
 export function emptyIssueList() {
 	foundIssues = [];
 }
@@ -58,6 +61,10 @@ export function addIssueToIssueList(issue: Issue) {
 	foundIssues.push(issue);
 }
 
+/**
+ * list all the found issues
+ * @return all found issues
+ */
 export function listAllIssues(): ReadonlyArray<Issue> {
 	return foundIssues;
 }

@@ -7,17 +7,33 @@ import { allowedExpressionToken, bracket, logicConnector, Regexes } from "./rege
  * @return a formatted expression as string[];
  * each element of the expression gets formatted into prolog readable code
  */
-export function expressionFormatter(expression: string, expressionPosition: number): string[] {
+export function expressionFormatter(expression: string, expressionPosition: number): string {
 	const preFormattedExpression: string[] = preFormatExpressionFromImput(expression);
 	expressionIssueDetector(preFormattedExpression, expressionPosition);
 	const finalFormattedExpression: string[] = replaceExpressionElementsIntoPrologCode(preFormattedExpression);
-	return finalFormattedExpression;
+	let finalFormattedExpressionString = "[";
+	finalFormattedExpression.forEach(element => {
+		if (element.match(Regexes.bracketLeft)) {
+			finalFormattedExpressionString = finalFormattedExpressionString + element;
+		} else if (element.match(Regexes.bracketRight)) {
+			finalFormattedExpressionString = finalFormattedExpressionString.slice(0, finalFormattedExpressionString.length - 1);
+			finalFormattedExpressionString = finalFormattedExpressionString + element + ",";
+		} else {
+			finalFormattedExpressionString = finalFormattedExpressionString + element + ",";
+		}
+
+	});
+	if (finalFormattedExpressionString.match(Regexes.wordEndsWithComma)) {
+		finalFormattedExpressionString = finalFormattedExpressionString.slice(0, finalFormattedExpressionString.length - 1);
+	}
+	finalFormattedExpressionString = finalFormattedExpressionString + "]";
+	return finalFormattedExpressionString;
 }
 
 /**
- * @param expression written by user
- * @return a preformatted expression where some different
+ *  * Returns a preformatted expression where some different
  * input styles for logical vocabulary gets formatted into one single style
+ * @param expression written by user
  */
 export function preFormatExpressionFromImput(expression: string): string[] {
 	const splittedExpression: string[] = expression.split(allowedExpressionToken);
@@ -26,7 +42,7 @@ export function preFormatExpressionFromImput(expression: string): string[] {
 }
 
 /**
- * @return finalExpression where expression elements got replaced with readable prolog code elements
+ * Returns finalExpression where expression elements got replaced with readable prolog code elements
  */
 export function replaceExpressionElementsIntoPrologCode(preFormattedExpression: string[]): string[] {
 	const finalFormattedExpression: string[] = [];
@@ -70,6 +86,9 @@ export function replaceASingleExpressionElementIntoPrologCode(preformattedExpres
 		;
 }
 
+/**
+ * Detects issues with an expression
+ */
 export function expressionIssueDetector(preFormattedExpression: string[], expressionPosition: number) {
 	detectBracketIssues(preFormattedExpression, expressionPosition);
 	detectMissingStatementsOrConnector(preFormattedExpression, expressionPosition);

@@ -1,6 +1,6 @@
-import { textFormatter } from "../../input_formatter/text_formatter";
-import { collectInvalidWordsInIssues } from "../../vocabularyChecker/detectWrongSyntax";
+import { textFormatter } from "../inputFormatter/textFormatter";
 import { getDiprocheResponse } from "../proofChecker";
+import { collectInvalidWordsInIssues } from "../vocabularyChecker/detectWrongSyntax";
 import { addDiprocheIssues } from "./diprocheResponseProcessing";
 
 export enum Mode {
@@ -29,14 +29,19 @@ export function getErrorsBeforeDiproche(userInput: string) {
 	// getSemanticErrors(userInput);
 }
 
+/**
+ * Collects all errors that diproche returns
+ */
 export async function getErrorsAfterDiproche(diprocheInput: string): Promise<void> {
 	const response: string = await getDiprocheResponse(diprocheInput);
 	addDiprocheIssues(response);
 }
 
-// this function collects all Errors.
+/**
+ * this function collects all Errors.
+ */
 export async function createErrors(userInput: string): Promise<void> {
-	collectInvalidWordsInIssues(userInput);
+	getErrorsBeforeDiproche(userInput);
 
 	// Also adds Issues which are caused when progressing this function
 	const diprocheInput = textFormatter(userInput);

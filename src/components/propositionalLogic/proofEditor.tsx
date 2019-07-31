@@ -1,8 +1,8 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import ContentEditable from "react-contenteditable";
-import Issue from "../../issueHandling/issue";
 import addStringIgnoringHTML from "../../util/addStringIgnoringHTML";
+import Issue from "../../util/issueHandling/issue";
 import { checkProof, checkProofWithoutDiproche } from "../../util/proofChecker";
 import IssueInformation from "./issueInformation";
 import styles from "./proofEditor.module.scss";
