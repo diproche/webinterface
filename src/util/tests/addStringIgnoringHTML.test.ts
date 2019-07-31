@@ -87,6 +87,13 @@ describe("Limit Cases", () => {
 		const stringWithInsertion: string = addStringIgnoringHTML(basisString, stringToAdd, 5);
 		expect(stringWithInsertion).toStrictEqual("5 < 35 and 35 > 5");
 	});
+
+	test("Inserting mulitple HTML tags are inserted at the specified location of the raw text", () => {
+		const basisString: string = "Bitte <mark>das und <mark>das hier markieren";
+		const stringToAdd: string = "</mark>";
+		const stringWithInsertion: string = addStringIgnoringHTML(basisString, stringToAdd, [9, 17]);
+		expect(stringWithInsertion).toStrictEqual("Bitte <mark>das</mark> und <mark>das</mark> hier markieren");
+	});
 });
 
 // Change later should be basisString without tags
