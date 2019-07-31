@@ -127,12 +127,12 @@ test("expression formatter testcase", () => {
 
 test("splitting full text into readable prolog format including formatted expressions and paragraph marker: ", () => {
 	const result = textFormatter(
-		"Hello, this is a test! => Is it Working? <= I     hope so. \n Paragraphs are marked with an " +
-		"abs List \n \n \n Here is also an expression $[AUNDbracketLEFTB<-->]-> D ODERNOT E]$. " +
+		"Hello, this is a test! => Is it Working? <= I     hope so." +
+		"Here is also an expression $[AUNDbracketLEFTB<-->]-> D ODERNOT E]$. " +
 		"And a second one $[5 ADD 12 equal 3 mal 5 plus 2]$");
 	const expectedResult = "[[hello,this,is,a,test],[=>],[is,it,working],[<=]," +
-		"[i,hope,so],[abs],[paragraphs,are,marked,with,an,abs,list]," +
-		"[abs],[abs],[abs],[here,is,also,an,expression,[[a,and,[b,<->],->," +
+		"[i,hope,so]," +
+		"[here,is,also,an,expression,[[a,and,[b,<->],->," +
 		"d,or,neg,e]]],[and,a,second,one,[[5,+,12,=,3,*,5,+,2]]]]";
 	expect(result).toEqual(expectedResult);
 	const issue = listAllIssues().find(i => i.code === "MISSING_STATEMENT_INSIDE");
@@ -141,8 +141,8 @@ test("splitting full text into readable prolog format including formatted expres
 		message: "Es fehlt ein Argument.",
 		severity: "WARNING",
 		position: {
-			fromIndex: 126,
-			toIndex: 126,
+			fromIndex: 79,
+			toIndex: 79,
 		},
 	});
 

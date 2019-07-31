@@ -6,7 +6,7 @@ import { Regexes } from "./regexes";
  * into a Array of string[]
  * @param input from user
  * @return the formatted text as a Array of string[] inculding
- * formatted expressions, list of words (setences) and paragraph marker (empty Array)
+ * formatted expressions and list of words (setences)
  */
 export function textFormatter(input: string): string {
 	let splittedSentence: string[] = input.split(Regexes.inputSeparator);
