@@ -16,8 +16,6 @@ export function textFormatter(input: string): string {
 	splittedSentence.forEach(element => {
 		if (element.match(Regexes.annotationMarker)) {
 			formattedText.push([element]);
-		} else if (element.match(Regexes.paragraphMarker)) {
-			formattedText.push(["abs"]);
 		} else if (element.match(Regexes.expressionMarker)) {
 			let formattedSentence: string = "";
 			let splittedElement: string[] = element.split(Regexes.expressionSeparator);
