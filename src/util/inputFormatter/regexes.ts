@@ -6,7 +6,6 @@ export const Regexes = {
 	endProofMarker: new RegExp(/qed/, "ig"),
 	wordSeparator: new RegExp(/[ ,]+/, "ig"),
 	wordMarker: new RegExp(/([A-Za-zäöüß]+)/, "ig"),
-	paragraphMarker: new RegExp(/\n/, "ig"),
 	whiteSpace: new RegExp(/\s/, "ig"),
 	allWhiteSpace: new RegExp(/\s+/, "ig"),
 	bracketLeft: new RegExp(/(\[|\(|bracketLeft)/, "ig"),
