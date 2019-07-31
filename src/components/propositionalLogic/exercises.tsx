@@ -1,30 +1,55 @@
 import React from "react";
-
+import data from "./exercises.json";
 import styles from "./propositionalLogic.module.scss";
 
-class ExercisesPropositionalLogic extends React.Component {
+interface IExercise {
+	title: string;
+	start: string;
+	end: string;
+	exampleSolution: string[][]; // More accurately: Arrray<[string, string]> but will cause type issues
+}
+
+interface IState {
+	exerciseID: number;
+	userInput: string;
+
+}
+
+const exercises: IExercise[] = data.exercises;
+
+class ExercisesPropositionalLogic extends React.Component<IState, {}> {
+
+	public state = {
+		exerciseID: -1,
+		userInput: "",
+	};
 
 	public render() {
-		return <div className={styles.site}>
-			<p>Hier sollten Übungen stehen. Entweder Zufällig generierte bzw. ausgewählte Aufgaben (nach schiwerigkeitsgrad?)
-				 oder festes schema)</p>
-			<p>Click the button to display a random exercise.</p>
-
-			<button className={styles.buttons}
-				onClick={this.checkInput}>
-				Zufallsgenerator
-	</button>
-			<p id="solve"></p>
+		return <div className={styles.selector}>
+			<select onChange={(event) => this.selectorOnChangeHandler(event)}>
+				<option value={-1}>Bitte wähle eine Übung</option>
+				{renderExerciseOptions()}
+			</select>
+			//Conditional Exercise loaded here; if -1 don't render anything otherwise the exerciseID
 		</div>;
 
 	}
-	private checkInput = async (): Promise<void> => {
-		const myComponent = document.getElementById("solve");
-		if (myComponent !== null) {
-			myComponent.innerHTML = Math.random().toString();
-		}
+
+	private selectorOnChangeHandler(event: React.ChangeEvent<HTMLSelectElement>): void {
+		this.setState({exerciseID: event.target.value});
 	}
 
+}
+
+function renderExerciseOptions(): JSX.Element[] {
+	const options: JSX.Element[] = [];
+	exercises.forEach((oneExercise, index) => {
+		options.push(<option value={index}>
+			{oneExercise.title}
+		</option>);
+	});
+
+	return options;
 }
 
 export default ExercisesPropositionalLogic;
