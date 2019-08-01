@@ -1,20 +1,54 @@
 {
   "examples":[
-    [
-      ["Wir zeigen: a -> (b -> c) -> (a und b) -> c.", "Dies soll bewiesen werden."],
-      ["Es seien a, b und c Aussagen.", "Allgemeine Vorraussetzung"],
-      ["Angenommen $a ->(b -> c)$.", "Vorraussetzung: Die Prämisse a -> (b -> c) ist wahr."],
-      ["Angenommen ferner es gilt $(a und b)$.", "Vorraussetzung: (a und b) ist wahr."],
-      ["Dann folgt a.", "a folgt, da (a und b) nur dann wahr ist, wenn a wahr ist."],
-      ["Ausserdem folgt b.", "b folgt, da (a und b) nur dann wahr ist, wenn b wahr ist."],
-      ["Damit gilt $(b -> c)$.", "Die Konlusion (b -> c) gilt, da die Prämissen a,sowie (a und b) beide gelten."],
-      ["Ferner folgt c.", "Die Konlusion c gilt, da die Prämissen a, sowie (a und b) beide gelten."],
-      ["Also gilt $a -> (b -> c) -> (a und b) -> c$.", "qed"]
-    ],
-
-    [
-      ["Bitte diesen Teil mit einem sinnvollem Beispiel füllen", "Ja hier steht auch was"],
-      ["Das wäre eine zweite Zeile", "und ein zweiter Hinweis"]
+        [
+          ["Aufgabe: Zeige a -> (b -> c) -> (a und b) -> c.", "",
+          ["Wir zeigen: a -> (b -> c) -> (a und b) -> c.", "Dies soll bewiesen werden."],
+          ["Es seien a, b und c Aussagen.", "Allgemeine Vorraussetzung"],
+          ["Angenommen $a ->(b -> c)$.", "Vorraussetzung: Die Prämisse a -> (b -> c) ist wahr."],
+          ["Angenommen ferner es gilt $(a und b)$.", "Vorraussetzung: (a und b) ist wahr."],
+          ["Dann folgt a.", "a folgt, da (a und b) nur dann wahr ist, wenn a wahr ist."],
+          ["Ausserdem folgt b.", "b folgt, da (a und b) nur dann wahr ist, wenn b wahr ist."],
+          ["Damit gilt $(b -> c)$.", "Die Konlusion (b -> c) gilt, da die Prämissen a,sowie (a und b) beide gelten."],
+          ["Ferner folgt c.", "Die Konlusion c gilt, da die Prämissen a, sowie (a und b) beide gelten."],
+          ["Also gilt $a -> (b -> c) -> (a und b) -> c$.", "qed"]
+        ],
+        [
+          ["Aufgabe: Zeige (a ->  (a -> b) ) -> b.", ""],
+          ["Wir zeigen: (a ->  (a -> b) ) -> b", "Dies soll bewiesen werden."],
+          ["Es seien a und b Aussagen.", "Allgemeine Voraussetzung"],
+          ["Angenommen $a$.", "Voraussetzung: Die Prämisse a ist wahr."],
+          ["Angenommen ferner, es gilt $(a -> b)$", "Voraussetzung: (a -> b) ist wahr."],
+          ["Dann folgt b.", "Da nun alle Voraussetzungen von b erfüllt sind, ist b wahr."],
+          ["Also gilt (a ->  (a -> b) ) -> b.", "qed"]
+        ],
+        [
+          ["Aufgabe: Zeige a ->  (a oder b).", ""],
+          ["Wir zeigen: a ->  (a oder b)", "Dies soll bewiesen werden.",
+          ["Es seien a und b Aussagen.", "Allgemeine Voraussetzung"],
+          ["Angenommen $a$.", "Voraussetzung: Die Prämisse a ist wahr."],
+          ["Dann folgt (a oder b)", "Wenn a wahr ist, ist auch (a oder b) wahr"],
+          ["Also gilt (a ->  (a oder b) )", "qed"]
+        ],
+        [
+          ["Aufgabe: Zeige (a und b) ->  (a -> b).", ""],
+          ["Wir zeigen: (a und b) ->  (a -> b)", "Dies soll bewiesen werden."],
+          ["Es seien a und b Aussagen.", "Allgemeine Voraussetzung"],
+          ["Angenommen $a und b$.", "Voraussetzung: Die Prämisse (a und b) ist wahr."],
+          ["Dann folgt a", "Wenn (a und b) wahr ist, ist auch a wahr"],
+          ["Dann folgt auch b", "Wenn (a und b) wahr ist, ist auch b wahr"],
+          ["Dann folgt a -> b", "Da die Prämisse und die Konklusion wahr sind, ist auch die ganze Implikation wahr."],
+          ["Also gilt (a und b) ->  (a -> b).", "qed"]
+        ],
+        [
+          ["Aufgabe: Zeige (neg b und neg a) ->  (a -> b).", ""],
+          ["Wir zeigen: (neg b und neg a) ->  (a -> b)", "Dies soll bewiesen werden."],
+          ["Es seien a und b Aussagen.", "Allgemeine Voraussetzung"],
+          ["Angenommen $(neg b und neg a)$.", "Voraussetzung: Die Prämisse (neg b und neg a) ist wahr."],
+          ["Dann folgt neg a", "Wenn (neg a und neg b) wahr ist, ist auch neg a wahr"],
+          ["Dann folgt a -> b", "Da die Prämisse falsch ist, ist die ganze Implikation wahr."],
+          ["Also gilt (neg b und neg a) ->  (a -> b).", "qed"]
+        ]
+      ]
     ]
   ]
 }
