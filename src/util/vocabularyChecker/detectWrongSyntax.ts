@@ -62,7 +62,7 @@ export function getInvalidWords(text: string): string[] {
 }
 
 /**
- * Collects all words that are invalid.
+ * Collects all words that are invalid in the text.
  * @param text - the userinput
  */
 function collectAllInvalidWords(text: string): string[] {
