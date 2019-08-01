@@ -20,6 +20,7 @@ export interface Position { fromIndex: number; toIndex: number; }
  * @param text the user-input
  */
 export function collectInvalidWordsInIssues(text: string): void {
+	text = text.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
 	const invalidWords = getInvalidWords(text);
 	for (const word of invalidWords) {
 		if (!(allowedWords.includes(word.toLowerCase()))) {
