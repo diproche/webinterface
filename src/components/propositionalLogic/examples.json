@@ -1,7 +1,6 @@
 {
   "examples":[
         [
-          ["Aufgabe: Zeige a -> (b -> c) -> (a und b) -> c.", ""],
           ["Wir zeigen: a -> (b -> c) -> (a und b) -> c.", "Dies soll bewiesen werden."],
           ["Es seien a, b und c Aussagen.", "Allgemeine Vorraussetzung"],
           ["Angenommen $a ->(b -> c)$.", "Vorraussetzung: Die Prämisse a -> (b -> c) ist wahr."],
@@ -13,7 +12,6 @@
           ["Also gilt $a -> (b -> c) -> (a und b) -> c$.", "qed"]
         ],
         [
-          ["Aufgabe: Zeige (a ->  (a -> b) ) -> b.", ""],
           ["Wir zeigen: (a ->  (a -> b) ) -> b", "Dies soll bewiesen werden."],
           ["Es seien a und b Aussagen.", "Allgemeine Voraussetzung"],
           ["Angenommen $a$.", "Voraussetzung: Die Prämisse a ist wahr."],
@@ -22,7 +20,6 @@
           ["Also gilt (a ->  (a -> b) ) -> b.", "qed"]
         ],
         [
-          ["Aufgabe: Zeige a ->  (a oder b).", ""],
           ["Wir zeigen: a ->  (a oder b)", "Dies soll bewiesen werden."],
           ["Es seien a und b Aussagen.", "Allgemeine Voraussetzung"],
           ["Angenommen $a$.", "Voraussetzung: Die Prämisse a ist wahr."],
@@ -30,7 +27,6 @@
           ["Also gilt (a ->  (a oder b) )", "qed"]
         ],
         [
-          ["Aufgabe: Zeige (a und b) ->  (a -> b).", ""],
           ["Wir zeigen: (a und b) ->  (a -> b)", "Dies soll bewiesen werden."],
           ["Es seien a und b Aussagen.", "Allgemeine Voraussetzung"],
           ["Angenommen $a und b$.", "Voraussetzung: Die Prämisse (a und b) ist wahr."],
@@ -40,7 +36,6 @@
           ["Also gilt (a und b) ->  (a -> b).", "qed"]
         ],
         [
-          ["Aufgabe: Zeige (neg b und neg a) ->  (a -> b).", ""],
           ["Wir zeigen: (neg b und neg a) ->  (a -> b)", "Dies soll bewiesen werden."],
           ["Es seien a und b Aussagen.", "Allgemeine Voraussetzung"],
           ["Angenommen $(neg b und neg a)$.", "Voraussetzung: Die Prämisse (neg b und neg a) ist wahr."],
