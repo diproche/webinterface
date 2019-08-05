@@ -1,7 +1,7 @@
 {
   "examples":[
         [
-          ["Aufgabe: Zeige a -> (b -> c) -> (a und b) -> c.", "",
+          ["Aufgabe: Zeige a -> (b -> c) -> (a und b) -> c.", ""],
           ["Wir zeigen: a -> (b -> c) -> (a und b) -> c.", "Dies soll bewiesen werden."],
           ["Es seien a, b und c Aussagen.", "Allgemeine Vorraussetzung"],
           ["Angenommen $a ->(b -> c)$.", "Vorraussetzung: Die Prämisse a -> (b -> c) ist wahr."],
@@ -23,7 +23,7 @@
         ],
         [
           ["Aufgabe: Zeige a ->  (a oder b).", ""],
-          ["Wir zeigen: a ->  (a oder b)", "Dies soll bewiesen werden.",
+          ["Wir zeigen: a ->  (a oder b)", "Dies soll bewiesen werden."],
           ["Es seien a und b Aussagen.", "Allgemeine Voraussetzung"],
           ["Angenommen $a$.", "Voraussetzung: Die Prämisse a ist wahr."],
           ["Dann folgt (a oder b)", "Wenn a wahr ist, ist auch (a oder b) wahr"],
@@ -48,7 +48,5 @@
           ["Dann folgt a -> b", "Da die Prämisse falsch ist, ist die ganze Implikation wahr."],
           ["Also gilt (neg b und neg a) ->  (a -> b).", "qed"]
         ]
-      ]
-    ]
   ]
 }
