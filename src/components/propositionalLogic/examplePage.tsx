@@ -2,9 +2,7 @@ import React from "react";
 import data from "./examples.json";
 import styles from "./propositionalLogic.module.scss";
 
-const exampleProofList: Array<Array<[string, string]>> = data.examples;
-console.log(exampleProofList);
-const exampleNumber = Math.floor(Math.random() * exampleProofList.length);
+const exampleProofList: string[][][] = data.examples;
 
 interface State {
 	exampleToShow: number;
@@ -25,7 +23,7 @@ class ExamplesPropositionalLogic extends React.Component<{}, State> {
 		return <div className={styles.site}>
 			{this.renderExampleButtons()}
 			<table className={styles.example} id="solve">
-				{this.renderProof(exampleNumber, false)}
+				{this.renderProof()}
 			</table>
 		</div >;
 	}
@@ -43,9 +41,9 @@ class ExamplesPropositionalLogic extends React.Component<{}, State> {
 			<td></td>
 		</tr>);
 
-		const proofPart: Array<[string, string]> = exampleProofList[this.state.exampleToShow];
+		const proofPart: string[][] = exampleProofList[this.state.exampleToShow];
 
-		proofPart.forEach((line: [string, string], index: number) => {
+		proofPart.forEach((line: string[], index: number) => {
 			let explanation: string;
 			let scssClass: string;
 
@@ -58,7 +56,7 @@ class ExamplesPropositionalLogic extends React.Component<{}, State> {
 			}
 			renderedPart.push(<tr>
 				<td>{line[0]}</td>
-				<td className={scssClass} onClick={() => this.showExplanation(index, proofPart)}>{explanation}</td>
+				<td className={scssClass} onClick={() => this.showExplanation(index)}>{explanation}</td>
 			</tr>);
 		});
 
@@ -93,7 +91,7 @@ class ExamplesPropositionalLogic extends React.Component<{}, State> {
 
 }
 
-function initializeShowExplanation(example: Array<[string, string]>): boolean[] {
+function initializeShowExplanation(example: string[][]): boolean[] {
 	return Array(example.length).fill(false);
 }
 
