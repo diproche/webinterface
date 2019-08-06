@@ -6,7 +6,7 @@ import uniqueValues from "./Iterators";
 
 /**
  * Regular expression that looks for any and all words. A word is defined as some sequence of
- * characters (\w+) betweeen wordbarriers (\b).
+ * characters (\w+) between wordbarriers (\b).
  */
 export const anyWord = new RegExp(/\b\w+\b/g);
 /**
@@ -16,7 +16,7 @@ const allowedWords = json;
 export interface Position { fromIndex: number; toIndex: number; }
 
 /**
- * Adds an Issue for every invalid word from a given text.
+ * Adds an Issue for every invalid word in a given text.
  * @param text the user-input
  */
 export function collectInvalidWordsInIssues(text: string): void {
@@ -44,7 +44,6 @@ function getPositionsOfInvalidWord(invalidWord: string, text: string): Position[
 	let foundIndex: number;
 	text = " " + text + " ";
 	while ((foundIndex = text.indexOf(" " + invalidWord + " ", offSet)) !== -1) {
-	console.log(foundIndex);
 	offSet = foundIndex + 1;
 	result.push({
 			fromIndex: foundIndex,
@@ -88,7 +87,7 @@ function logMultipleOccurences(word: string, position: Position[]): Issue[] {
 }
 
 /**
- * Creates an Issue of a single word.
+ * Creates an Issue for a single word.
  * @param word - a word that is invalid
  * @param position - the position of the word
  */
