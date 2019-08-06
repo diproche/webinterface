@@ -21,40 +21,40 @@
 	background-color: rgb(204, 218, 255);
 	text-align: center;
 	height: 50px;
-	font-style: normal; 
+	font-style: normal;
 	font-weight: 700;
 	left: 50px;
 	min-width: 160px;
 
  }
-  
+
   li {
 	float: left;
   }
-  
+
   li a, .dropdownButton {
 	display: inline-block;
 	color: white;
 	text-align: center;
 	padding: 14px 16px;
 	text-decoration: none;
-	font-style: normal; 
+	font-style: normal;
 	font-weight: 700;
 	min-width: 160px;
   }
-  
+
   li a:hover, .dropdown:hover .dropdownButton:hover {
 	background-color: rgba(255, 255, 255, 0.850);
 	color: rgba(7, 62, 139, 0.900);
 	display: block;
 	text-decoration: none;
   }
-  
+
 
   li.dropdown {
 	display: inline-block;
   }
- 
+
 
   .dropdownContent {
 	display: none;
@@ -64,7 +64,7 @@
 	box-shadow: 0px 10px 20px 0px rgba(7, 62, 139, 0.500);
 	z-index: 1;
   }
-  
+
   .dropdownContent a {
 	color: black;
 	padding: 12px 16px;
@@ -72,12 +72,12 @@
 	display: block;
 	text-align: left;
   }
-  
+
   .dropdownContent a:hover {
 	  background-color:rgba(7, 62, 139, 0.150);
 	  color:rgba(7, 62, 139, 0.900);
 	}
-  
+
   .dropdown:hover .dropdownContent {
 	display: block;
   }
@@ -85,11 +85,11 @@
   .site {
 	position: absolute;
 	left: 160px;
-	width: 100%;
+	width: calc(100% - 160px);
 	padding: 20px;
   }
 
-//styles for Buttons 
+//styles for Buttons
   .buttons {
 	display: block;
 	background-color: rgba(7, 62, 139, 0.900);
@@ -100,7 +100,7 @@
 	box-shadow: 0px 2px 4px 0px rgba(7, 62, 139, 0.500);
 	font-size: 20px;
 	text-align: center;
-	margin: 1rem auto 0 auto;
+	margin: left;
 }
 .buttons:hover {
 	display: block;
@@ -111,7 +111,7 @@
 	box-shadow: 0px 10px 20px 0px rgba(7, 62, 139, 0.500);
 	font-size: 20px;
 	text-align: center;
-	margin: 1rem auto 0 auto;
+	margin: left;
   }
 
 
@@ -120,15 +120,49 @@
 	display: block;
 	width: 80%;
 	height: 32px;
-	margin: 1rem auto 0 auto;
+	margin: left;
 }
 .textInputFalse {
 	display: block;
 	width: 80%;
-	margin: 1rem auto 0 auto;
+	margin: left;
 	border: 2px solid red;
 }
 .IssuePositionInformation {
 	text-align: center;
 	margin: 30px;
+}
+
+//table styles for example page
+table {
+	border-collapse: collapse;
+	width: 100%;
+  }
+
+  th {
+	padding: 8px;
+	text-align: left;
+	border-bottom: 1px solid #ddd;
+	width: 50%;
+  }
+
+  td {
+	padding: 8px;
+	text-align: left;
+	border-bottom: 1px solid #ddd;
+	width: 50%;
+  }
+
+.clickToChange:hover {
+	cursor: pointer;
+	background-color:#b0b8fc;
+}
+
+.alreadyClicked:hover {
+	cursor: default;
+	background-color:rgb(106, 119, 236);
+}
+
+.alreadyClicked {
+	background-color:#8590f1;
 }
