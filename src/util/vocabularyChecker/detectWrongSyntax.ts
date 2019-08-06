@@ -2,7 +2,7 @@ import Issue from "../issueHandling/issue";
 import { addIssue } from "../issueHandling/issueMapping";
 import issueJson from "../issueHandling/knownIssues.json";
 import json from "./allowedVocab.json";
-import uniqueValues from "./Iterators";
+import uniqueValues from "./iterators";
 
 /**
  * Regular expression that looks for any and all words. A word is defined as some sequence of

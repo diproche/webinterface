@@ -110,6 +110,7 @@ describe("logSingleWord", () => {
 });
 
 describe("CollectAllInvalidWordsInIssues", () => {
+	beforeEach(() => emptyIssueList());
 	it("Creates a correct Issue-array for one wrong word containing only this word", () => {
 		collectInvalidWordsInIssues("WrongWord beweis");
 		expect(listAllIssues()).toEqual([
@@ -123,11 +124,6 @@ describe("CollectAllInvalidWordsInIssues", () => {
 				severity: issueJson.INVALID_WORD.severity,
 			},
 		]);
-	});
-
-	it("Empties the issue-list correctly", () => {
-		emptyIssueList();
-		expect(listAllIssues()).toEqual([]);
 	});
 
 	it("Creates a correct Issue-array for two copies of the same wrong word", () => {
@@ -152,7 +148,6 @@ describe("CollectAllInvalidWordsInIssues", () => {
 				severity: issueJson.INVALID_WORD.severity,
 			},
 		]);
-		emptyIssueList();
 	});
 	it("Does not create unneccessary issues when a wrong word is a substring of another wrong word", () => {
 		collectInvalidWordsInIssues("ff ffff");
