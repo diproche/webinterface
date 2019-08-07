@@ -1,5 +1,3 @@
-
-
 .sidebar {
 	list-style-type: none;
 	margin: 0;
@@ -85,7 +83,7 @@
   .site {
 	position: absolute;
 	left: 160px;
-	width: 100%;
+	width: calc(100% - 160px);
 	padding: 20px;
   }
 
@@ -100,7 +98,7 @@
 	box-shadow: 0px 2px 4px 0px rgba(7, 62, 139, 0.500);
 	font-size: 20px;
 	text-align: center;
-	margin: 1rem auto 0 auto;
+	margin: left;
 }
 .buttons:hover {
 	display: block;
@@ -111,7 +109,7 @@
 	box-shadow: 0px 10px 20px 0px rgba(7, 62, 139, 0.500);
 	font-size: 20px;
 	text-align: center;
-	margin: 1rem auto 0 auto;
+	margin: left;
   }
 
 
@@ -120,12 +118,12 @@
 	display: block;
 	width: 80%;
 	height: 32px;
-	margin: 1rem auto 0 auto;
+	margin: left;
 }
 .textInputFalse {
 	display: block;
 	width: 80%;
-	margin: 1rem auto 0 auto;
+	margin: left;
 	border: 2px solid red;
 }
 .IssuePositionInformation {
@@ -133,7 +131,36 @@
 	margin: 30px;
 }
 
-.selector {
-	text-align: center;
-	margin-top: 30px;
+//table styles for example page
+table {
+	border-collapse: collapse;
+	width: 100%;
+  }
+
+  th {
+	padding: 8px;
+	text-align: left;
+	border-bottom: 1px solid #ddd;
+	width: 50%;
+  }
+
+  td {
+	padding: 8px;
+	text-align: left;
+	border-bottom: 1px solid #ddd;
+	width: 50%;
+  }
+
+.clickToChange:hover {
+	cursor: pointer;
+	background-color:#b0b8fc;
+}
+
+.alreadyClicked:hover {
+	cursor: default;
+	background-color:rgb(106, 119, 236);
+}
+
+.alreadyClicked {
+	background-color:#8590f1;
 }
