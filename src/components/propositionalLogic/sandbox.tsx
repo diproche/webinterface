@@ -13,7 +13,7 @@ class Sandbox extends React.Component< {}, IParentState > {
 			<ProofEditor
 				userInput = {this.state.userInput}
 				issues = {this.state.issues}
-				setStateParent = {() => this.setState}
+				setStateParent = {(input) => this.setState(input)}
 			/ >
 		</React.Fragment>;
 	}
