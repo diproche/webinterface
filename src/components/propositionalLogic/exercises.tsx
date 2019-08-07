@@ -33,7 +33,11 @@ class ExercisesPropositionalLogic extends React.Component<IState, {}> {
 				<option value={-1}>Bitte wähle eine Übung</option>
 				{renderExerciseOptions()}
 			</select>
-			{this.renderExercise()}
+			{this.renderExerciseOrSolution()}
+			<button
+				className={styles.toggleExerciseSolution}
+				onClick={() => this.setState({showSolution: !this.state.showSolution})}
+			/>
 		</div>;
 
 	}
@@ -42,10 +46,20 @@ class ExercisesPropositionalLogic extends React.Component<IState, {}> {
 		this.setState({exerciseID: event.target.value});
 	}
 
-	private renderExercise(): JSX.Element {
+	private renderExerciseOrSolution(): JSX.Element {
+		// Could be made more general, but -1 is the default "no exercise is selected" and otherwise it should be an error
+		// More general could be: if(!exercises[this.state.exerciseID])
+		// It will then create an empty return if the exercise at the index doesn't exist
 		if (this.state.exerciseID === -1) {
+			// Returns nothing but is still a JSX.Element
 			return <React.Fragment></React.Fragment>;
 		}
+
+		if (this.state.showSolution) {
+			// Render example solution here. Should utilize the example component.
+		}
+
+		// If
 
 		const activeExercise = exercises[this.state.exerciseID];
 		return <div className={styles.workspace}>
