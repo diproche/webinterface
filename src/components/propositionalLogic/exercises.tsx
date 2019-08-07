@@ -1,4 +1,5 @@
 import React from "react";
+import SingleExampleDisplay from "../examples/singleExampleDisplay";
 import ProofEditor,  { IParentState } from "../proofEditor/proofEditor";
 import data from "./exercises.json";
 import styles from "./propositionalLogic.module.scss";
@@ -34,10 +35,7 @@ class ExercisesPropositionalLogic extends React.Component<IState, {}> {
 				{renderExerciseOptions()}
 			</select>
 			{this.renderExerciseOrSolution()}
-			<button
-				className={styles.toggleExerciseSolution}
-				onClick={() => this.setState({showSolution: !this.state.showSolution})}
-			/>
+			{this.renderToggleButton()}
 		</div>;
 
 	}
@@ -56,10 +54,10 @@ class ExercisesPropositionalLogic extends React.Component<IState, {}> {
 		}
 
 		if (this.state.showSolution) {
-			// Render example solution here. Should utilize the example component.
+			return <SingleExampleDisplay
+				exampleData = { data.exercises[this.state.exerciseID].exampleSolution }
+			/>;
 		}
-
-		// If
 
 		const activeExercise = exercises[this.state.exerciseID];
 		return <div className={styles.workspace}>
@@ -83,6 +81,25 @@ class ExercisesPropositionalLogic extends React.Component<IState, {}> {
 			+ "\n" + activeExercise.end;
 
 		return modifiedUserInput;
+	}
+
+	private renderToggleButton(): JSX.Element {
+		if (this.state.exerciseID === -1) {
+			return <React.Fragment></React.Fragment>;
+		}
+
+		let buttonCaption: string = "Musterlösung anzeigen";
+
+		if (this.state.showSolution) {
+			buttonCaption = "Zurück zum Editor";
+		}
+
+		return <button
+			className={styles.toggleExerciseSolution}
+			onClick={() => this.setState({showSolution: !this.state.showSolution})}
+		>
+			{buttonCaption}
+		</button>;
 	}
 
 }
