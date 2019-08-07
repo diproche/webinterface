@@ -19,7 +19,7 @@ import WikiBooleanAlgebra from "./booleanAlgebra/wiki";
 
 import ExamplesPropositionalLogic from "./propositionalLogic/examplePage";
 import ExercisesPropositionalLogic from "./propositionalLogic/exercises";
-import FreeProverPropositionalLogic from "./propositionalLogic/freeProver";
+import SandboxPropositionalLogic from "./propositionalLogic/sandbox";
 import NavigationPropositionalLogic from "./propositionalLogic/navigationPropositionalLogic";
 import TutorialPropositionalLogic from "./propositionalLogic/tutorial";
 import WikiPropositionalLogic from "./propositionalLogic/wiki";
@@ -47,7 +47,7 @@ class App extends Component<{}, {}> {
 						<Route exact path="/aussagenlogisches_beweisen/tutorial" component={TutorialPropositionalLogic} />
 						<Route exact path="/aussagenlogisches_beweisen/beispiele" component={ExamplesPropositionalLogic} />
 						<Route exact path="/aussagenlogisches_beweisen/uebungen" component={ExercisesPropositionalLogic} />
-						<Route exact path="/aussagenlogisches_beweisen/sandbox" component={FreeProverPropositionalLogic} />
+						<Route exact path="/aussagenlogisches_beweisen/sandbox" component={SandboxPropositionalLogic} />
 						<Route exact path="/aussagenlogisches_beweisen/wiki" component={WikiPropositionalLogic} />
 					</Switch>
 				</React.Fragment>

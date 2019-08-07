@@ -1,8 +1,8 @@
 import React from "react";
 import shortid from "shortid";
 import Issue from "../../util/issueHandling/issue";
+import styles from "../propositionalLogic/propositionalLogic.module.scss";
 import IssuePositionInformation from "./issuePositionInformation";
-import styles from "./propositionalLogic.module.scss";
 
 export interface Props {
 	issue: Issue;
