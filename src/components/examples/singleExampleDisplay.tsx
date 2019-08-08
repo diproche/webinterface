@@ -69,22 +69,6 @@ class SingleExampleDisplay extends React.Component<IProps, IState> {
 		this.setState({showExplanation: copy});
 	}
 
-/*
-	private renderExampleButtons(): JSX.Element[] {
-
-		const buttons: JSX.Element[] = [];
-		this.props.exampleData.forEach((_, index) => {
-			buttons.push(
-				<button className={styles.buttons}
-					onClick={() => this.showExampleID(index)}>
-					Beispiel {index + 1}
-				</button>);
-		});
-
-		return buttons;
-	}
-*/
-
 }
 
 function initializeShowExplanation(example: string[][]): boolean[] {
