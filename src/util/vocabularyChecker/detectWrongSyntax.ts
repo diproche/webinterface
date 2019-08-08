@@ -6,7 +6,7 @@ import uniqueValues from "./iterators";
 
 /**
  * Regular expression that looks for any and all words. A word is defined as some sequence of
- * characters (\w+) betweeen wordbarriers (\b)
+ * characters (\w+) between wordbarriers (\b).
  */
 export const anyWord = new RegExp(/\b\w+\b/g);
 /**
@@ -16,10 +16,11 @@ const allowedWords = json;
 export interface Position { fromIndex: number; toIndex: number; }
 
 /**
- * Adds an Issue for every invalid word.
+ * Adds an Issue for every invalid word in a given text.
  * @param text the user-input
  */
 export function collectInvalidWordsInIssues(text: string): void {
+	text = text.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
 	const invalidWords = getInvalidWords(text);
 	for (const word of invalidWords) {
 		if (!(allowedWords.includes(word.toLowerCase()))) {
@@ -43,7 +44,6 @@ function getPositionsOfInvalidWord(invalidWord: string, text: string): Position[
 	let foundIndex: number;
 	text = " " + text + " ";
 	while ((foundIndex = text.indexOf(" " + invalidWord + " ", offSet)) !== -1) {
-	console.log(foundIndex);
 	offSet = foundIndex + 1;
 	result.push({
 			fromIndex: foundIndex,
@@ -62,7 +62,7 @@ export function getInvalidWords(text: string): string[] {
 }
 
 /**
- * Collects all words that are invalid.
+ * Collects all words that are invalid in the text.
  * @param text - the userinput
  */
 function collectAllInvalidWords(text: string): string[] {
@@ -87,7 +87,7 @@ function logMultipleOccurences(word: string, position: Position[]): Issue[] {
 }
 
 /**
- * Creates an Issue of one word.
+ * Creates an Issue for a single word.
  * @param word - a word that is invalid
  * @param position - the position of the word
  */
