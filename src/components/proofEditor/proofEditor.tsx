@@ -2,8 +2,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import Issue from "../../util/issueHandling/issue";
 import { checkProof } from "../../util/proofChecker";
-import styles from "../propositionalLogic/propositionalLogic.module.scss";
+import buttonStyles from "../generalStyles/buttons.module.scss";
 import IssueInformation from "./issueInformation";
+import styles from "./proofEditor.module.scss";
 
 const textboxPlaceHolder = "Gebe hier deinen Beweis ein...";
 
@@ -35,7 +36,7 @@ class ProofEditor extends React.Component<IProps, {}> {
 
 			{this.renderAfterInputFieldText()}
 
-			<button className={styles.buttons}
+			<button className={buttonStyles.buttons}
 				onClick={() => this.checkInput()}>
 				Prüfen
 			</button>
