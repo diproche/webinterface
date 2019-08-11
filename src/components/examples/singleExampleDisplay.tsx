@@ -18,6 +18,11 @@ class SingleExampleDisplay extends React.Component<IProps, IState> {
 		this.state = { showExplanation };
 	}
 
+	public componentWillReceiveProps() {
+		const showExplanation = initializeShowExplanation(this.props.exampleData);
+		this.setState({ showExplanation });
+	}
+
 	public render() {
 		return <div className={styles.site}>
 			<table className={styles.example} id="solve">
