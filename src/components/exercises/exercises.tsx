@@ -2,6 +2,7 @@ import React from "react";
 import SingleExampleDisplay from "../examples/singleExampleDisplay";
 import buttonStyles from "../generalStyles/buttons.module.scss";
 import ProofEditor,  { IParentState } from "../proofEditor/proofEditor";
+import styles from "./exercises.module.scss";
 
 interface IExercise {
 	title: string;
@@ -31,7 +32,10 @@ class Exercises extends React.Component<IProps, IState> {
 
 	public render() {
 		return <div>
-			<select onChange={(event) => this.selectorOnChangeHandler(event)}>
+			<select
+				onChange={(event) => this.selectorOnChangeHandler(event)}
+				className={styles.selector}
+			>
 				<option value={-1}>Bitte wähle eine Übung</option>
 				{this.renderExerciseOptions()}
 			</select>
@@ -62,7 +66,9 @@ class Exercises extends React.Component<IProps, IState> {
 
 		const activeExercise = this.props.data[this.state.exerciseID];
 		return <div>
-			{activeExercise.start} <br />
+			<div className={styles.preText}>
+				{activeExercise.start} <br />
+			</div>
 			<ProofEditor
 				userInput = {this.state.userInput}
 				issues = {this.state.issues}
@@ -96,7 +102,7 @@ class Exercises extends React.Component<IProps, IState> {
 		}
 
 		return <button
-			className={buttonStyles.button}
+			className={buttonStyles.buttons + " " + styles.toggleExerciseSolutionBtn}
 			onClick={() => this.setState({showSolution: !this.state.showSolution})}
 		>
 			{buttonCaption}

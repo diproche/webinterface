@@ -2,6 +2,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import Issue from "../../util/issueHandling/issue";
 import { checkProof } from "../../util/proofChecker";
+import exerciseStyles from "../exercises/exercises.module.scss";
 import buttonStyles from "../generalStyles/buttons.module.scss";
 import IssueInformation from "./issueInformation";
 import styles from "./proofEditor.module.scss";
@@ -58,10 +59,10 @@ class ProofEditor extends React.Component<IProps, {}> {
 	// An attempt to make this inline didn't work
 	private renderAfterInputFieldText(): string | JSX.Element {
 		if (this.props.displayAfterInputfield) {
-			return  <React.Fragment>
+			return  <div className={exerciseStyles.postText}>
 				<br />
 				{this.props.displayAfterInputfield}s
-			</React.Fragment>;
+			</div>;
 		}
 
 		return "";
