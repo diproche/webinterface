@@ -25,7 +25,7 @@ class SingleExampleDisplay extends React.Component<IProps, IState> {
 
 	public render() {
 		return <div className={styles.site}>
-			<table className={styles.example} id="solve">
+			<table className={styles.example}>
 				{this.renderProof()}
 			</table>
 		</div >;
