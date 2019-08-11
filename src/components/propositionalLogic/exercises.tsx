@@ -1,8 +1,8 @@
 import React from "react";
 import SingleExampleDisplay from "../examples/singleExampleDisplay";
+import buttonStyles from "../generalStyles/buttons.module.scss";
 import ProofEditor,  { IParentState } from "../proofEditor/proofEditor";
 import data from "./exercises.json";
-import styles from "./propositionalLogic.module.scss";
 
 interface IExercise {
 	title: string;
@@ -29,7 +29,7 @@ class ExercisesPropositionalLogic extends React.Component<IState, {}> {
 	};
 
 	public render() {
-		return <div className={styles.selector}>
+		return <div>
 			<select onChange={(event) => this.selectorOnChangeHandler(event)}>
 				<option value={-1}>Bitte wähle eine Übung</option>
 				{renderExerciseOptions()}
@@ -60,7 +60,7 @@ class ExercisesPropositionalLogic extends React.Component<IState, {}> {
 		}
 
 		const activeExercise = exercises[this.state.exerciseID];
-		return <div className={styles.workspace}>
+		return <div>
 			{activeExercise.start} <br />
 			<ProofEditor
 				userInput = {this.state.userInput}
@@ -95,7 +95,7 @@ class ExercisesPropositionalLogic extends React.Component<IState, {}> {
 		}
 
 		return <button
-			className={styles.toggleExerciseSolution}
+			className={buttonStyles.button}
 			onClick={() => this.setState({showSolution: !this.state.showSolution})}
 		>
 			{buttonCaption}

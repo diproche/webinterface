@@ -36,7 +36,9 @@ class ProofEditor extends React.Component<IProps, {}> {
 
 			{this.renderAfterInputFieldText()}
 
-			<button className={buttonStyles.buttons}
+			<br />
+
+			<button className={buttonStyles.buttons + " " + styles.checkProofBtn}
 				onClick={() => this.checkInput()}>
 				Prüfen
 			</button>
@@ -56,7 +58,10 @@ class ProofEditor extends React.Component<IProps, {}> {
 	// An attempt to make this inline didn't work
 	private renderAfterInputFieldText(): string | JSX.Element {
 		if (this.props.displayAfterInputfield) {
-			return this.props.displayAfterInputfield;
+			return  <React.Fragment>
+				<br />
+				{this.props.displayAfterInputfield}s
+			</React.Fragment>;
 		}
 
 		return "";

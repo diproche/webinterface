@@ -1,15 +1,25 @@
+.checkProofBtn {
+	display: inline;
+	margin-top: 30px;
+}
+
+.proofEditor {
+	text-align: center;
+}
+
 .textInput {
-	display: block;
 	width: 80%;
 	height: 32px;
 	margin: left;
 }
+
 .textInputFalse {
 	display: block;
 	width: 80%;
 	margin: left;
 	border: 2px solid red;
 }
+
 .IssuePositionInformation {
 	text-align: center;
 	margin: 30px;

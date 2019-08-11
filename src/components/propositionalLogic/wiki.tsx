@@ -1,6 +1,5 @@
 import React from "react";
-
-import styles from "./propositionalLogic.module.scss";
+import styles from "./wiki.module.scss";
 
 class WikiPropositionalLogic extends React.Component {
 

@@ -1,21 +1,28 @@
 table {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 30px;
 	border-collapse: collapse;
 	width: 100%;
-  }
+}
 
-  th {
+th {
 	padding: 8px;
 	text-align: left;
 	border-bottom: 1px solid #ddd;
 	width: 50%;
-  }
+}
 
-  td {
+td {
 	padding: 8px;
 	text-align: left;
 	border-bottom: 1px solid #ddd;
 	width: 50%;
-  }
+}
+
+td.clickToChange {
+	text-align: center;
+}
 
 .clickToChange:hover {
 	cursor: pointer;

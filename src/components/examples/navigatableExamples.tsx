@@ -1,5 +1,6 @@
 import React from "react";
 import buttonStyles from "../generalStyles/buttons.module.scss";
+import styles from "./navigatableExamples.module.scss";
 import SingleExampleDisplay from "./singleExampleDisplay";
 
 interface IProps {
@@ -30,7 +31,7 @@ class NavigatableExamples extends React.Component<IProps, IState> {
 		const buttons: JSX.Element[] = [];
 		this.props.examplesData.forEach((_, index: number) => {
 			buttons.push(
-				<button className={buttonStyles.buttons}
+				<button className={buttonStyles.buttons + " " + styles.exampleChanger}
 					onClick={() => this.setState({exampleToShow: index})}>
 					Beispiel {index + 1}
 				</button>);
