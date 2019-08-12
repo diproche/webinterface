@@ -12,7 +12,7 @@ const severities: string[] = ["FATALERROR", "ERROR", "WARNING", "HINT"];
 	*/
 export async function checkProof(userInput: string): Promise<readonly Issue[]> {
 	emptyIssueList();
-	const curatedUserInput: string = userInput.replace("\n", " ");
+	const curatedUserInput: string = userInput.replace(/\n/g, " ");
 	await createErrors(curatedUserInput);
 	return orderIssuesBySeverity(listAllIssues());
 }
