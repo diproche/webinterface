@@ -30,8 +30,12 @@ class WikiPropositionalLogic extends React.Component {
 				A&arr;B ist wahr genau dann, wenn entweder die Voraussetzung A
 				falsch ist oder A und B wahr sind. Ansonsten ist A&arr;B falsch.
 				A&harr;B ist wahr genau dann, wenn A und B beide falsch oder beide
-				wahr sind. Ansonsten ist A&harr;B falsch.
-			</p>
+				wahr sind. Ansonsten ist A&harr;B falsch.</p>
+				<h2>Literatur</h2>
+				Über die Unibibliothek gibt es beispielsweise folgende
+				Bücher gratis als E-Book-Download:
+				<p>Martin Ziegler - Mathematische Logik, 2017, 2. Auflage</p>
+				<p>Kurt-Ulrich Witt - Mathematische Grundlagen für die Informatik, 2013</p>
 		</div>;
 
 	}
