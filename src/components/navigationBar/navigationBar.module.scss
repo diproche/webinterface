@@ -13,9 +13,10 @@
 
 li {
 	float: left;
+	cursor: pointer;
 }
 
-li a {
+li div {
 	display: inline-block;
 	color: white;
 	text-align: center;
@@ -23,7 +24,7 @@ li a {
 	text-decoration: none;
 }
 
-li a:hover {
+li div:hover {
 	background-color: rgba(255, 255, 255, 0.850);
 	color: rgba(7, 62, 139, 0.900);
 	display: block;
