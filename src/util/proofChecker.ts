@@ -24,7 +24,8 @@ export function checkProofWithoutDiproche(userInput: string): readonly Issue[] {
 	*/
 export async function checkProof(userInput: string): Promise<readonly Issue[]> {
 	emptyIssueList();
-	createErrors(userInput);
+	const curatedUserInput: string = userInput.replace(/\n/g, " ");
+	await createErrors(curatedUserInput);
 	return orderIssuesBySeverity(listAllIssues());
 }
 

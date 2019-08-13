@@ -2,7 +2,6 @@ import React from "react";
 import shortid from "shortid";
 import Issue from "../../util/issueHandling/issue";
 import IssuePositionInformation from "./issuePositionInformation";
-import styles from "./propositionalLogic.module.scss";
 
 export interface Props {
 	issue: Issue;
@@ -22,7 +21,7 @@ export class IssueInformation extends React.Component<Props, {}> {
 			/>;
 		}
 
-		return <div className={styles.IssuePositionInformation}>
+		return <div>
 			{this.props.issue.message} {displayedPosition}
 		</div>;
 

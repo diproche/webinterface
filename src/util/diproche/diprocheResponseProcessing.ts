@@ -48,6 +48,9 @@ function getErrorList(diprocheResponse: string): string {
 		return ErrorList[1];
 	}
 
-	throw new Error("No error list found in the reponse from diproche.");
+	// Pretending no error happened.
+	// This part of the code will be reached if the diproche server is not running or the list ist not diproche readable
+	// (wrong syntax or unallowed words)
+	return "[]";
 
 }
