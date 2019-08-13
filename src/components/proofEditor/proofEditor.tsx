@@ -117,6 +117,15 @@ class ProofEditor extends React.Component< IProps , {} > {
 		return "";
 	}
 
+	private readonly checkInput = async (): Promise<void> => {
+		let userInput = this.props.userInput;
+		if (this.props.transformUserinputPreCheck) {
+			userInput = this.props.transformUserinputPreCheck(userInput);
+		}
+
+		const issues: readonly Issue[] = await checkProof(userInput);
+		this.props.setStateParent({ issues });
+	}
 }
 
 export default ProofEditor;
