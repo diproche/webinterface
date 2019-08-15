@@ -50,7 +50,7 @@ class WikiPropositionalLogic extends React.Component {
 				können in allen Aussagen auch "quantifizierte" Variablen auftauchen. Dies wird aber erst
 				zu einem späteren Zeitpunkt behandelt.
 				<h2>Literatur</h2>
-				Über die Unibibliothek gibt es beispielsweise folgende
+				Über die Unibibliothek gibt es zu dem Thema folgende
 				Bücher gratis als E-Book-Download:
 				<p>Martin Ziegler - Mathematische Logik, 2017, 2. Auflage</p>
 				<p>Kurt-Ulrich Witt - Mathematische Grundlagen für die Informatik, 2013</p>
