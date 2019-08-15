@@ -20,7 +20,7 @@ export interface Position { fromIndex: number; toIndex: number; }
  * @param text the user-input
  */
 export function collectInvalidWordsInIssues(text: string): void {
-	text = text.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+	text = text.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, " ");
 	const invalidWords = getInvalidWords(text);
 	for (const word of invalidWords) {
 		if (!(allowedWords.includes(word.toLowerCase()))) {
@@ -47,7 +47,7 @@ function getPositionsOfInvalidWord(invalidWord: string, text: string): Position[
 	offSet = foundIndex + 1;
 	result.push({
 			fromIndex: foundIndex,
-			toIndex: foundIndex + invalidWord.length,
+			toIndex: foundIndex + invalidWord.length - 1,
 		});
 	}
  return result;
