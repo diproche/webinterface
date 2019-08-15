@@ -1,0 +1,18 @@
+.selector {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.preText {
+  padding: 20px;
+}
+
+// In the controlled proofEditor component
+// src/components/proofEditor/proofEditor.tsx [valid on the 11th of October 2019]
+.postText {
+  padding: 20px;
+}
+
+.toggleExerciseSolutionBtn, .toggleExerciseSolutionBtn:hover {
+  display: inline;
+}

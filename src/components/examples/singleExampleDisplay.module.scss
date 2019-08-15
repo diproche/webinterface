@@ -1,0 +1,39 @@
+table {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 30px;
+	border-collapse: collapse;
+	width: 100%;
+}
+
+th {
+	padding: 8px;
+	text-align: left;
+	border-bottom: 1px solid #ddd;
+	width: 50%;
+}
+
+td {
+	padding: 8px;
+	text-align: left;
+	border-bottom: 1px solid #ddd;
+	width: 50%;
+}
+
+td.clickToChange {
+	text-align: center;
+}
+
+.clickToChange:hover {
+	cursor: pointer;
+	background-color:#b0b8fc;
+}
+
+.alreadyClicked:hover {
+	cursor: default;
+	background-color:rgb(106, 119, 236);
+}
+
+.alreadyClicked {
+	background-color:#8590f1;
+}
