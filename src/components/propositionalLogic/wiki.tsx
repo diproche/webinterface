@@ -37,8 +37,8 @@ class WikiPropositionalLogic extends React.Component {
 					von F auf 2<sup>n</sup> verschiedene Weisen einen Wahrheitswert zuordnen.
 					F heißt nun <b>allgemeingültig</b> oder auch <b>Tatutologie</b>, falls jede Wertebelegung F wahr macht.
 					Gibt es mindestens eine Wahrheitswertebelegung, sodass F wahr wird, so heißt
-					F <b>erfüllbar</b>. Gibt es keine solche Wahrheitswertebelegung, dann heißt F
-					 <b>unerfüllbar</b> oder auch <b>Kontradiktion</b>.
+					F <b>erfüllbar</b>. Gibt es keine solche Wahrheitswertebelegung, dann heißt F <b>unerfüllbar</b> oder
+					 auch <b>Kontradiktion</b>.
 				</p>
 				<h2>Was ist ein Beweis?</h2>
 				Wenn man etwas beweisen muss, so handelt es sich immer um eine Aussage.
