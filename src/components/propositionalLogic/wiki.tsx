@@ -22,7 +22,7 @@ class WikiPropositionalLogic extends React.Component {
 				und eine falsche Formel wird wahr. Statt &amp; sieht man normalerweise
 				das Zeichen &#8743; und statt | das Zeichen &#8744;. Auf einer gewöhnlichen Tastatur
 				gibt es diese Zeichen jedoch nicht. Daher benutzen wir in Diproche lieber die ersten
-				beiden Zeichen.
+				beiden Zeichen. Alternativ kann man auch die Worte "und" und "oder" schreiben.
 				&#172; ist der einzige Junktor, der nur auf einer statt auf zwei Formeln operiert.
 				Wenn A und B Formeln sind, dann ist A&amp;B wahr genau dann, wenn
 				sowohl A, als auch B wahr ist. Ansonsten ist A&amp;B falsch.
