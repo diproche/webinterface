@@ -42,7 +42,7 @@ class WikiPropositionalLogic extends React.Component {
 				</p>
 				<h2>Was ist ein Beweis?</h2>
 				Wenn man etwas beweisen muss, so handelt es sich immer um eine Aussage.
-				Wir nennen die zu zeigende Aussasge Z. Eventuell gibt es auch einige Annahmen
+				Wir nennen die zu zeigende Aussage Z. Eventuell gibt es auch einige Annahmen
 				die man treffen kann. Diese können auch als Aussage gesehen werden. Wir nennen
 				sie A. Dann besteht ein Beweis von Z daraus, Formeln zu finden, sagen wir B,..., Y,
 				sodass A&rarr;B&rarr;...&rarr;Y&rarr;Z eine allgemeingültige Formel ist. Es muss also eine
