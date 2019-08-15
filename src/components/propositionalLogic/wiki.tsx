@@ -15,7 +15,7 @@ class WikiPropositionalLogic extends React.Component {
 				gekennzeichnet. Jedem Atom kann einen Wahrheitswert zugeordnet werden.
 				Wir betrachten ausschließlich die Wahrheitswerte "wahr" und "falsch".
 				Atome heißen auch "atomare Formeln".</p>
-				<h2>Kompliziertere Formeln</h2>
+				<h2>Nicht-atomare Formeln</h2>
 				<p>Atomare Formeln können mit den Junktoren
 				&#172; (nicht), &amp; (und), | (oder), &rarr; (Implikation) und &harr; (Äquivalenz).
 				&#172; negiert den Wahrheitswert einer Formel. Das heißt eine wahre Formel wird falsch
@@ -32,7 +32,7 @@ class WikiPropositionalLogic extends React.Component {
 				falsch ist oder A und B wahr sind. Ansonsten ist A&rarr;B falsch.
 				A&harr;B ist wahr genau dann, wenn A und B beide falsch oder beide
 				wahr sind. Ansonsten ist A&harr;B falsch.</p>
-				<h2>Klassifikation einige Formeln</h2>
+				<h2>Klassifikation einiger Formeln</h2>
 				<p> Sei F eine Formel mit n Aussagenvariablen. Man kann allen Aussagenvariablen
 					von F auf 2<sup>n</sup> verschiedene Weisen einen Wahrheitswert zuordnen.
 					F heißt nun <b>allgemeingültig</b> oder auch <b>Tatutologie</b>, falls jede Wertebelegung F wahr macht.
