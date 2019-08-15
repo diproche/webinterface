@@ -7,8 +7,8 @@ describe("Fubar", () => {
 		query("man(bob).");
 	});
 
-	/* test("Tests frank is not a man", async () => {
+	test("Tests frank is not a man", async () => {
 		await loadingFinishedPromise;
 		query("man(frank).");
-	}); */
+	});
 });

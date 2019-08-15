@@ -98,17 +98,20 @@ function initialise(initBindings: any, initModule: any) {
 	);
 }
 
-const swiplWasm = new Uint8Array(fs.readFileSync("swipl-wasm/swipl-web.wasm"));
+const swiplWasm = fs.readFileSync("swipl-wasm/swipl-web.wasm");
+const swiplWasmData = fs.readFileSync("swipl-wasm/swipl-web.data").buffer;
 
 // Stub Module object. Used by swipl-web.js to
 // populate the actual Module object.
 export const Module = {
 	noInitialRun: true,
-	locateFile: (url: string) => `../../../swipl-wasm/${url}`,
+	locateFile: (url: string) => `swipl-wasm/${url}`,
 	print: console.log,
 	printErr: console.error,
 	wasmBinary: swiplWasm,
 	preRun: [() => FS.init(readStdin)], // sets up stdin
+	getPreloadedPackage: (fileName: string) =>
+		fileName === "swipl-wasm/swipl-web.data" ? swiplWasmData : null,
 	onRuntimeInitialized: () => {
 		// Bind foreign functions to JavaScript.
 		bindings = createBindings(Module);
