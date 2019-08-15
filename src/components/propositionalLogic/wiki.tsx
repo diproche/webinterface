@@ -47,8 +47,8 @@ class WikiPropositionalLogic extends React.Component {
 				sie A. Dann besteht ein Beweis von Z daraus, Formeln zu finden, sagen wir B,..., Y,
 				sodass A&rarr;B&rarr;...&rarr;Y&rarr;Z eine allgemeingültige Formel ist. Es muss also eine
 				Abfolge von Schlussfolgerungen gefunden werden, die in jedem Fall wahr ist. Streng genommen
-				können in allen Aussagen auch "quantifizierte" Variablen auftauchen. Dies ist aber
-				in der Aussagenlogik erst einmal nicht wichtig.
+				können in allen Aussagen auch "quantifizierte" Variablen auftauchen. Dies wird aber erst
+				zu einem späteren Zeitpunkt behandelt.
 				<h2>Literatur</h2>
 				Über die Unibibliothek gibt es beispielsweise folgende
 				Bücher gratis als E-Book-Download:
