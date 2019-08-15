@@ -35,7 +35,7 @@ class WikiPropositionalLogic extends React.Component {
 				<h2>Klassifikation einiger Formeln</h2>
 				<p> Sei F eine Formel mit n Aussagenvariablen. Man kann allen Aussagenvariablen
 					von F auf 2<sup>n</sup> verschiedene Weisen einen Wahrheitswert zuordnen.
-					F heißt nun <b>allgemeingültig</b> oder auch <b>Tatutologie</b>, falls jede Wertebelegung F wahr macht.
+					F heißt nun <b>allgemeingültig</b> oder auch <b>Tautologie</b>, falls jede Wertebelegung F wahr macht.
 					Gibt es mindestens eine Wahrheitswertebelegung, sodass F wahr wird, so heißt
 					F <b>erfüllbar</b>. Gibt es keine solche Wahrheitswertebelegung, dann heißt F <b>unerfüllbar</b> oder
 					 auch <b>Kontradiktion</b>.
