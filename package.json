@@ -1,48 +1,48 @@
 {
-	"name": "diproche-webinterface",
-	"version": "0.1.0",
-	"private": true,
-	"dependencies": {
-		"@types/lodash": "^4.14.136",
-		"@types/react-router-dom": "^4.3.4",
-		"@types/shortid": "0.0.29",
-		"bootstrap": "^4.3.1",
-		"jquery": "^3.4.1",
-		"lodash": "^4.17.15",
-		"node-sass": "^4.12.0",
-		"react": "^16.8.6",
-		"react-bootstrap": "^1.0.0-beta.10",
-		"react-dom": "^16.8.6",
-		"react-router-dom": "^5.0.1",
-		"react-scripts": "^3.0.1",
-		"shortid": "^2.2.14",
-		"tau-prolog": "^0.2.66",
-		"typescript": "3.4.2"
-	},
-	"scripts": {
-		"start": "react-scripts start",
-		"lint": "tslint --project .",
-		"build": "react-scripts build",
-		"test": "react-scripts test",
-		"eject": "react-scripts eject"
-	},
-	"eslintConfig": {
-		"extends": "react-app"
-	},
-	"browserslist": [
-		">0.2%",
-		"not dead",
-		"not ie <= 11",
-		"not op_mini all"
-	],
-	"devDependencies": {
-		"@types/jest": "24.0.11",
-		"@types/node": "11.13.2",
-		"@types/node-sass": "^4.11.0",
-		"@types/react": "16.8.13",
-		"@types/react-dom": "16.8.3",
-		"shx": "^0.3.2",
-		"tslint": "^5.18.0"
-	},
-	"proxy": "http://localhost:5000"
+  "name": "diproche-webinterface",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@types/lodash": "^4.14.136",
+    "@types/react-router-dom": "^4.3.4",
+    "@types/shortid": "0.0.29",
+    "bootstrap": "^4.3.1",
+    "jquery": "^3.4.1",
+    "lodash": "^4.17.15",
+    "node-sass": "^4.12.0",
+    "react": "^16.8.6",
+    "react-bootstrap": "^1.0.0-beta.10",
+    "react-dom": "^16.8.6",
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "^3.0.1",
+    "shortid": "^2.2.14",
+    "tau-prolog": "^0.2.66",
+    "typescript": "3.4.2"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "lint": "tslint --project .",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "devDependencies": {
+    "@types/jest": "24.0.11",
+    "@types/node": "11.13.2",
+    "@types/node-sass": "^4.11.0",
+    "@types/react": "16.8.13",
+    "@types/react-dom": "16.8.3",
+    "shx": "^0.3.2",
+    "tslint": "^5.18.0"
+  },
+  "proxy": "http://localhost:5000"
 }
