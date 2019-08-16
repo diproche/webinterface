@@ -57,11 +57,12 @@ export function consult(program: string): Promise<void> {
 }
 
 let loadingFinished!: () => void;
-let printListener: ((str: string) => void) | undefined;
-let errorListener: ((str: string) => void) | undefined;
-let lastPromise: Promise<unknown> = new Promise<void>(resolve => {
+export const loadingComplete = new Promise<void>(resolve => {
 	loadingFinished = () => resolve();
 });
+let printListener: ((str: string) => void) | undefined;
+let errorListener: ((str: string) => void) | undefined;
+let lastPromise: Promise<unknown> = loadingComplete;
 
 let bindings: any = null;
 let stdin = "";

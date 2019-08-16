@@ -1,7 +1,11 @@
 import "../../../swipl-wasm/swipl-web";
-import { consult, query } from "./fubar";
+import { consult, loadingComplete as swiLoadingComplete, query } from "./fubar";
 
 describe("Fubar", () => {
+	beforeAll(async () => {
+		await swiLoadingComplete;
+	}, 15000);
+
 	test("Test whether bob and frank are men", async () => {
 		await consult("man(bob).");
 		expect(await query("man(bob).")).toEqual(["true."]);
