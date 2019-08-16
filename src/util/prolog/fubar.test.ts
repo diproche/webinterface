@@ -8,8 +8,8 @@ describe("Fubar", () => {
 
 	test("Test whether bob and frank are men", async () => {
 		await consult("man(bob).");
-		expect(await query("man(bob).")).toEqual(["true."]);
-		expect(await query("man(frank).")).toEqual(["false."]);
+		expect(await query("man(bob).")).toEqual("true.");
+		expect(await query("man(frank).")).toEqual("false.");
 	});
 
 	test("Waiting on previous results and maintaining order is not necessary", async () => {
@@ -17,8 +17,8 @@ describe("Fubar", () => {
 		const bobResult = query("man(bob).");
 		const frankResult = query("man(frank).");
 
-		expect(await frankResult).toEqual(["false."]);
-		expect(await bobResult).toEqual(["true."]);
+		expect(await frankResult).toEqual("false.");
+		expect(await bobResult).toEqual("true.");
 	});
 
 	test("Can reconsult", async () => {
@@ -28,20 +28,20 @@ describe("Fubar", () => {
 		consult("man(frank).");
 		const frankResult = query("man(frank).");
 
-		expect(await bobResult).toEqual(["true."]);
-		expect(await frankResult).toEqual(["true."]);
+		expect(await bobResult).toEqual("true.");
+		expect(await frankResult).toEqual("true.");
 	});
 
 	test("Can return concrete answer", async () => {
 		await consult("man(bob).");
-		expect(await query("man(N).")).toEqual(["N = bob."]);
+		expect(await query("man(N).")).toEqual("N = bob.");
 	});
 
 	/* doesn't work yet.
 
 	test("Can return multiple answers", async () => {
 		await consult("man(bob). man(frank).");
-		expect(await query("man(N).")).toEqual(["N = bob;", "N = frank."]);
+		expect(await query("man(N).")).toEqual("N = bob;", "N = frank.");
 	});
 
 	test("Handles consulting errors", async () => {

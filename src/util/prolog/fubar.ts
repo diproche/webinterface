@@ -6,15 +6,15 @@ import { FS } from "../../../swipl-wasm/swipl-web";
  * @param program The program to consult
  * @returns A promise that is resolved when the new program is loaded.
  */
-export function query(queryText: string): Promise<string[]> {
+export function query(queryText: string): Promise<string> {
 	const previousPromise = lastPromise;
-	const promise = new Promise<string[]>(async (resolve, reject) => {
-		const results: string[] = [];
+	const promise = new Promise<string>(async (resolve, reject) => {
+		let result: string;
 		await previousPromise;
 		printListener = str => {
-			results.push(str);
+			result = str;
 			if (str.endsWith(".")) {
-				resolve(results);
+				resolve(result);
 			} else {
 				setStdin(";");
 			}
