@@ -57,6 +57,7 @@ export function consult(program: string): Promise<void> {
 }
 
 let loadingFinished!: () => void;
+/** An awaitable promise to make sure SWI is loaded and responsive. */
 export const loadingComplete = new Promise<void>(resolve => {
 	loadingFinished = () => resolve();
 });

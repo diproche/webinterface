@@ -1,34 +1,29 @@
 {
-	"defaultSeverity": "error",
-	"extends": [
-		"tslint:recommended"
-	],
-	"jsRules": {},
-	"rules": {
-		"object-literal-sort-keys": false,
-		"interface-name": false,
-		"no-console": false,
-		"indent": [
-			true,
-			"tabs",
-			2
-		],
-		"no-conditional-assignment": false,
-		"arrow-parens": false,
-		"no-redundant-jsdoc": true,
-		"completed-docs": [
-		  true,
-		  {
-		    "functions": {"visibilities": ["exported"]}
-		  }
-		],
-		"file-name-casing": [true, "camel-case"]
-	},
-	"rulesDirectory": [],
-	"linterOptions": {
-		"exclude": [
-			"src/serviceWorker.ts",
-			"./src/types/tau-prolog/index.d.ts"
-		]
-	}
+  "defaultSeverity": "error",
+  "extends": ["tslint:recommended"],
+  "jsRules": {},
+  "rules": {
+    "object-literal-sort-keys": false,
+    "interface-name": false,
+    "no-console": false,
+    "indent": [true, "tabs", 2],
+    "no-conditional-assignment": false,
+    "arrow-parens": false,
+    "no-redundant-jsdoc": true,
+    "completed-docs": [
+      true,
+      {
+        "functions": { "visibilities": ["exported"] }
+      }
+    ],
+    "file-name-casing": [true, "camel-case"]
+  },
+  "rulesDirectory": [],
+  "linterOptions": {
+    "exclude": [
+      "swipl-wasm/*",
+      "src/serviceWorker.ts",
+      "./src/types/tau-prolog/index.d.ts"
+    ]
+  }
 }
