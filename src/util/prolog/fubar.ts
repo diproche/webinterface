@@ -1,18 +1,80 @@
 import fs from "fs";
 import { FS } from "../../../swipl-wasm/swipl-web";
 
-// tslint:disable-next-line:prefer-const
+/**
+ * Runs a query on the consulted program.
+ * @param program The program to consult
+ * @returns A promise that is resolved when the new program is loaded.
+ */
+export function query(queryText: string): Promise<string[]> {
+	const previousPromise = lastPromise;
+	const promise = new Promise<string[]>(async (resolve, reject) => {
+		const results: string[] = [];
+		await previousPromise;
+		printListener = str => {
+			results.push(str);
+			if (str.endsWith(".")) {
+				resolve(results);
+			} else {
+				setStdin(";");
+			}
+		};
+		errorListener = error => {
+			clear_exception();
+			reject(new Error(error));
+		};
+		setStdin(queryText);
+		call("break");
+	});
+	lastPromise = promise;
+	return promise;
+}
+
+/**
+ * Consults a new prolog program. Waits for all previously started operations to finish.
+ * @param program The program to consult
+ * @returns A promise that is resolved when the new program is loaded.
+ */
+export function consult(program: string): Promise<void> {
+	const previousPromise = lastPromise;
+	const promise = new Promise<void>(async (resolve, reject) => {
+		await previousPromise;
+		printListener = str => {
+			if (str === "true.") {
+				resolve();
+			}
+		};
+		errorListener = error => {
+			clear_exception();
+			reject(new Error(error));
+		};
+		FS.writeFile("/file.pl", program);
+		setStdin("consult('/file.pl').");
+		call("break");
+	});
+	lastPromise = promise;
+	return promise;
+}
+
+let loadingFinished!: () => void;
+let printListener: ((str: string) => void) | undefined;
+let errorListener: ((str: string) => void) | undefined;
+let lastPromise: Promise<unknown> = new Promise<void>(resolve => {
+	loadingFinished = () => resolve();
+});
+
 let bindings: any = null;
 let stdin = "";
 let stdinPosition = 0;
 
 // We use this to provide data into
 // the SWI stdin.
-const setStdin = (s: string) => {
+function setStdin(s: string) {
 	stdin = s;
 	stdinPosition = 0;
-};
-const readStdin = () => {
+}
+
+function readStdin() {
 	if (stdinPosition >= stdin.length) {
 		return null;
 	} else {
@@ -20,15 +82,6 @@ const readStdin = () => {
 		stdinPosition++;
 		return code;
 	}
-};
-
-/**
- * Helper function to call a query.
- */
-export function query(queryText: string) {
-	setStdin(queryText);
-	// This will execute one iteration of toplevel.
-	call(bindings, "break"); // see call.js
 }
 
 // Creates bindings to the SWI foreign API.
@@ -44,17 +97,22 @@ function createBindings(bindingModule: any) {
 			"number",
 		]),
 		PL_call: bindingModule.cwrap("PL_call", "number", ["number", "number"]),
+		PL_clear_exception: bindingModule.cwrap("PL_clear_exception", "number", []),
 	};
 }
 
 // Helper function to parse a JavaScript
 // string into a Prolog term and call is as a query.
-function call(callBindings: any, callQuery: any) {
-	const ref = callBindings.PL_new_term_ref();
-	if (!callBindings.PL_chars_to_term(callQuery, ref)) {
+function call(callQuery: string) {
+	const ref = bindings.PL_new_term_ref();
+	if (!bindings.PL_chars_to_term(callQuery, ref)) {
 		throw new Error("Query has a syntax error: " + callQuery);
 	}
-	return !!callBindings.PL_call(ref, 0);
+	return !!bindings.PL_call(ref, 0);
+}
+
+function clear_exception() {
+	bindings.PL_clear_exception();
 }
 
 // This will set up the arguments necessary for the PL_initialise
@@ -92,10 +150,7 @@ function initialise(initBindings: any, initModule: any) {
 	}
 	// Set the path of the preloaded (from swipl-web.dat) standard library.
 	// This makes it possible to call use_module(library(lists)) and so on.
-	call(
-		initBindings,
-		"assert(user:file_search_path(library, 'wasm-preload/library')).",
-	);
+	call("assert(user:file_search_path(library, 'wasm-preload/library')).");
 }
 
 const swiplWasm = fs.readFileSync("swipl-wasm/swipl-web.wasm");
@@ -106,8 +161,29 @@ const swiplWasmData = fs.readFileSync("swipl-wasm/swipl-web.data").buffer;
 export const Module = {
 	noInitialRun: true,
 	locateFile: (url: string) => `swipl-wasm/${url}`,
-	print: console.log,
-	printErr: console.error,
+	print: (str: string) => {
+		if (str === "") {
+			return;
+		}
+
+		if (printListener) {
+			printListener(str);
+		} else {
+			console.error(
+				`Prolog printed "${str}", but no print listener was attached.`,
+			);
+		}
+	},
+	printErr: (str: string) => {
+		if (str === "") {
+			return;
+		}
+
+		if (errorListener) {
+			errorListener(str);
+		}
+		console.error(str);
+	},
 	wasmBinary: swiplWasm,
 	preRun: [() => FS.init(readStdin)], // sets up stdin
 	getPreloadedPackage: (fileName: string) =>
@@ -118,15 +194,6 @@ export const Module = {
 		// Initialise SWI-Prolog.
 		initialise(bindings, Module);
 
-		FS.writeFile("/file.pl", "man(bob).");
-		query("consult('/file.pl').");
-
 		loadingFinished();
 	},
 };
-
-let loadingFinished!: () => void;
-
-export const loadingFinishedPromise = new Promise<void>(resolve => {
-	loadingFinished = () => resolve();
-});
