@@ -1,10 +1,23 @@
 import fs from "fs";
+import path from "path";
 import { FS } from "../../../swipl-wasm/swipl-web";
 
 // tslint:disable-next-line:prefer-const
 let bindings: any = null;
 let stdin = "";
 let stdinPosition = 0;
+
+const basePathDiproche: string = path.resolve(__dirname, "../../../diproche_source");
+const diprocheFiles: string[] = fs.readdirSync(basePathDiproche);
+const diprocheMap: Map<string, string> = new Map();
+diprocheFiles.forEach((fileName: string) => {
+	const filePath: string = path.resolve(basePathDiproche, "./" + fileName);
+	diprocheMap.set(fileName.replace(".pl", ""), fs.readFileSync(filePath, "utf8"));
+});
+
+// var to make this variable global
+// tslint:disable-next-line:no-var-keyword
+export var result: string[] = [];
 
 // We use this to provide data into
 // the SWI stdin.
@@ -98,6 +111,10 @@ function initialise(initBindings: any, initModule: any) {
 	);
 }
 
+function pushToResultArray(value: string): void {
+	result.push(value);
+}
+
 const swiplWasm = fs.readFileSync("swipl-wasm/swipl-web.wasm");
 const swiplWasmData = fs.readFileSync("swipl-wasm/swipl-web.data").buffer;
 
@@ -106,7 +123,7 @@ const swiplWasmData = fs.readFileSync("swipl-wasm/swipl-web.data").buffer;
 export const Module = {
 	noInitialRun: true,
 	locateFile: (url: string) => `swipl-wasm/${url}`,
-	print: console.log,
+	print: pushToResultArray,
 	printErr: console.error,
 	wasmBinary: swiplWasm,
 	preRun: [() => FS.init(readStdin)], // sets up stdin
@@ -118,8 +135,11 @@ export const Module = {
 		// Initialise SWI-Prolog.
 		initialise(bindings, Module);
 
-		FS.writeFile("/file.pl", "man(bob).");
-		query("consult('/file.pl').");
+		diprocheMap.forEach((programCode: string, fileName: string) => {
+			FS.writeFile("/" + fileName + ".pl", programCode);
+		});
+
+		query("consult('/diproche.pl').");
 
 		loadingFinished();
 	},

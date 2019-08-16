@@ -7,6 +7,7 @@
     "@types/react-router-dom": "^4.3.4",
     "@types/shortid": "0.0.29",
     "bootstrap": "^4.3.1",
+    "diproche": "git+https://github.com/TimothyGillespie/Diproche-Prolog.git",
     "jquery": "^3.4.1",
     "lodash": "^4.17.15",
     "node-sass": "^4.12.0",
@@ -20,11 +21,12 @@
     "typescript": "3.4.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "npm run copy-diproche && react-scripts start",
     "lint": "tslint --project .",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build": "npm run copy-diproche && react-scripts build",
+    "test": "npm run copy-diproche && react-scripts test",
+    "eject": "react-scripts eject",
+    "copy-diproche": "shx cp -r ./node_modules/diproche/*.pl ./diproche_source"
   },
   "eslintConfig": {
     "extends": "react-app"
