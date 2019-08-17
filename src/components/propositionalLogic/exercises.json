@@ -2,13 +2,13 @@
   "exercises": [
     {
       "title": "Beweise, dass A und B <-> B und A",
-      "start": "Wir zeigen $A und B <-> B und A$.",
-      "end": "Also gilt $A und B <-> B und A$.",
+      "start": "Wir zeigen A und B <-> B und A.",
+      "end": "Also gilt A und B <-> B und A.",
       "exampleSolution": [
-        ["Angenommen $A und B$", "Wir bleiben auf der linken Seite."],
+        ["Angenommen A und B", "Wir bleiben auf der linken Seite."],
         ["Dann folgt A.", "Nachdem A und B gilt muss A wahr sein."],
         ["Ausserdem folgt B", "Mit der gleichen Logik ist auch B wahr."],
-        ["Damit gilt $B und A$", "Nachdem B wahr ist und A auch wahr ist, ist A und B wahr."],
+        ["Damit gilt B und A", "Nachdem B wahr ist und A auch wahr ist, ist A und B wahr."],
         ["...Das ist alles noch nicht so richtig, das soll ein Rohling sein", "Ja genau"]
       ]
     }
