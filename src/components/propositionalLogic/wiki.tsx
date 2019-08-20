@@ -16,7 +16,7 @@ class WikiPropositionalLogic extends React.Component {
 				&#172; (nicht), &amp; (und), | (oder), &rarr; (Implikation) und &harr; (Äquivalenz).
 				&#172; negiert den Wahrheitswert einer Formel. Das heißt eine wahre Formel wird falsch
 				und eine falsche Formel wird wahr. Statt &amp; sieht man normalerweise
-				das Zeichen &#8743; und statt | das Zeichen &#8744;. Auf einer gewöhnlichen Tastatur	
+				das Zeichen &#8743; und statt | das Zeichen &#8744;. Auf einer gewöhnlichen Tastatur
 				gibt es diese Zeichen jedoch nicht. Daher benutzen wir in Diproche lieber die ersten
 				beiden Zeichen. Alternativ kann man auch die Worte "und" und "oder" schreiben.
 				&#172; ist der einzige Junktor, der nur auf einer statt auf zwei Formeln operiert.
