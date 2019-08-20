@@ -11,7 +11,7 @@ class WikiPropositionalLogic extends React.Component {
 				Dabei geht man von elementaren Aussagen aus. Sogenannten
 				Atomen.</p>
 				<h2>Atome</h2>
-				<p>Atome werden meist mit A, B, C, ..., Z
+				<p>Atome werden meist mit A, B, C, ..., Z oder auch a, b, c, ..., z
 				gekennzeichnet. Jedem Atom kann einen Wahrheitswert zugeordnet werden.
 				Wir betrachten ausschließlich die Wahrheitswerte "wahr" und "falsch".
 				Atome heißen auch "atomare Formeln".</p>
@@ -24,6 +24,7 @@ class WikiPropositionalLogic extends React.Component {
 				gibt es diese Zeichen jedoch nicht. Daher benutzen wir in Diproche lieber die ersten
 				beiden Zeichen. Alternativ kann man auch die Worte "und" und "oder" schreiben.
 				&#172; ist der einzige Junktor, der nur auf einer statt auf zwei Formeln operiert.
+				Statt &#172; kann man in Diproche auch "nicht" oder "neg" schreiben.
 				Wenn A und B Formeln sind, dann ist A&amp;B wahr genau dann, wenn
 				sowohl A, als auch B wahr ist. Ansonsten ist A&amp;B falsch.
 				A | B ist wahr genau dann, wenn mindestens eine der Formeln
@@ -31,7 +32,9 @@ class WikiPropositionalLogic extends React.Component {
 				A&rarr;B ist wahr genau dann, wenn entweder die Voraussetzung A
 				falsch ist oder A und B wahr sind. Ansonsten ist A&rarr;B falsch.
 				A&harr;B ist wahr genau dann, wenn A und B beide falsch oder beide
-				wahr sind. Ansonsten ist A&harr;B falsch.</p>
+				wahr sind. Ansonsten ist A&harr;B falsch. Für alle Formeln gilt:
+				In Diproche muss eine Formel immer zwischen $-Zeichen stehen. Zum Beispiel
+				wäre $A$ eine Formel, ebenso wie $A und B$.</p>
 				<h2>Klassifikation einiger Formeln</h2>
 				<p> Sei F eine Formel mit n Aussagenvariablen. Man kann allen Aussagenvariablen
 					von F auf 2<sup>n</sup> verschiedene Weisen einen Wahrheitswert zuordnen.
