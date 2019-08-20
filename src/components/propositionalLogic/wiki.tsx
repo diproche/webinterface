@@ -58,6 +58,8 @@ class WikiPropositionalLogic extends React.Component {
 					Über die Unibibliothek gibt es zu dem Thema folgende
 					Bücher gratis als E-Book-Download:
 				</p>
+				<p>Martin Ziegler - Mathematische Logik, 2017, 2. Auflage</p>
+				<p>Kurt-Ulrich Witt - Mathematische Grundlagen für die Informatik, 2013</p>
 		</div>;
 
 	}
