@@ -3,7 +3,7 @@ import React from "react";
 class ProofEditor extends React.Component {
 
 	public render() {
-		return <div className={"addStyleHere"}>
+		return <div>
 			<h1>Willkommen bei Diproche!</h1>
 			<p>
 				<b>Diproche</b> steht für <b>Didactical proof checking</b>. Das heißt im Wesentlichen, dass Diproche die
