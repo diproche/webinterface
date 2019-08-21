@@ -119,7 +119,7 @@ describe("CollectAllInvalidWordsInIssues", () => {
 				message: "Das Wort 'WrongWord' in der Eingabe ist nicht erlaubt.",
 				position: {
 					fromIndex: 0,
-					toIndex: 9,
+					toIndex: 8,
 				},
 				severity: issueJson.INVALID_WORD.severity,
 			},
@@ -134,7 +134,7 @@ describe("CollectAllInvalidWordsInIssues", () => {
 				message: "Das Wort 'Sonne' in der Eingabe ist nicht erlaubt.",
 				position: {
 					fromIndex: 0,
-					toIndex: 5,
+					toIndex: 4,
 				},
 				severity: issueJson.INVALID_WORD.severity,
 			},
@@ -143,7 +143,7 @@ describe("CollectAllInvalidWordsInIssues", () => {
 				message: "Das Wort 'Sonne' in der Eingabe ist nicht erlaubt.",
 				position: {
 					fromIndex: 10,
-					toIndex: 15,
+					toIndex: 14,
 				},
 				severity: issueJson.INVALID_WORD.severity,
 			},
@@ -157,7 +157,7 @@ describe("CollectAllInvalidWordsInIssues", () => {
 				message: "Das Wort 'ff' in der Eingabe ist nicht erlaubt.",
 				position: {
 					fromIndex: 0,
-					toIndex: 2,
+					toIndex: 1,
 				},
 				severity: issueJson.INVALID_WORD.severity,
 			},
@@ -166,7 +166,7 @@ describe("CollectAllInvalidWordsInIssues", () => {
 				message: "Das Wort 'ffff' in der Eingabe ist nicht erlaubt.",
 				position: {
 					fromIndex: 3,
-					toIndex: 7,
+					toIndex: 6,
 				},
 				severity: issueJson.INVALID_WORD.severity,
 			},
