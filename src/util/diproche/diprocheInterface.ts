@@ -1,7 +1,7 @@
 import { textFormatter } from "../inputFormatter/textFormatter";
 import { getDiprocheResponse } from "../proofChecker";
 import { collectInvalidWordsInIssues } from "../vocabularyChecker/detectWrongSyntax";
-import { addDiprocheIssues } from "./diprocheResponseProcessing";
+import addDiprocheIssues from "./addDiprocheIssues";
 
 export enum Mode {
 	propositionalLogic = "diproche",
@@ -14,7 +14,7 @@ export enum Mode {
  * @param userInput - the user input
  * @param mode - the mode
  */
-export function addPredicate(userInput: string, mode: Mode) {
+function addPredicate(userInput: string, mode: Mode) {
 	return mode + "(" + userInput + ").";
 }
 
@@ -44,7 +44,7 @@ export function getErrorsBeforeDiproche(userInput: string) {
  * Collects all errors that diproche returns
  */
 export async function getErrorsAfterDiproche(diprocheInput: string): Promise<void> {
-	const response: string = await getDiprocheResponse(diprocheInput);
+	const response: number[] = await getDiprocheResponse(diprocheInput);
 	addDiprocheIssues(response);
 }
 
@@ -55,6 +55,6 @@ export async function createErrors(userinput: string): Promise<void> {
 	getErrorsBeforeDiproche(userinput);
 
 	// Also adds Issues which are caused when progressing this function
-	const diprocheInput = textFormatter(userinput) + ".";
+	const diprocheInput = addPredicate(textFormatter(userinput), Mode.firstOrderPredicateLogic);
 	await getErrorsAfterDiproche(diprocheInput);
 }
