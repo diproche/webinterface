@@ -1,4 +1,4 @@
-import { Module } from "../src/util/prolog/fubar";
+import { Module } from "../src/util/prolog/swiplwasmHandler";
 
 if (!Module.expectedDataFileDownloads) {
   Module.expectedDataFileDownloads = 0;
