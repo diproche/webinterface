@@ -1,6 +1,5 @@
 // Not sure why it has to be imported like this, but if I don't it breaks
 import { Module } from "../../../src/util/prolog/swiplwasmHandler";
-
 if (!Module.expectedDataFileDownloads) {
   Module.expectedDataFileDownloads = 0;
   Module.finishedDataFileDownloads = 0;
