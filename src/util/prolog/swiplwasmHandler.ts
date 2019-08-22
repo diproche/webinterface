@@ -1,5 +1,6 @@
 import fs from "fs";
-import { FS } from "../../../swipl-wasm/swipl-web";
+import path from "path";
+import { FS } from "../swipl-wasm/swipl-web";
 
 /**
  * Runs a query on the consulted program.
@@ -153,8 +154,8 @@ function initialise(initBindings: any, initModule: any) {
 	call("assert(user:file_search_path(library, 'wasm-preload/library')).");
 }
 
-const swiplWasm = fs.readFileSync("swipl-wasm/swipl-web.wasm");
-const swiplWasmData = fs.readFileSync("swipl-wasm/swipl-web.data").buffer;
+const swiplWasm = fs.readFileSync(path.resolve(__dirname, "../swipl-wasm/swipl-web.wasm"));
+const swiplWasmData = fs.readFileSync(path.resolve(__dirname, "../swipl-wasm/swipl-web.data")).buffer;
 
 // Stub Module object. Used by swipl-web.js to
 // populate the actual Module object.

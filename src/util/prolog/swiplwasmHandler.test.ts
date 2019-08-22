@@ -1,6 +1,4 @@
-import fs from "fs";
-import path from "path";
-import "../../../swipl-wasm/swipl-web";
+import "../swipl-wasm/swipl-web";
 import { consult, loadingComplete as swiLoadingComplete, query } from "./swiplwasmHandler";
 
 describe("Fubar", () => {
