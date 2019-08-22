@@ -8,7 +8,7 @@ import { allowedExpressionToken, bracket, logicConnector, Regexes } from "./rege
  * each element of the expression gets formatted into prolog readable code
  */
 export function expressionFormatter(expression: string, expressionPosition: number): string {
-	const preFormattedExpression: string[] = preFormatExpressionFromImput(expression);
+	const preFormattedExpression: string[] = preFormatExpressionFromInput(expression);
 	expressionIssueDetector(preFormattedExpression, expressionPosition);
 	const finalFormattedExpression: string[] = replaceExpressionElementsIntoPrologCode(preFormattedExpression);
 	let finalFormattedExpressionString = "[";
@@ -35,7 +35,7 @@ export function expressionFormatter(expression: string, expressionPosition: numb
  * input styles for logical vocabulary gets formatted into one single style
  * @param expression written by user
  */
-export function preFormatExpressionFromImput(expression: string): string[] {
+export function preFormatExpressionFromInput(expression: string): string[] {
 	const splittedExpression: string[] = expression.split(allowedExpressionToken);
 	const filtered = splittedExpression.filter(x => x);
 	return filtered;
