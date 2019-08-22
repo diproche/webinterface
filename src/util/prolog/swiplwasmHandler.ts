@@ -20,7 +20,7 @@ export function query(queryText: string): Promise<string> {
 				return query("bagof(X, " + queryText.substr(0, queryText.length - 1) + ", Xs).");
 			}
 		};
-		errorListener = __ => {
+		errorListener = () => {
 			clear_exception();
 		};
 		setStdin(queryText);
@@ -37,14 +37,14 @@ export function query(queryText: string): Promise<string> {
  */
 export function consult(program: string): Promise<void> {
 	const previousPromise = lastPromise;
-	const promise = new Promise<void>(async (resolve, reject) => {
+	const promise = new Promise<void>(async (resolve) => {
 		await previousPromise;
 		printListener = str => {
 			if (str === "true.") {
 				resolve();
 			}
 		};
-		errorListener = error => {
+		errorListener = () => {
 			clear_exception();
 		};
 		FS.writeFile("/file.pl", program);

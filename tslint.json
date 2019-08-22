@@ -21,7 +21,7 @@
   "rulesDirectory": [],
   "linterOptions": {
     "exclude": [
-      "swipl-wasm/*",
+      "src/util/swipl-wasm/*",
       "src/serviceWorker.ts",
       "./src/types/tau-prolog/index.d.ts"
     ]

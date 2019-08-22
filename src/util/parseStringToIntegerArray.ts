@@ -1,6 +1,6 @@
- /**
-  * Converts a string to an array of numbers
-  * @param integerArrayString - A string representing a array of integers (i.e. [16, 87, 27])
+/**
+	* Converts a string to an array of numbers
+	* @param integerArrayString - A string representing a array of integers (i.e. [16, 87, 27])
 	* @return An array of integers represented by the string
 	*/
 export function parseStringToIntegerArray(integerArrayString: string) {
