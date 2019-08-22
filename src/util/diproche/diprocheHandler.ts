@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
-import "../../../swipl-wasm/swipl-web";
-import { consult, loadingComplete as swiLoadingComplete, query } from "../prolog/fubar";
+import { consult, loadingComplete as swiLoadingComplete, query } from "../prolog/swiplwasmHandler";
+import "../swipl-wasm/swipl-web";
 
 const diprocheProgramCode: string = fs.readFileSync(
 	path.resolve(__dirname, "../../../diproche.pl"),
