@@ -17,6 +17,9 @@ export function query(queryText: string): Promise<string> {
 			if (str.endsWith(".")) {
 				resolve(result);
 			} else {
+				// swipl-wasm cannot parse multiple results
+				// This line will display multiple results for a variable X in a bag
+				// Not a nice solution, could be improved upon. Works for diproche though.
 				return query("bagof(X, " + queryText.substr(0, queryText.length - 1) + ", Xs).");
 			}
 		};
