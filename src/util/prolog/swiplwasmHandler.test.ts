@@ -1,5 +1,8 @@
+// The order of these two imports makes a functional difference
+// tslint:disable: ordered-imports
 import "../swipl-wasm/swipl-web";
 import { consult, loadingComplete as swiLoadingComplete, query } from "./swiplwasmHandler";
+// tslint:enable: ordered-imports
 
 describe("Fubar", () => {
 	beforeAll(async () => {

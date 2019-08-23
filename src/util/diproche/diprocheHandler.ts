@@ -1,7 +1,11 @@
 import fs from "fs";
 import path from "path";
-import { consult, loadingComplete as swiLoadingComplete, query } from "../prolog/swiplwasmHandler";
+
+// The order of these two imports makes a functional difference
+// tslint:disable: ordered-imports
 import "../swipl-wasm/swipl-web";
+import { consult, loadingComplete as swiLoadingComplete, query } from "../prolog/swiplwasmHandler";
+// tslint:enable: ordered-imports
 
 const diprocheProgramCode: string = fs.readFileSync(
 	path.resolve(__dirname, "../../../diproche.pl"),
