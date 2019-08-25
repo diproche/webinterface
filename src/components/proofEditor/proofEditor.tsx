@@ -8,6 +8,7 @@ import IssueInformation from "./issueInformation";
 import styles from "./proofEditor.module.scss";
 
 const textboxPlaceHolder = "Gebe hier deinen Beweis ein...";
+let hasStarted = false;
 
 /** The parent component needs to control the proofEditor and have these states */
 export interface IParentState {
@@ -65,6 +66,7 @@ class ProofEditor extends React.Component<IProps, {}> {
 	}
 
 	private readonly checkInput = async (): Promise<void> => {
+		hasStarted = true;
 		let userInput = this.props.userInput;
 		if (this.props.transformUserinputPreCheck) {
 			userInput = this.props.transformUserinputPreCheck(userInput);
@@ -75,7 +77,7 @@ class ProofEditor extends React.Component<IProps, {}> {
 	}
 
 	private renderIssueList(): JSX.Element | JSX.Element[] {
-		if (this.props.issues.length === 0) {
+		if (this.props.issues.length === 0 && hasStarted === true) {
 			return <div
 					className={styles.successMessage}
 				>
