@@ -75,7 +75,7 @@ class ProofEditor extends React.Component<IProps, {}> {
 	}
 
 	private renderIssueList(): JSX.Element | JSX.Element[] {
-		if (this.props.issues.length === 0) {
+		if (this.props.issues.length === 0 && this.props.userInput !== "") {
 			return <div
 					className={styles.successMessage}
 				>
