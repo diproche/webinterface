@@ -33,4 +33,3 @@ export default function parseStringToIntegerArray(integerArrayString: string) {
 
 }
 
-export default parseStringToIntegerArray;
