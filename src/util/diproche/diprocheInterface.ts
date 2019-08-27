@@ -9,12 +9,13 @@ export enum Mode {
 	test = "teste",
 }
 
+// The following function is added for testing reasons
 /**
  * returns a string containing the userInput as an argument of a predicate
  * @param userInput - the user input
  * @param mode - the mode
  */
-function addPredicate(userInput: string, mode: Mode) {
+export function addPredicate(userInput: string, mode: Mode) {
 	return mode + "(" + userInput + ").";
 }
 
