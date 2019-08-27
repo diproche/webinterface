@@ -27,6 +27,10 @@ class ProofEditor extends React.Component<IProps, {}> {
 
 	public constructor(props: IProps) {
 		super(props);
+
+		// If the initial issue given is empty it will update it to contain the empty issue
+		// This is an indication that the proof checker hasn't been used yet and therefore
+		// not show the success message
 		if (this.props.issues.length === 0) {
 			emptyIssueList();
 			addIssue("EMPTY_ISSUE");
