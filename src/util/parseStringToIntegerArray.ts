@@ -3,7 +3,7 @@
 	* @param integerArrayString - A string representing a array of integers (i.e. [16, 87, 27])
 	* @return An array of integers represented by the string
 	*/
-export function parseStringToIntegerArray(integerArrayString: string) {
+export default function parseStringToIntegerArray(integerArrayString: string) {
 
 	if (integerArrayString === "[]") {
 		return [];
