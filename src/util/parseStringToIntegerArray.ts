@@ -15,12 +15,9 @@ export function parseStringToIntegerArray(integerArrayString: string) {
 	) {
 		throw new Error("The given string is not contained in brackets '[]'");
 	}
-	console.log("HI");
 
 	// Removing the outter brackets
 	integerArrayString = integerArrayString.substr(1, integerArrayString.length - 2);
-
-	console.log(integerArrayString);
 
 	const arrayOfStrings: string[] = integerArrayString.split(",");
 	const arrayOfInteger: number[] = [];
