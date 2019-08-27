@@ -1,4 +1,9 @@
 {
+	"EMPTY_ISSUE": {
+		"severity": "HINT",
+		"message": "",
+		"etc": "This is to signify that no proof check has taken place"
+	},
 	"BRACKET_UNDERCLOSING": {
 		"severity": "WARNING",
 		"message": "Es wurden Klammern geöffnet, die nicht geschlossen wurden."

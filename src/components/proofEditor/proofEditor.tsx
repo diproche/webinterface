@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import Issue from "../../util/issueHandling/issue";
+import { addIssue, emptyIssueList, listAllIssues} from "../../util/issueHandling/issueMapping";
 import { checkProof } from "../../util/proofChecker";
 import exerciseStyles from "../exercises/exercises.module.scss";
 import buttonStyles from "../generalStyles/buttons.module.scss";
@@ -23,6 +24,15 @@ interface IProps extends IParentState {
 }
 
 class ProofEditor extends React.Component<IProps, {}> {
+
+	public constructor(props: IProps) {
+		super(props);
+		if (this.props.issues.length === 0) {
+			emptyIssueList();
+			addIssue("EMPTY_ISSUE");
+			this.props.setStateParent({issues: listAllIssues()});
+		}
+	}
 
 	public render() {
 		return <div className={styles.proofEditor}>
@@ -75,7 +85,7 @@ class ProofEditor extends React.Component<IProps, {}> {
 	}
 
 	private renderIssueList(): JSX.Element | JSX.Element[] {
-		if (this.props.issues.length === 0 && this.props.userInput !== "") {
+		if (this.props.issues.length === 0) {
 			return <div
 					className={styles.successMessage}
 				>
