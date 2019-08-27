@@ -4,7 +4,7 @@ import "../swipl-wasm/swipl-web";
 import { consult, loadingComplete as swiLoadingComplete, query } from "./swiplwasmHandler";
 // tslint:enable: ordered-imports
 
-describe("Fubar", () => {
+describe("swiplWasmHandler", () => {
 	beforeAll(async () => {
 		await swiLoadingComplete;
 	}, 15000);
