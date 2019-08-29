@@ -1,6 +1,7 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import React from "react";
 import Issue from "../../util/issueHandling/issue";
+import { addIssue, emptyIssueList, listAllIssues} from "../../util/issueHandling/issueMapping";
 import { checkProof } from "../../util/proofChecker";
 import exerciseStyles from "../exercises/exercises.module.scss";
 import buttonStyles from "../generalStyles/buttons.module.scss";
@@ -24,6 +25,19 @@ interface IProps extends IParentState {
 
 class ProofEditor extends React.Component<IProps, {}> {
 
+	public constructor(props: IProps) {
+		super(props);
+
+		// If the initial issue given is empty it will update it to contain the empty issue
+		// This is an indication that the proof checker hasn't been used yet and therefore
+		// not show the success message
+		if (this.props.issues.length === 0) {
+			emptyIssueList();
+			addIssue("EMPTY_ISSUE");
+			this.props.setStateParent({issues: listAllIssues()});
+		}
+	}
+
 	public render() {
 		return <div className={styles.proofEditor}>
 
@@ -45,11 +59,7 @@ class ProofEditor extends React.Component<IProps, {}> {
 			</button>
 
 			<div className={styles.issuesInformation}>
-				{this.props.issues.map((issue: Issue) => {
-					return <IssueInformation
-						issue={issue}
-					/>;
-				})}
+				{this.renderIssueList()}
 			</div>
 
 		</div>;
@@ -76,6 +86,26 @@ class ProofEditor extends React.Component<IProps, {}> {
 
 		const issues: readonly Issue[] = await checkProof(userInput);
 		this.props.setStateParent({ issues });
+	}
+
+	private renderIssueList(): JSX.Element | JSX.Element[] {
+		if (this.props.issues.length === 0) {
+			return <div
+					className={styles.successMessage}
+				>
+				Alles richtig
+				</div>;
+		}
+
+		const issueList: JSX.Element[] = [];
+
+		this.props.issues.map((issue: Issue) => {
+			issueList.push(<IssueInformation
+				issue={issue}
+			/>);
+		});
+
+		return issueList;
 	}
 }
 
