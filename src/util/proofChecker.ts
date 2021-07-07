@@ -1,9 +1,16 @@
+import DiprocheHandler from "./diproche/diprocheHandler";
 import { createErrors } from "./diproche/diprocheInterface";
 import Issue from "./issueHandling/issue";
 import { emptyIssueList, listAllIssues } from "./issueHandling/issueMapping";
+import parseStringToIntegerArray from "./parseStringToIntegerArray";
 
 // Ordered by their degree of fatality
 const severities: string[] = ["FATALERROR", "ERROR", "WARNING", "HINT"];
+
+const unloadedDiproche = new DiprocheHandler();
+unloadedDiproche.loadDiproche();
+
+export const diproche: DiprocheHandler = unloadedDiproche;
 
 /**
 	* Checks the userinput and returns the Issues it caused
@@ -19,23 +26,16 @@ export async function checkProof(userInput: string): Promise<readonly Issue[]> {
 
 /**
 	* Receives the diproche response for a given input
-	* @param userInput - The user input as a list which should end with a "."
+	* @param diprocheInput - The input one would enter into diproche
 	* @return The diproche reponse
 	*/
-export async function getDiprocheResponse(userInput: string): Promise<string> {
+export async function getDiprocheResponse(diprocheInput: string): Promise<number[]> {
 
-	const body = userInput;
+	const result: string = await diproche.query(diprocheInput);
+	const returnValue: number[] = parseStringToIntegerArray(result);
 
-	const response = await fetch("http://localhost:3000/dipr", {
-		headers: {
-			"Content-Type": "application/x-prolog",
-		},
-		method: "POST",
-		body,
-	});
+	return returnValue;
 
-	const responseText = await response.text();
-	return responseText;
 }
 
 /**
